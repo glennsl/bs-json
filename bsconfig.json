@@ -1,0 +1,4 @@
+{
+  "name": "bs-json",
+  "sources": ["src", { "dir": "examples", "type": "dev" }]
+}
