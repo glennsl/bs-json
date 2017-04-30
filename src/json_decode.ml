@@ -1,123 +1,96 @@
-open Result
-
 external isInteger : float -> bool = "" [@@bs.val]
 
-type 'a decoder = Js.Json.t -> ('a, string) result
+type 'a decoder = Js.Json.t -> 'a
+
+exception Decode_error of string
 
 let boolean json = 
-  if Js.typeof json = "boolean"
-  then Ok (Obj.magic (json : Js.Json.t) : Js.boolean)
-  else Error ("Expected boolean, got " ^ Js_json.stringify json)
+  if Js.typeof json = "boolean" then
+    (Obj.magic (json : Js.Json.t) : Js.boolean)
+  else
+    raise @@ Decode_error ("Expected boolean, got " ^ Js.Json.stringify json)
 
 let float json = 
-  if Js.typeof json = "number" 
-  then Ok (Obj.magic (json : Js.Json.t) : float)
-  else Error ("Expected number, got " ^ Js_json.stringify json)
+  if Js.typeof json = "number" then
+    (Obj.magic (json : Js.Json.t) : float)
+  else
+    raise @@ Decode_error ("Expected number, got " ^ Js.Json.stringify json)
 
 let int json = 
-  match float json with
-  | Ok float ->
-    if isInteger float
-    then Ok (Obj.magic (float : float) : int)
-    else Error ("Expected integer, got " ^ Js_json.stringify json)
-  | Error message -> Error message
+  let f = float json in
+  if isInteger f then
+    (Obj.magic (f : float) : int)
+  else
+    raise @@ Decode_error ("Expected integer, got " ^ Js.Json.stringify json)
 
 let string json = 
-  if Js.typeof json = "string" 
-  then Ok (Obj.magic (json:Js.Json.t) : string)
-  else Error ("Expected string, got " ^ Js_json.stringify json)
+  if Js.typeof json = "string" then
+    (Obj.magic (json : Js.Json.t) : string)
+  else
+    raise @@ Decode_error ("Expected string, got " ^ Js.Json.stringify json)
 
 let nullable decode json =
-  if (Obj.magic json : 'a Js.null) == Js.null
-  then Ok Js.null
+  if (Obj.magic json : 'a Js.null) == Js.null then
+    Js.null
   else
-    match decode json with
-    | Ok value -> Ok (Js.Null.return value)
-    | Error message -> Error message
+    let value = decode json in
+    Js.Null.return value
 
 (* TODO: remove this? *)
 let nullAs value json = 
-  if (Obj.magic json : 'a Js.null) == Js.null
-  then Ok value
-  else Error ("Expected null, got " ^ Js_json.stringify json)
+  if (Obj.magic json : 'a Js.null) == Js.null then
+    value
+  else 
+    raise @@ Decode_error ("Expected null, got " ^ Js.Json.stringify json)
 
 let array decode json = 
-  if Js_array.isArray json
-  then begin
-    (* TODO: Seriously rethink this for better balance between readability and perf *)
+  if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let l = Js.Array.length source in
-
-    if l = 0 then Ok [||]
-
-    else begin
-      let target = Array.make l (Obj.magic 0) in
-      let break = ref false in
-      let result = ref (Ok target) in
-      let i = ref 0 in
-      while not !break do
-        if !i >= l then break := true
-        else
-          match decode (Array.unsafe_get source !i) with
-          | Ok value ->
-            Array.set target !i value;
-            i := !i + 1
-          | Error message ->
-            result := Error message;
-            break := true
-      done;
-      !result
-    end
+    let target = Array.make l (Obj.magic 0) in
+    for i = 0 to l do
+      let value = decode (Array.unsafe_get source i) in
+      Array.set target i value;
+    done;
+    target
   end
-  else Error ("Expected array, got " ^ Js_json.stringify json)
+  else
+    raise @@ Decode_error ("Expected array, got " ^ Js.Json.stringify json)
 
 let dict decode json = 
   if Js.typeof json = "object" && 
-      not (Js_array.isArray json) && 
+      not (Js.Array.isArray json) && 
       not ((Obj.magic json : 'a Js.null) == Js.null)
   then begin
-    (* TODO: Seriously rethink this for better balance between readability and perf *)
-    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t Js_dict.t) in
-    let keys = Js_dict.keys source in
+    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
+    let keys = Js.Dict.keys source in
     let l = Js.Array.length keys in
-
-    if l = 0 then Ok (Js_dict.empty ())
-
-    else begin
-      let target = Js_dict.empty () in
-      let break = ref false in
-      let result = ref (Ok target) in
-      let i = ref 0 in
-      while not !break do
-        if !i >= l then break := true
-        else
-          let key = (Array.unsafe_get keys !i) in
-          match decode (Js_dict.unsafeGet source key) with
-          | Ok value ->
-            Js_dict.set target key value;
-            i := !i + 1
-          | Error message ->
-            result := Error message;
-            break := true
-      done;
-      !result
-    end
+    let target = Js.Dict.empty () in
+    for i = 0 to l do
+        let key = (Array.unsafe_get keys i) in
+        let value = decode (Js.Dict.unsafeGet source key) in
+        Js.Dict.set target key value;
+    done;
+    target
   end
-  else Error ("Expected object, got " ^ Js_json.stringify json)
+  else
+    raise @@ Decode_error ("Expected object, got " ^ Js.Json.stringify json)
 
 let field key decode json =
   if Js.typeof json = "object" && 
-      not (Js_array.isArray json) && 
+      not (Js.Array.isArray json) && 
       not ((Obj.magic json : 'a Js.null) == Js.null)
   then begin
     let dict = (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
     match Js.Dict.get dict key with
     | Some value -> decode value
-    | None -> Error ("Expected field '" ^ key ^ "'")
+    | None -> raise @@ Decode_error ("Expected field '" ^ key ^ "'")
   end
-  else Error ("Expected object, got " ^ Js_json.stringify json)
+  else
+    raise @@ Decode_error ("Expected object, got " ^ Js.Json.stringify json)
 
 let optional decode json =
-  match decode json with
-  | Ok value -> Ok (Some value)
-  | Error message -> Ok None
+  try
+    Some (decode json)
+  with
+  | Decode_error _ -> None
