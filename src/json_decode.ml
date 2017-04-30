@@ -1,4 +1,4 @@
-external isInteger : float -> bool = "" [@@bs.val]
+external isInteger : float -> bool = "Number.isInteger" [@@bs.val]
 
 type 'a decoder = Js.Json.t -> 'a
 
