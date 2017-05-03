@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "bsb -make-world -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "bsb -make-world",
+    "test": "npm run build && jest",
+    "watch:bsb": "bsb -make-world -w",
+    "watch:jest": "jest --watchAll",
+    "watch:screen": "screen -c .screenrc"
   },
   "repository": {
     "type": "git",
@@ -22,6 +26,7 @@
   },
   "homepage": "https://github.com/BuckleTypes/bs-json#readme",
   "devDependencies": {
-    "bs-platform": "bloomberg/bucklescript"
+    "bs-platform": "bloomberg/bucklescript",
+    "bs-jest": "buckletypes/bs-jest"
   }
 }
