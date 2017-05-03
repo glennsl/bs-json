@@ -19,16 +19,16 @@ val boolean : Js.boolean decoder
     
 {b Returns} [Ok of Js.boolean] if the JSON value is a boolean, [Error of string] otherwise.
 @example {[
-  open Js.Json
+  open Json
   let _ =
   (* prints [Ok Js.true_] *)
-  Js.log \@\@ parse "true" |> Decode.boolean
+  Js.log \@\@ Js.Json.parseExn "true" |> Decode.boolean
   (* prints [Ok Js.false_] *)
-  Js.log \@\@ parse "true" |> Decode.boolean
+  Js.log \@\@ Js.Json.parseExn "true" |> Decode.boolean
   (* prints [Error ...] *)
-  Js.log \@\@ parse "123" |> Decode.boolean
+  Js.log \@\@ Js.Json.parseExn "123" |> Decode.boolean
   (* prints [Error ...] *)
-  Js.log \@\@ parse "null" |> Decode.boolean
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.boolean
 ]}
 *)
 
@@ -37,16 +37,16 @@ val bool : bool decoder
     
 {b Returns} [Ok of bool] if the JSON value is a boolean, [Error of string] otherwise.
 @example {[
-  open Js.Json
+  open Json
   let _ =
   (* prints [Ok true] *)
-  Js.log \@\@ parse "true" |> Decode.bool
+  Js.log \@\@ Js.Json.parseExn "true" |> Decode.bool
   (* prints [Ok false] *)
-  Js.log \@\@ parse "true" |> Decode.bool
+  Js.log \@\@ Js.Json.parseExn "true" |> Decode.bool
   (* prints [Error ...] *)
-  Js.log \@\@ parse "123" |> Decode.bool
+  Js.log \@\@ Js.Json.parseExn "123" |> Decode.bool
   (* prints [Error ...] *)
-  Js.log \@\@ parse "null" |> Decode.bool
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.bool
 ]}
 *)
 
@@ -55,16 +55,16 @@ val float : float decoder
     
 {b Returns} [Ok of float] if the JSON value is a number, [Error of string] otherwise.
 @example {[
-  open Js.Json
+  open Json
   let _ =
   (* prints [Ok 1.23] *)
-  Js.log \@\@ parse "1.23" |> Decode.float
+  Js.log \@\@ Js.Json.parseExn "1.23" |> Decode.float
   (* prints [Ok 23.] *)
-  Js.log \@\@ parse "23" |> Decode.float
+  Js.log \@\@ Js.Json.parseExn "23" |> Decode.float
   (* prints [Error ...] *)
-  Js.log \@\@ parse "true" |> Decode.float
+  Js.log \@\@ Js.Json.parseExn "true" |> Decode.float
   (* prints [Error ...] *)
-  Js.log \@\@ parse "null" |> Decode.float
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.float
 ]}
 *)
 
@@ -73,16 +73,16 @@ val int : int decoder
     
 {b Returns} [Ok of int] if the JSON value is an integer, [Error of string] otherwise.
 @example {[
-  open Js.Json
+  open Json
   let _ =
   (* prints [Ok 23] *)
-  Js.log \@\@ parse "23" |> Decode.int
+  Js.log \@\@ Js.Json.parseExn "23" |> Decode.int
   (* prints [Error ...] *)
-  Js.log \@\@ parse "1.23" |> Decode.int
+  Js.log \@\@ Js.Json.parseExn "1.23" |> Decode.int
   (* prints [Error ...] *)
-  Js.log \@\@ parse "true" |> Decode.int
+  Js.log \@\@ Js.Json.parseExn "true" |> Decode.int
   (* prints [Error ...] *)
-  Js.log \@\@ parse "null" |> Decode.int
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.int
 ]}
 *)
 
@@ -91,14 +91,14 @@ val string : string decoder
     
 {b Returns} [Ok of string] if the JSON value is a string, [Error of string] otherwise.
 @example {[
-  open Js.Json
+  open Json
   let _ =
   (* prints [Ok "foo"] *)
-  Js.log \@\@ parse "\"foo\"" |> Decode.string
+  Js.log \@\@ Js.Json.parseExn "\"foo\"" |> Decode.string
   (* prints [Error ...] *)
-  Js.log \@\@ parse "1.23" |> Decode.string
+  Js.log \@\@ Js.Json.parseExn "1.23" |> Decode.string
   (* prints [Error ...] *)
-  Js.log \@\@ parse "null" |> Decode.string
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.string
 ]}
 *)
 
@@ -108,14 +108,14 @@ val nullable : 'a decoder -> 'a Js.null decoder
 {b Returns} [Ok Js.null] if the JSON value is [null], [Ok of 'a Js.null] if the
 given decoder succeeds, [Error of string] otherwise.
 @example {[
-  open Js.Json
+  open Json
   let _ =
   (* prints [Ok (Js.Null.return 23)] *)
-  Js.log \@\@ parse "23" |> Decode.(nullable int)
+  Js.log \@\@ Js.Json.parseExn "23" |> Decode.(nullable int)
   (* prints [Error ...] *)
-  Js.log \@\@ parse "1.23" |> Decode.(nullable int)
+  Js.log \@\@ Js.Json.parseExn "1.23" |> Decode.(nullable int)
   (* prints [Ok Js.null] *)
-  Js.log \@\@ parse "null" |> Decode.(nullable int)
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.(nullable int)
 ]}
 *)
 
@@ -124,14 +124,14 @@ val nullAs : 'a -> 'a decoder
     
 {b Returns} [Ok of 'a] if the JSON value is [null], [Error of string] otherwise.
 @example {[
-  open Js.Json
+  open Json
   let _ =
   (* prints [Error ...] *)
-  Js.log \@\@ parse "\"x\"" |> Decode.nullAs "x"
+  Js.log \@\@ Js.Json.parseExn "\"x\"" |> Decode.nullAs "x"
   (* prints [Ok "x"] *)
-  Js.log \@\@ parse "null" |> Decode.nullAs "x"
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.nullAs "x"
   (* prints [Ok None] *)
-  Js.log \@\@ parse "null" |> Decode.nullAs None
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.nullAs None
 ]}
 *)
 
@@ -141,16 +141,16 @@ val array : 'a decoder -> 'a array decoder
 {b Returns} [Ok of 'a array] if the JSON value is a JSON array and all its
 elements are successfully decoded, [Error of string] otherwise.
 @example {[
-  open Js.Json
+  open Json
   let _ =
   (* prints [Ok [| 1; 2; 3 |]] *)
-  Js.log \@\@ parse "[1, 2, 3]" |> Decode.(array int)
+  Js.log \@\@ Js.Json.parseExn "[1, 2, 3]" |> Decode.(array int)
   (* prints [Error ...] *)
-  Js.log \@\@ parse "[1, 2, "c"]" |> Decode.(array int)
+  Js.log \@\@ Js.Json.parseExn "[1, 2, "c"]" |> Decode.(array int)
   (* prints [Error ...] *)
-  Js.log \@\@ parse "123" |> Decode.(array int)
+  Js.log \@\@ Js.Json.parseExn "123" |> Decode.(array int)
   (* prints [Ok None] *)
-  Js.log \@\@ parse "null" |> Decode.(array int)
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.(array int)
 ]}
 *)
 
@@ -160,16 +160,16 @@ val dict : 'a decoder -> 'a Js.Dict.t decoder
 {b Returns} [Ok of 'a Js.Dict.t] if the JSON value is a JSON object and all its
 values are successfully decoded, [Error of string] otherwise.
 @example {[
-  open Js.Json
+  open Json
   let _ =
   (* prints [Ok (Js.Dict.fromList [("x", 23); ("y", 42)])] *)
-  Js.log \@\@ parse {| { "x": 23, "y": 42 } |} |> Decode.(dict int)
+  Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": 42 } |} |> Decode.(dict int)
   (* prints [Error ...] *)
-  Js.log \@\@ parse {| { "x": 23, "y": "b" } |} |> Decode.(dict int)
+  Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(dict int)
   (* prints [Error ...] *)
-  Js.log \@\@ parse "123" |> Decode.(dict int)
+  Js.log \@\@ Js.Json.parseExn "123" |> Decode.(dict int)
   (* prints [Ok None] *)
-  Js.log \@\@ parse "null" |> Decode.(dict int)
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.(dict int)
 ]}
 *)
 
@@ -179,18 +179,18 @@ val field : string -> 'a decoder -> 'a decoder
 {b Returns} [Ok of 'a] if the JSON value is a JSON object with the given field
 and a value that is successfully decoded with the given decoder, [Error of string] otherwise.
 @example {[
-  open Js.Json
+  open Json
   let _ =
   (* prints [Ok 23] *)
-  Js.log \@\@ parse {| { "x": 23, "y": 42 } |} |> Decode.(field "x" int)
+  Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": 42 } |} |> Decode.(field "x" int)
   (* prints [Ok 23] *)
-  Js.log \@\@ parse {| { "x": 23, "y": "b" } |} |> Decode.(field "x" int)
+  Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "x" int)
   (* prints [Error ...] *)
-  Js.log \@\@ parse {| { "x": 23, "y": "b" } |} |> Decode.(field "y" int)
+  Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "y" int)
   (* prints [Error ...] *)
-  Js.log \@\@ parse "123" |> Decode.(field "x" int)
+  Js.log \@\@ Js.Json.parseExn "123" |> Decode.(field "x" int)
   (* prints [Ok None] *)
-  Js.log \@\@ parse "null" |> Decode.(field "x" int)
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.(field "x" int)
 ]}
 *)
 
@@ -204,25 +204,25 @@ of a given decoder into [Ok]s by mapping its [result] into an [option] and then
 returning that wrapped in an [Ok]. This prevents a decoder error from terminating
 a composite decoder, and is useful to decode optional JSON object fields.
 @example {[
-  open Js.Json
+  open Json
   let _ =
   (* prints [Ok (Some 23)] *)
-  Js.log \@\@ parse "23" |> Decode.(optional int)
+  Js.log \@\@ Js.Json.parseExn "23" |> Decode.(optional int)
   (* prints [Ok None] *)
-  Js.log \@\@ parse 1.23 |> Decode.(optional int)
+  Js.log \@\@ Js.Json.parseExn 1.23 |> Decode.(optional int)
   (* prints [Ok None] *)
-  Js.log \@\@ parse "null" |> Decode.(optional int)
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.(optional int)
   (* prints [Ok (Some 23)] *)
-  Js.log \@\@ parse {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "x" int))
+  Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "x" int))
   (* prints [Ok None] *)
-  Js.log \@\@ parse {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "y" int))
+  Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "y" int))
   (* prints [Ok None] *)
-  Js.log \@\@ parse {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "z" int))
+  Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "z" int))
   (* prints [Ok (Some 23)] *)
-  Js.log \@\@ parse {| { "x": 23, "y": "b" } |} |> Decode.(field "x" (optional int))
+  Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "x" (optional int))
   (* prints [Ok None] *)
-  Js.log \@\@ parse {| { "x": 23, "y": "b" } |} |> Decode.(field "y" (optional int))
+  Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "y" (optional int))
   (* prints [Error ...] *)
-  Js.log \@\@ parse {| { "x": 23, "y": "b" } |} |> Decode.(field "z" (optional int))
+  Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "z" (optional int))
 ]}
 *)
