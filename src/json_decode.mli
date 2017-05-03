@@ -32,6 +32,24 @@ val boolean : Js.boolean decoder
 ]}
 *)
 
+val bool : bool decoder
+(** Decodes a JSON value into a [bool]
+    
+{b Returns} [Ok of bool] if the JSON value is a boolean, [Error of string] otherwise.
+@example {[
+  open Js.Json
+  let _ =
+  (* prints [Ok true] *)
+  Js.log \@\@ parse "true" |> Decode.bool
+  (* prints [Ok false] *)
+  Js.log \@\@ parse "true" |> Decode.bool
+  (* prints [Error ...] *)
+  Js.log \@\@ parse "123" |> Decode.bool
+  (* prints [Error ...] *)
+  Js.log \@\@ parse "null" |> Decode.bool
+]}
+*)
+
 val float : float decoder
 (** Decodes a JSON value into a [float]
     

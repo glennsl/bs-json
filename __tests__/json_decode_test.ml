@@ -23,6 +23,29 @@ describe "boolean" (fun () ->
     expectFn boolean (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
 );
 
+describe "bool" (fun () ->
+  let open Json in
+  let open Decode in
+
+  test "boolean" (fun () ->
+    expect @@ bool (Encode.boolean Js.true_) |> toEqual true);
+  test "float" (fun () ->
+    expectFn bool (Encode.float 1.23) |> toThrow);
+  test "int" (fun () ->
+    expectFn bool (Encode.int 23) |> toThrow);
+  test "string" (fun () ->
+    expectFn bool (Encode.string "test") |> toThrow);
+  test "null" (fun () ->
+    expectFn bool Encode.null |> toThrow);
+  test "array" (fun () ->
+    expectFn bool (Encode.array [||]) |> toThrow);
+  test "object" (fun () ->
+    expectFn bool (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+
+  test "boolean - false" (fun () ->
+    expect @@ bool (Encode.boolean Js.false_) |> toEqual false);
+);
+
 describe "float" (fun () ->
   let open Json in
   let open! Decode in

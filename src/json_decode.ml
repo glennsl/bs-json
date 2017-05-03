@@ -10,6 +10,9 @@ let boolean json =
   else
     raise @@ Decode_error ("Expected boolean, got " ^ Js.Json.stringify json)
 
+let bool json = 
+  if boolean json = Js.true_ then true else false
+
 let float json = 
   if Js.typeof json = "number" then
     (Obj.magic (json : Js.Json.t) : float)
