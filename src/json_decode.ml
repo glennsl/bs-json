@@ -48,7 +48,7 @@ let array decode json =
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let l = Js.Array.length source in
     let target = Array.make l (Obj.magic 0) in
-    for i = 0 to l do
+    for i = 0 to l - 1 do
       let value = decode (Array.unsafe_get source i) in
       Array.set target i value;
     done;
@@ -66,7 +66,7 @@ let dict decode json =
     let keys = Js.Dict.keys source in
     let l = Js.Array.length keys in
     let target = Js.Dict.empty () in
-    for i = 0 to l do
+    for i = 0 to l - 1 do
         let key = (Array.unsafe_get keys i) in
         let value = decode (Js.Dict.unsafeGet source key) in
         Js.Dict.set target key value;
