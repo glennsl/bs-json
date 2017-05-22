@@ -1,4 +1,5 @@
 external isInteger : float -> bool = "Number.isInteger" [@@bs.val]
+external unsafeCreateUninitializedArray : int -> 'a array = "Array" [@@bs.new]
 
 type 'a decoder = Js.Json.t -> 'a
 
@@ -11,7 +12,7 @@ let boolean json =
     raise @@ Decode_error ("Expected boolean, got " ^ Js.Json.stringify json)
 
 let bool json = 
-  if boolean json = Js.true_ then true else false
+  if boolean json == Js.true_ then true else false
 
 let float json = 
   if Js.typeof json = "number" then
@@ -36,8 +37,7 @@ let nullable decode json =
   if (Obj.magic json : 'a Js.null) == Js.null then
     Js.null
   else
-    let value = decode json in
-    Js.Null.return value
+    Js.Null.return (decode json)
 
 (* TODO: remove this? *)
 let nullAs value json = 
@@ -50,10 +50,10 @@ let array decode json =
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let l = Js.Array.length source in
-    let target = Array.make l (Obj.magic 0) in
+    let target = unsafeCreateUninitializedArray l in
     for i = 0 to l - 1 do
       let value = decode (Array.unsafe_get source i) in
-      Array.set target i value;
+      Array.unsafe_set target i value;
     done;
     target
   end
@@ -93,7 +93,6 @@ let field key decode json =
     raise @@ Decode_error ("Expected object, got " ^ Js.Json.stringify json)
 
 let optional decode json =
-  try
-    Some (decode json)
-  with
-  | Decode_error _ -> None
+  match decode json with
+  | exception Decode_error _ -> None
+  | v -> Some v
