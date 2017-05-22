@@ -1,24 +1,6 @@
-*.annot
-*.cmo
-*.cma
-*.cmi
-*.a
-*.o
-*.cmx
-*.cmxs
-*.cmxa
-
-# ocamlbuild working directory
-_build/
-
-# ocamlbuild targets
-*.byte
-*.native
-
-# oasis generated files
-setup.data
-setup.log
-
 node_modules/
-lib/
+lib/*
+!lib/js
 .merlin
+npm-debug.log
+.DS_Store
