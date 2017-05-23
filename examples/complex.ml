@@ -1,33 +1,34 @@
-type address = {
-  city: string;
-  state: string
+type line = {
+  start: point;
+  end_: point;
+  thickness: int option
+}
+and point = {
+  x: float;
+  y: float
 }
 
-type person = {
-  id: int;
-  name: string;
-  age: int option;
-  address: address option
-}
+module Decode = struct
+  let point json =
+    let open! Json.Decode in {
+      x = json |> field "x" float;
+      y = json |> field "y" float
+    }
 
-let parseAddress json: address =
-  let open Json.Decode in {
-    city = json |> field "city" string;
-    state = json |> field "state" string
-  }
+  let line json =
+    Json.Decode.{
+      start     = json |> field "start" point;
+      end_      = json |> field "end" point;
+      thickness = json |> optional (field "thickness" int)
+    }
+end
 
-let parsePerson json: person =
-  let open Json.Decode in {
-    id = json |> field "id" int;
-    name = json |> field "name" string;
-    age = json |> optional (field "age" int);
-    address = json |> optional (field "address" parseAddress)
-  }
-
-
-let data = "{\"id\":1,\"name\":\"brad\",\"age\":27,\"address\":{\"city\":\"city1\",\"state\":\"state1\"}}"
+let data = {| {
+  "start": { "x": 1.1, "y": -0.4 },
+  "end":   { "x": 5.3, "y": 3.8 }
+} |}
 
 let _ =
-  Js.Json.parseExn data
-  |> parsePerson
-  |> Js.log
+  data |> Js.Json.parseExn
+       |> Decode.line
+       |> Js.log
