@@ -3,8 +3,8 @@
 let mapJsonObjectString f decoder (encoder: int -> Js.Json.t) str =
   let json = Js.Json.parseExn str in
   Json.Decode.(dict decoder json)
-    |> DictExtensions.map f
-    |> DictExtensions.map encoder
+    |> Js.Dict.map ((fun v -> f v) [@bs])
+    |> Js.Dict.map ((fun v -> encoder v) [@bs])
     |> Json.Encode.object_
     |> Js.Json.stringify
 
