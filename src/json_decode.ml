@@ -60,6 +60,9 @@ let array decode json =
   else
     raise @@ Decode_error ("Expected array, got " ^ Js.Json.stringify json)
 
+let list decode json =
+  json |> array decode |> Array.to_list
+
 let dict decode json = 
   if Js.typeof json = "object" && 
       not (Js.Array.isArray json) && 

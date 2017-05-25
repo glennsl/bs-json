@@ -136,7 +136,7 @@ val nullAs : 'a -> 'a decoder
 *)
 
 val array : 'a decoder -> 'a array decoder
-(** Decodes a JSON array into an ['a array] using the given decoder on each array element
+(** Decodes a JSON array into an ['a array] using the given decoder on each element
     
 {b Returns} [Ok of 'a array] if the JSON value is a JSON array and all its
 elements are successfully decoded, [Error of string] otherwise.
@@ -151,6 +151,25 @@ elements are successfully decoded, [Error of string] otherwise.
   Js.log \@\@ Js.Json.parseExn "123" |> Decode.(array int)
   (* prints [Ok None] *)
   Js.log \@\@ Js.Json.parseExn "null" |> Decode.(array int)
+]}
+*)
+
+val list : 'a decoder -> 'a list decoder
+(** Decodes a JSON array into an ['a list] using the given decoder on each element
+    
+{b Returns} [Ok of 'a ]st if the JSON value is a JSON array and all its
+elements are successfully decoded, [Error of string] otherwise.
+@example {[
+  open Json
+  let _ =
+  (* prints [Ok [1; 2; 3]] *)
+  Js.log \@\@ Js.Json.parseExn "[1, 2, 3]" |> Decode.(list int)
+  (* prints [Error ...] *)
+  Js.log \@\@ Js.Json.parseExn "[1, 2, "c"]" |> Decode.(list int)
+  (* prints [Error ...] *)
+  Js.log \@\@ Js.Json.parseExn "123" |> Decode.(list int)
+  (* prints [Ok None] *)
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.(list int)
 ]}
 *)
 

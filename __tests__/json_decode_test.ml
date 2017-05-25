@@ -209,6 +209,51 @@ describe "array" (fun () ->
       |> toThrow);
 );
 
+describe "list" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "boolean" (fun () ->
+    expectFn (list int) (Encode.boolean Js.true_) |> toThrow);
+  test "float" (fun () ->
+    expectFn (list int) (Encode.float 1.23) |> toThrow);
+  test "int" (fun () ->
+    expectFn (list int) (Encode.int 23) |> toThrow);
+  test "string" (fun () ->
+    expectFn (list int) (Encode.string "test") |> toThrow);
+  test "null" (fun () ->
+    expectFn (list int) Encode.null |> toThrow);
+  test "array" (fun () ->
+    expect @@ (list int) (Encode.array [||]) |> toEqual []);
+  test "object" (fun () ->
+    expectFn (list int) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+
+  test "list boolean" (fun () ->
+    expect @@
+      list boolean (Js.Json.parseExn {| [true, false, true] |})
+      |> toEqual [Js.true_; Js.false_; Js.true_]);
+  test "list float" (fun () ->
+    expect @@
+      list float (Js.Json.parseExn {| [1, 2, 3] |})
+      |> toEqual [ 1.; 2.; 3.]);
+  test "list int" (fun () ->
+    expect @@
+      list int (Js.Json.parseExn {| [1, 2, 3] |})
+      |> toEqual [1; 2; 3]);
+  test "list string" (fun () ->
+    expect @@
+      list string (Js.Json.parseExn {| ["a", "b", "c"] |})
+      |> toEqual ["a"; "b"; "c"]);
+  test "list nullAs" (fun () ->
+    expect @@
+      list (nullAs Js.null) (Js.Json.parseExn {| [null, null, null] |})
+      |> toEqual [Js.null; Js.null; Js.null]);
+  test "array int -> list boolean" (fun () ->
+    expectFn
+      (list boolean) (Js.Json.parseExn {| [1, 2, 3] |})
+      |> toThrow);
+);
+
 describe "dict" (fun () ->
   let open Json in
   let open! Decode in
