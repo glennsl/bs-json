@@ -423,6 +423,55 @@ describe "withDefault" (fun () ->
     expect @@ (withDefault 0 int) (Encode.object_ @@ Js.Dict.empty ()) |> toEqual 0);
 );
 
+describe "map" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "boolean" (fun () ->
+    expectFn (int |> map ((+)2)) (Encode.boolean Js.true_) |> toThrow);
+  test "float" (fun () ->
+    expectFn (int |> map ((+)2)) (Encode.float 1.23) |> toThrow);
+  test "int" (fun () ->
+    expect @@ (int |> map ((+)2)) (Encode.int 23) |> toEqual 25);
+  test "string" (fun () ->
+    expectFn (int |> map ((+)2)) (Encode.string "test") |> toThrow);
+  test "null" (fun () ->
+    expectFn (int |> map ((+)2)) (Encode.null) |> toThrow);
+  test "array" (fun () ->
+    expectFn (int |> map ((+)2)) (Encode.array [||]) |> toThrow);
+  test "object" (fun () ->
+    expectFn (int |> map ((+)2)) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+);
+
+describe "andThen" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "boolean -> int" (fun () ->
+    expectFn (int |> andThen (fun _ -> int)) (Encode.boolean Js.true_) |> toThrow);
+  test "float -> int" (fun () ->
+    expectFn (int |> andThen (fun _ -> int)) (Encode.float 1.23) |> toThrow);
+  test "int -> int" (fun () ->
+    expect @@ (int |> andThen (fun _ -> int)) (Encode.int 23) |> toEqual 23);
+  test "string -> int" (fun () ->
+    expectFn (int |> andThen (fun _ -> int)) (Encode.string "test") |> toThrow);
+  test "null -> int" (fun () ->
+    expectFn (int |> andThen (fun _ -> int)) (Encode.null) |> toThrow);
+  test "array -> int" (fun () ->
+    expectFn (int |> andThen (fun _ -> int)) (Encode.array [||]) |> toThrow);
+  test "object -> int" (fun () ->
+    expectFn (int |> andThen (fun _ -> int)) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+
+  test "int -> int andThen float" (fun () ->
+    expect @@ (int |> andThen (fun _ -> float)) (Encode.int 23) |> toEqual 23.);
+  test "float -> int andThen float" (fun () ->
+    expectFn (int |> andThen (fun _ ->float)) (Encode.float 1.23) |> toThrow);
+  test "int -> float andThen int" (fun () ->
+    expect @@ (float |> andThen (fun _ -> int)) (Encode.int 23) |> toEqual 23);
+  test "float -> float andThen int" (fun () ->
+    expectFn (float |> andThen (fun _ -> int)) (Encode.float 1.23) |> toThrow);
+);
+
 describe "composite expressions" (fun () ->
   let open Json in
   let open! Decode in

@@ -267,10 +267,68 @@ val withDefault : 'a -> 'a decoder -> 'a decoder
   open Json
   let _ =
   (* prints [Ok 23] *)
-  Js.log \@\@ Js.Json.parseExn "23"" |> Decode.withDefault 0 int
+  Js.log \@\@ Js.Json.parseExn "23" |> Decode.withDefault 0 int
   (* prints [Ok 0] *)
   Js.log \@\@ Js.Json.parseExn "\"x\"" |> Decode.withDefault 0 int
   (* prints [Ok 0] *)
   Js.log \@\@ Js.Json.parseExn "null" |> Decode.withDefault 0 int
+]}
+*)
+
+val map : ('a -> 'b) -> 'a decoder -> 'b decoder
+(** Returns a decoder that maps the result of the given decoder if successful
+
+{b Returns} [Ok of 'b] if the given decoder succeeds, [Error of string] otherwise.
+@example {[
+  open Json
+  let _ =
+  (* prints [Ok 46] *)
+  Js.log \@\@ Js.Json.parseExn "23" |> Decode.map (fun x -> x * x) int
+]}
+*)
+
+val andThen : ('a -> 'b decoder) -> 'a decoder -> 'b decoder
+(** Returns a decoder that maps the result of the given decoder if successful
+
+{b Returns} [Ok of 'a] if the both decoders succeed, [Error of string] otherwise.
+@example {[
+  (* Deoce a JSON tree structure *)
+  type 'a tree =
+  | Node of 'a * 'a tree list
+  | Leaf of 'a
+
+  let decodeTree decodeValue =
+  |> Decode.(
+      field "type" string
+      |> andThen (fun
+      | "node" -> Node (field "value" decodeValue) (field "children" (array decodeTree |> map Array.to_list))
+      | "leaf" -> Leaf (field "value" decodeValue)
+      )
+    )
+
+  let json =
+    {| {
+      "type": "node",
+      "value": 9
+      "children": [{
+        "type": "leaf",
+        "value": 5,
+        "children": [{
+          "type": "leaf",
+          "value": 3
+        }, {
+          "type": "leaf",
+          "value": 2
+        }]
+      }, {
+          "type": "leaf",
+          "value": 4
+      }]
+    } |}
+
+  let myTree =
+    json
+    |> Js.Json.parseExn 
+    |> decodeTree int
 ]}
 *)

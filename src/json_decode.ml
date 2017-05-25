@@ -112,3 +112,9 @@ let withDefault default decode json =
   match decode json with
   | v -> v
   | exception _ -> default
+
+let map f decode json =
+  f (decode json)
+
+let andThen b a json=
+  b (a json) json
