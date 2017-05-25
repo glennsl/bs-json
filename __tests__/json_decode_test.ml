@@ -357,6 +357,72 @@ describe "optional" (fun () ->
       |> toThrow);
 );
 
+describe "oneOf" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "boolean" (fun () ->
+    expectFn (oneOf [int; field "x" int]) (Encode.boolean Js.true_) |> toThrow);
+  test "float" (fun () ->
+    expectFn (oneOf [int; field "x" int]) (Encode.float 1.23) |> toThrow);
+  test "int" (fun () ->
+    expect @@ (oneOf [int; field "x" int]) (Encode.int 23) |> toEqual 23);
+  test "string" (fun () ->
+    expectFn (oneOf [int; field "x" int]) (Encode.string "test") |> toThrow);
+  test "null" (fun () ->
+    expectFn (oneOf [int; field "x" int]) Encode.null |> toThrow);
+  test "array" (fun () ->
+    expectFn (oneOf [int; field "x" int]) (Encode.array [||]) |> toThrow);
+  test "object" (fun () ->
+    expectFn (oneOf [int; field "x" int]) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+
+  test "object with field" (fun () ->
+    expect @@ (oneOf [int; field "x" int]) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
+);
+
+describe "either" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "boolean" (fun () ->
+    expectFn (either int (field "x" int)) (Encode.boolean Js.true_) |> toThrow);
+  test "float" (fun () ->
+    expectFn (either int (field "x" int)) (Encode.float 1.23) |> toThrow);
+  test "int" (fun () ->
+    expect @@ (either int (field "x" int)) (Encode.int 23) |> toEqual 23);
+  test "string" (fun () ->
+    expectFn (either int (field "x" int)) (Encode.string "test") |> toThrow);
+  test "null" (fun () ->
+    expectFn (either int (field "x" int)) Encode.null |> toThrow);
+  test "array" (fun () ->
+    expectFn (either int (field "x" int)) (Encode.array [||]) |> toThrow);
+  test "object" (fun () ->
+    expectFn (either int (field "x" int)) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+
+  test "object with field" (fun () ->
+    expect @@ (either int (field "x" int)) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
+);
+
+describe "withDefault" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "boolean" (fun () ->
+    expect @@ (withDefault 0 int) (Encode.boolean Js.true_) |> toEqual 0);
+  test "float" (fun () ->
+    expect @@ (withDefault 0 int) (Encode.float 1.23) |> toEqual 0);
+  test "int" (fun () ->
+    expect @@ (withDefault 0 int) (Encode.int 23) |> toEqual 23);
+  test "string" (fun () ->
+    expect @@ (withDefault 0 int) (Encode.string "test") |> toEqual 0);
+  test "null" (fun () ->
+    expect @@ (withDefault 0 int) Encode.null |> toEqual 0);
+  test "array" (fun () ->
+    expect @@ (withDefault 0 int) (Encode.array [||]) |> toEqual 0);
+  test "object" (fun () ->
+    expect @@ (withDefault 0 int) (Encode.object_ @@ Js.Dict.empty ()) |> toEqual 0);
+);
+
 describe "composite expressions" (fun () ->
   let open Json in
   let open! Decode in

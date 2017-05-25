@@ -226,3 +226,51 @@ a composite decoder, and is useful to decode optional JSON object fields.
   Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "z" (optional int))
 ]}
 *)
+
+val oneOf : 'a decoder list -> 'a decoder
+(** Tries each [decoder] in order, retunring the result of the first that succeeds
+
+{b Returns} [Ok of 'a] if one of the decoders succeed, [Error of string] otherwise.
+@example {[
+  open Json
+  let _ =
+  (* prints [Ok 23] *)
+  Js.log \@\@ Js.Json.parseExn "23" |> Decode.(oneOf [int; field "x" int])
+  (* prints [Ok 42] *)
+  Js.log \@\@ Js.Json.parseExn {| { "x": 42 } |}  |> Decode.(oneOf [int; field "x" int])
+  (* prints [Error _] *)
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.(oneOf [int; field "x" int]
+]}
+*)
+
+val either : 'a decoder -> 'a decoder -> 'a decoder
+(** Tries each [decoder] in order, retunring the result of the first that succeeds
+
+{b Returns} [Ok of 'a] if one of the decoders succeed, [Error of string] otherwise.
+@example {[
+  open Json
+  let _ =
+  (* prints [Ok 23] *)
+  Js.log \@\@ Js.Json.parseExn "23" |> Decode.(either int (field "x" int))
+  (* prints [Ok 42] *)
+  Js.log \@\@ Js.Json.parseExn {| { "x": 42 } |}  |> Decode.(either int (field "x" int))
+  (* prints [Error _] *)
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.(either int (field "x" int))
+]}
+*)
+
+val withDefault : 'a -> 'a decoder -> 'a decoder
+(** Tries each [decoder] in order, retunring the result of the first that succeeds
+
+{b Returns} [Ok of 'a] if one of the decoders succeed, [Error of string] otherwise.
+@example {[
+  open Json
+  let _ =
+  (* prints [Ok 23] *)
+  Js.log \@\@ Js.Json.parseExn "23"" |> Decode.withDefault 0 int
+  (* prints [Ok 0] *)
+  Js.log \@\@ Js.Json.parseExn "\"x\"" |> Decode.withDefault 0 int
+  (* prints [Ok 0] *)
+  Js.log \@\@ Js.Json.parseExn "null" |> Decode.withDefault 0 int
+]}
+*)

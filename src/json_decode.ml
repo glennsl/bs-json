@@ -96,3 +96,19 @@ let optional decode json =
   match decode json with
   | exception Decode_error _ -> None
   | v -> Some v
+
+let rec oneOf decoders json =
+  match decoders with
+  | [] -> raise @@ Decode_error ("Expected oneOf " ^ string_of_int (List.length decoders) ^ ", got " ^ Js.Json.stringify json)
+  | decode :: rest ->
+    match decode json with
+    | v -> v
+    | exception _ -> oneOf rest json
+
+let either a b =
+  oneOf [a;b]
+
+let withDefault default decode json =
+  match decode json with
+  | v -> v
+  | exception _ -> default
