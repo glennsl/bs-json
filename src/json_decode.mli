@@ -208,7 +208,7 @@ and a value that is successfully decoded with the given decoder, [Error of strin
   Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "y" int)
   (* prints [Error ...] *)
   Js.log \@\@ Js.Json.parseExn "123" |> Decode.(field "x" int)
-  (* prints [Ok None] *)
+  (* prints [Error ...] *)
   Js.log \@\@ Js.Json.parseExn "null" |> Decode.(field "x" int)
 ]}
 *)
