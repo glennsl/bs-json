@@ -213,6 +213,21 @@ and a value that is successfully decoded with the given decoder, [Error of strin
 ]}
 *)
 
+val at : string -> string list -> 'a decoder -> 'a decoder
+(** Same as [field] but takes a top level field and a list of nested fields for decoding nested values.
+    
+{b Returns} [Ok of 'a] if the JSON value is a JSON object with the given field
+and a value that is successfully decoded with the given decoder, [Error of string] otherwise.
+@example {[
+  open Json
+  let _ =
+  (* prints [Ok 23] *)
+  Js.log \@\@ Js.Json.parseExn {| { "x": {"foo": 23}, "y": 42 } |} |> Decode.(at "x" ["foo"] int)
+  (* prints [Error ...] *)
+  Js.log \@\@ Js.Json.parseExn {| { "x": null, "y": "b" } |} |> Decode.(at "x" ["foo"] int)
+]}
+*)
+
 val optional : 'a decoder -> 'a option decoder
 (** Maps a decoder [result] to an option wrapped in an [Ok] result
     

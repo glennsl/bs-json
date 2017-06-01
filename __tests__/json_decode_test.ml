@@ -271,6 +271,22 @@ describe "field" (fun () ->
       |> toThrow);
 );
 
+describe "at" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  Test.throws (at "foo" ["bar"] int) [Bool; Float; Int; String; Null; Array; Object];
+
+  test "at boolean" (fun () ->
+    expect @@
+      at "a" ["x"; "y"] boolean (Js.Json.parseExn {| { "a": { "x" : { "y" : false } }, "b": false } |})
+      |> toEqual Js.false_);
+  test "field nullAs" (fun () ->
+    expect @@
+      at "a" ["x"] (nullAs Js.null) (Js.Json.parseExn {| { "a": { "x" : null }, "b": null } |})
+      |> toEqual Js.null);
+);
+
 describe "optional" (fun () ->
   let open Json in
   let open! Decode in
