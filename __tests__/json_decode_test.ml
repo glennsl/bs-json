@@ -1,6 +1,42 @@
 open Jest
 open Expect
 
+module Test = struct
+  type default_case = 
+    | Float
+    | Int
+    | String
+    | Null
+    | Array
+    | Object
+    | Bool
+  
+  (* TODO: tests for this function *)
+  let test decoder = 
+    let open Json in function
+    | Float -> test "float" (fun () ->
+        expectFn decoder (Encode.float 1.23) |> toThrow)
+    | Int -> test "int" (fun () ->
+      expectFn decoder (Encode.int 23) |> toThrow);
+    | String -> test "string" (fun () ->
+      expectFn decoder (Encode.string "test") |> toThrow);
+    | Null -> test "null" (fun () ->
+      expectFn decoder Encode.null |> toThrow);
+    | Array -> test "array" (fun () ->
+      expectFn decoder (Encode.array [||]) |> toThrow);
+    | Object -> test "object" (fun () ->
+      expectFn decoder (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+    | Bool -> test "boolean" (fun () ->
+      expectFn decoder (Encode.boolean Js.true_) |> toThrow);
+  ;;
+
+  let rec throws decoder = function
+    | [] -> ();
+    | default_case::t ->
+        test decoder default_case;
+        throws decoder t
+end
+
 let () = 
 
 describe "boolean" (fun () ->
@@ -9,121 +45,65 @@ describe "boolean" (fun () ->
 
   test "boolean" (fun () ->
     expect @@ boolean (Encode.boolean Js.true_) |> toEqual Js.true_);
-  test "float" (fun () ->
-    expectFn boolean (Encode.float 1.23) |> toThrow);
-  test "int" (fun () ->
-    expectFn boolean (Encode.int 23) |> toThrow);
-  test "string" (fun () ->
-    expectFn boolean (Encode.string "test") |> toThrow);
-  test "null" (fun () ->
-    expectFn boolean Encode.null |> toThrow);
-  test "array" (fun () ->
-    expectFn boolean (Encode.array [||]) |> toThrow);
-  test "object" (fun () ->
-    expectFn boolean (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+
+  Test.throws boolean [Float; Int; String; Null; Array; Object];
 );
 
 describe "bool" (fun () ->
   let open Json in
   let open Decode in
 
-  test "boolean" (fun () ->
+  test "bool" (fun () ->
     expect @@ bool (Encode.boolean Js.true_) |> toEqual true);
-  test "float" (fun () ->
-    expectFn bool (Encode.float 1.23) |> toThrow);
-  test "int" (fun () ->
-    expectFn bool (Encode.int 23) |> toThrow);
-  test "string" (fun () ->
-    expectFn bool (Encode.string "test") |> toThrow);
-  test "null" (fun () ->
-    expectFn bool Encode.null |> toThrow);
-  test "array" (fun () ->
-    expectFn bool (Encode.array [||]) |> toThrow);
-  test "object" (fun () ->
-    expectFn bool (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
-
-  test "boolean - false" (fun () ->
+  test "bool - false" (fun () ->
     expect @@ bool (Encode.boolean Js.false_) |> toEqual false);
+    
+  Test.throws bool [Float; Int; String; Null; Array; Object];
 );
 
 describe "float" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
-    expectFn float (Encode.boolean Js.true_) |> toThrow);
   test "float" (fun () ->
     expect @@ float (Encode.float 1.23) |> toEqual 1.23);
   test "int" (fun () ->
     expect @@ float (Encode.int 23) |> toEqual 23.);
-  test "string" (fun () ->
-    expectFn float (Encode.string "test") |> toThrow);
-  test "null" (fun () ->
-    expectFn float Encode.null |> toThrow);
-  test "array" (fun () ->
-    expectFn float (Encode.array [||]) |> toThrow);
-  test "object" (fun () ->
-    expectFn float (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+  
+  Test.throws float [Bool; String; Null; Array; Object;];
 );
 
 describe "int" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
-    expectFn int (Encode.boolean Js.true_) |> toThrow);
-  test "float" (fun () ->
-    expectFn int (Encode.float 1.23) |> toThrow);
   test "int" (fun () ->
     expect @@ int (Encode.int 23) |> toEqual 23);
-  test "string" (fun () ->
-    expectFn int (Encode.string "test") |> toThrow);
-  test "null" (fun () ->
-    expectFn int Encode.null |> toThrow);
-  test "array" (fun () ->
-    expectFn int (Encode.array [||]) |> toThrow);
-  test "object" (fun () ->
-    expectFn int (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+  
+  Test.throws int [Bool; Float; String; Null; Array; Object];
 );
 
 describe "string" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
-    expectFn string (Encode.boolean Js.true_) |> toThrow);
-  test "float" (fun () ->
-    expectFn string (Encode.float 1.23) |> toThrow);
-  test "int" (fun () ->
-    expectFn string (Encode.int 23) |> toThrow);
   test "string" (fun () ->
     expect @@ string (Encode.string "test") |> toEqual "test");
-  test "null" (fun () ->
-    expectFn string Encode.null |> toThrow);
-  test "array" (fun () ->
-    expectFn string (Encode.array [||]) |> toThrow);
-  test "object" (fun () ->
-    expectFn string (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+
+  Test.throws string [Bool; Float; Int; Null; Array; Object];
 );
 
 describe "nullable" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean -> int" (fun () ->
-    expectFn (nullable int) (Encode.boolean Js.true_) |> toThrow);
-  test "float -> int" (fun () ->
-    expectFn (nullable int) (Encode.float 1.23) |> toThrow);
+  Test.throws (nullable int) [Bool; Float; String; Array; Object];
+  Test.throws (nullable boolean) [Int];
+
   test "int -> int" (fun () ->
     expect @@ (nullable int) (Encode.int 23) |> toEqual (Js.Null.return 23));
-  test "string -> int" (fun () ->
-    expectFn (nullable int) (Encode.string "test") |> toThrow);
   test "null -> int" (fun () ->
     expect @@ (nullable int) Encode.null |> toEqual Js.null);
-  test "array -> int" (fun () ->
-    expectFn (nullable int) (Encode.array [||]) |> toThrow);
-  test "object -> int" (fun () ->
-    expectFn (nullable int) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
 
   test "boolean -> boolean " (fun () ->
     expect @@ nullable boolean (Encode.boolean Js.true_) |> toEqual (Js.Null.return Js.true_));
@@ -133,28 +113,16 @@ describe "nullable" (fun () ->
     expect @@ nullable string (Encode.string "test") |> toEqual (Js.Null.return "test"));
   test "null -> null" (fun () ->
     expect @@ nullable (nullAs Js.null) Encode.null |> toEqual Js.null);
-  test "int -> boolean" (fun () ->
-    expectFn (nullable boolean) (Encode.int 1) |> toThrow)
 );
 
 describe "nullAs" (fun () ->
   let open Json in
   let open Decode in
 
-  test "as 0 - boolean" (fun () ->
-    expectFn (nullAs 0) (Encode.boolean Js.true_) |> toThrow);
-  test "as 0 - float" (fun () ->
-    expectFn (nullAs 0) (Encode.float 1.23) |> toThrow);
-  test "as 0 - int" (fun () ->
-    expectFn (nullAs 0) (Encode.int 23) |> toThrow);
-  test "as 0 - string" (fun () ->
-    expectFn (nullAs 0) (Encode.string "test") |> toThrow);
+  Test.throws (nullAs 0) [Bool; Float; Int; String; Array; Object];
+
   test "as 0 - null" (fun () ->
     expect @@ (nullAs 0) Encode.null |> toEqual 0);
-  test "as 0 - array" (fun () ->
-    expectFn (nullAs 0) (Encode.array [||]) |> toThrow);
-  test "as 0 - object" (fun () ->
-    expectFn (nullAs 0) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
 
   test "as Js.null" (fun () ->
     expect (nullAs Js.null Encode.null) |> toEqual Js.null);
@@ -168,20 +136,10 @@ describe "array" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
-    expectFn (array int) (Encode.boolean Js.true_) |> toThrow);
-  test "float" (fun () ->
-    expectFn (array int) (Encode.float 1.23) |> toThrow);
-  test "int" (fun () ->
-    expectFn (array int) (Encode.int 23) |> toThrow);
-  test "string" (fun () ->
-    expectFn (array int) (Encode.string "test") |> toThrow);
-  test "null" (fun () ->
-    expectFn (array int) Encode.null |> toThrow);
+  Test.throws (array int) [Bool; Float; Int; String; Null; Object];
+
   test "array" (fun () ->
     expect @@ (array int) (Encode.array [||]) |> toEqual [||]);
-  test "object" (fun () ->
-    expectFn (array int) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
 
   test "array boolean" (fun () ->
     expect @@
@@ -213,20 +171,10 @@ describe "list" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
-    expectFn (list int) (Encode.boolean Js.true_) |> toThrow);
-  test "float" (fun () ->
-    expectFn (list int) (Encode.float 1.23) |> toThrow);
-  test "int" (fun () ->
-    expectFn (list int) (Encode.int 23) |> toThrow);
-  test "string" (fun () ->
-    expectFn (list int) (Encode.string "test") |> toThrow);
-  test "null" (fun () ->
-    expectFn (list int) Encode.null |> toThrow);
+  Test.throws (list int) [Bool; Float; Int; String; Null; Object];
+
   test "array" (fun () ->
     expect @@ (list int) (Encode.array [||]) |> toEqual []);
-  test "object" (fun () ->
-    expectFn (list int) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
 
   test "list boolean" (fun () ->
     expect @@
@@ -258,18 +206,8 @@ describe "dict" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
-    expectFn (dict int) (Encode.boolean Js.true_) |> toThrow);
-  test "float" (fun () ->
-    expectFn (dict int) (Encode.float 1.23) |> toThrow);
-  test "int" (fun () ->
-    expectFn (dict int) (Encode.int 23) |> toThrow);
-  test "string" (fun () ->
-    expectFn (dict int) (Encode.string "test") |> toThrow);
-  test "null" (fun () ->
-    expectFn (dict int) Encode.null |> toThrow);
-  test "array" (fun () ->
-    expectFn (dict int) (Encode.array [||]) |> toThrow);
+  Test.throws (dict int) [Bool; Float; Int; String; Null; Array];
+
   test "object" (fun () ->
     expect @@
       dict int (Encode.object_ @@ Js.Dict.empty ())
@@ -305,20 +243,7 @@ describe "field" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
-    expectFn (field "foo" int) (Encode.boolean Js.true_) |> toThrow);
-  test "float" (fun () ->
-    expectFn (field "foo" int) (Encode.float 1.23) |> toThrow);
-  test "int" (fun () ->
-    expectFn (field "foo" int) (Encode.int 23) |> toThrow);
-  test "string" (fun () ->
-    expectFn (field "foo" int) (Encode.string "test") |> toThrow);
-  test "null" (fun () ->
-    expectFn (field "foo" int) Encode.null |> toThrow);
-  test "array" (fun () ->
-    expectFn (field "foo" int) (Encode.array [||]) |> toThrow);
-  test "object" (fun () ->
-    expectFn (field "foo" int) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+  Test.throws (field "foo" int) [Bool; Float; Int; String; Null; Array; Object];
 
   test "field boolean" (fun () ->
     expect @@
@@ -406,20 +331,7 @@ describe "oneOf" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
-    expectFn (oneOf [int; field "x" int]) (Encode.boolean Js.true_) |> toThrow);
-  test "float" (fun () ->
-    expectFn (oneOf [int; field "x" int]) (Encode.float 1.23) |> toThrow);
-  test "int" (fun () ->
-    expect @@ (oneOf [int; field "x" int]) (Encode.int 23) |> toEqual 23);
-  test "string" (fun () ->
-    expectFn (oneOf [int; field "x" int]) (Encode.string "test") |> toThrow);
-  test "null" (fun () ->
-    expectFn (oneOf [int; field "x" int]) Encode.null |> toThrow);
-  test "array" (fun () ->
-    expectFn (oneOf [int; field "x" int]) (Encode.array [||]) |> toThrow);
-  test "object" (fun () ->
-    expectFn (oneOf [int; field "x" int]) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+  Test.throws (oneOf [int; field "x" int]) [Bool; Float; String; Null; Array; Object];
 
   test "object with field" (fun () ->
     expect @@ (oneOf [int; field "x" int]) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
@@ -429,20 +341,7 @@ describe "either" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
-    expectFn (either int (field "x" int)) (Encode.boolean Js.true_) |> toThrow);
-  test "float" (fun () ->
-    expectFn (either int (field "x" int)) (Encode.float 1.23) |> toThrow);
-  test "int" (fun () ->
-    expect @@ (either int (field "x" int)) (Encode.int 23) |> toEqual 23);
-  test "string" (fun () ->
-    expectFn (either int (field "x" int)) (Encode.string "test") |> toThrow);
-  test "null" (fun () ->
-    expectFn (either int (field "x" int)) Encode.null |> toThrow);
-  test "array" (fun () ->
-    expectFn (either int (field "x" int)) (Encode.array [||]) |> toThrow);
-  test "object" (fun () ->
-    expectFn (either int (field "x" int)) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+  Test.throws (either int (field "x" int)) [Bool; Float; String; Null; Array; Object];
 
   test "object with field" (fun () ->
     expect @@ (either int (field "x" int)) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
@@ -472,49 +371,27 @@ describe "map" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
-    expectFn (int |> map ((+)2)) (Encode.boolean Js.true_) |> toThrow);
-  test "float" (fun () ->
-    expectFn (int |> map ((+)2)) (Encode.float 1.23) |> toThrow);
+  Test.throws (int |> map ((+)2)) [Bool; Float; String; Null; Array; Object];
+
   test "int" (fun () ->
     expect @@ (int |> map ((+)2)) (Encode.int 23) |> toEqual 25);
-  test "string" (fun () ->
-    expectFn (int |> map ((+)2)) (Encode.string "test") |> toThrow);
-  test "null" (fun () ->
-    expectFn (int |> map ((+)2)) (Encode.null) |> toThrow);
-  test "array" (fun () ->
-    expectFn (int |> map ((+)2)) (Encode.array [||]) |> toThrow);
-  test "object" (fun () ->
-    expectFn (int |> map ((+)2)) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
 );
 
 describe "andThen" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean -> int" (fun () ->
-    expectFn (int |> andThen (fun _ -> int)) (Encode.boolean Js.true_) |> toThrow);
-  test "float -> int" (fun () ->
-    expectFn (int |> andThen (fun _ -> int)) (Encode.float 1.23) |> toThrow);
+  Test.throws (int |> andThen (fun _ -> int)) [Bool; Float; String; Null; Array; Object];
+  Test.throws (float |> andThen (fun _ -> int)) [Float];
+  Test.throws (int |> andThen (fun _ ->float)) [Float];
+
   test "int -> int" (fun () ->
     expect @@ (int |> andThen (fun _ -> int)) (Encode.int 23) |> toEqual 23);
-  test "string -> int" (fun () ->
-    expectFn (int |> andThen (fun _ -> int)) (Encode.string "test") |> toThrow);
-  test "null -> int" (fun () ->
-    expectFn (int |> andThen (fun _ -> int)) (Encode.null) |> toThrow);
-  test "array -> int" (fun () ->
-    expectFn (int |> andThen (fun _ -> int)) (Encode.array [||]) |> toThrow);
-  test "object -> int" (fun () ->
-    expectFn (int |> andThen (fun _ -> int)) (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
 
   test "int -> int andThen float" (fun () ->
     expect @@ (int |> andThen (fun _ -> float)) (Encode.int 23) |> toEqual 23.);
-  test "float -> int andThen float" (fun () ->
-    expectFn (int |> andThen (fun _ ->float)) (Encode.float 1.23) |> toThrow);
   test "int -> float andThen int" (fun () ->
     expect @@ (float |> andThen (fun _ -> int)) (Encode.int 23) |> toEqual 23);
-  test "float -> float andThen int" (fun () ->
-    expectFn (float |> andThen (fun _ -> int)) (Encode.float 1.23) |> toThrow);
 );
 
 describe "composite expressions" (fun () ->
