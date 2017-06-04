@@ -213,7 +213,7 @@ and a value that is successfully decoded with the given decoder, [Error of strin
 ]}
 *)
 
-val at : string -> string list -> 'a decoder -> 'a decoder
+val at : string list -> 'a decoder -> 'a decoder
 (** Same as [field] but takes a top level field and a list of nested fields for decoding nested values.
     
 {b Returns} [Ok of 'a] if the JSON value is a JSON object with the given field
