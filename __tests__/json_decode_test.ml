@@ -12,29 +12,29 @@ module Test = struct
     | Bool
   
   (* TODO: tests for this function *)
-  let test decoder = 
+  let test decoder prefix = 
     let open Json in function
-    | Float -> test "float" (fun () ->
+    | Float -> test (prefix ^ "float") (fun () ->
         expectFn decoder (Encode.float 1.23) |> toThrow)
-    | Int -> test "int" (fun () ->
+    | Int -> test (prefix ^ "int") (fun () ->
       expectFn decoder (Encode.int 23) |> toThrow);
-    | String -> test "string" (fun () ->
+    | String -> test (prefix ^ "string") (fun () ->
       expectFn decoder (Encode.string "test") |> toThrow);
-    | Null -> test "null" (fun () ->
+    | Null -> test (prefix ^ "null") (fun () ->
       expectFn decoder Encode.null |> toThrow);
-    | Array -> test "array" (fun () ->
+    | Array -> test (prefix ^ "array") (fun () ->
       expectFn decoder (Encode.array [||]) |> toThrow);
-    | Object -> test "object" (fun () ->
+    | Object -> test (prefix ^ "object") (fun () ->
       expectFn decoder (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
-    | Bool -> test "boolean" (fun () ->
+    | Bool -> test (prefix ^ "boolean") (fun () ->
       expectFn decoder (Encode.boolean Js.true_) |> toThrow);
   ;;
 
-  let rec throws decoder = function
+  let rec throws ?(prefix = "") decoder = function
     | [] -> ();
-    | default_case::t ->
-        test decoder default_case;
-        throws decoder t
+    | first::rest ->
+        test decoder prefix first;
+        throws decoder ~prefix rest 
 end
 
 let () = 
@@ -97,9 +97,6 @@ describe "nullable" (fun () ->
   let open Json in
   let open! Decode in
 
-  Test.throws (nullable int) [Bool; Float; String; Array; Object];
-  Test.throws (nullable boolean) [Int];
-
   test "int -> int" (fun () ->
     expect @@ (nullable int) (Encode.int 23) |> toEqual (Js.Null.return 23));
   test "null -> int" (fun () ->
@@ -113,13 +110,14 @@ describe "nullable" (fun () ->
     expect @@ nullable string (Encode.string "test") |> toEqual (Js.Null.return "test"));
   test "null -> null" (fun () ->
     expect @@ nullable (nullAs Js.null) Encode.null |> toEqual Js.null);
+
+  Test.throws (nullable int) [Bool; Float; String; Array; Object];
+  Test.throws (nullable boolean) [Int];
 );
 
 describe "nullAs" (fun () ->
   let open Json in
   let open Decode in
-
-  Test.throws (nullAs 0) [Bool; Float; Int; String; Array; Object];
 
   test "as 0 - null" (fun () ->
     expect @@ (nullAs 0) Encode.null |> toEqual 0);
@@ -129,14 +127,14 @@ describe "nullAs" (fun () ->
   test "as None" (fun () ->
     expect (nullAs None Encode.null) |> toEqual None);
   test "as Some _" (fun () ->
-    expect (nullAs (Some "foo") Encode.null) |> toEqual (Some "foo"))
+    expect (nullAs (Some "foo") Encode.null) |> toEqual (Some "foo"));
+
+  Test.throws (nullAs 0) [Bool; Float; Int; String; Array; Object];
 );
 
 describe "array" (fun () ->
   let open Json in
   let open! Decode in
-
-  Test.throws (array int) [Bool; Float; Int; String; Null; Object];
 
   test "array" (fun () ->
     expect @@ (array int) (Encode.array [||]) |> toEqual [||]);
@@ -165,13 +163,13 @@ describe "array" (fun () ->
     expectFn
       (array boolean) (Js.Json.parseExn {| [1, 2, 3] |})
       |> toThrow);
+
+  Test.throws (array int) [Bool; Float; Int; String; Null; Object];
 );
 
 describe "list" (fun () ->
   let open Json in
   let open! Decode in
-
-  Test.throws (list int) [Bool; Float; Int; String; Null; Object];
 
   test "array" (fun () ->
     expect @@ (list int) (Encode.array [||]) |> toEqual []);
@@ -200,13 +198,13 @@ describe "list" (fun () ->
     expectFn
       (list boolean) (Js.Json.parseExn {| [1, 2, 3] |})
       |> toThrow);
+
+  Test.throws (list int) [Bool; Float; Int; String; Null; Object];
 );
 
 describe "dict" (fun () ->
   let open Json in
   let open! Decode in
-
-  Test.throws (dict int) [Bool; Float; Int; String; Null; Array];
 
   test "object" (fun () ->
     expect @@
@@ -237,13 +235,13 @@ describe "dict" (fun () ->
     expectFn
       (dict string) (Js.Json.parseExn {| { "a": null, "b": null } |})
       |> toThrow);
+
+  Test.throws (dict int) [Bool; Float; Int; String; Null; Array];
 );
 
 describe "field" (fun () ->
   let open Json in
   let open! Decode in
-
-  Test.throws (field "foo" int) [Bool; Float; Int; String; Null; Array; Object];
 
   test "field boolean" (fun () ->
     expect @@
@@ -269,22 +267,24 @@ describe "field" (fun () ->
     expectFn
       (field "b" string) (Js.Json.parseExn {| { "a": null, "b": null } |})
       |> toThrow);
+
+  Test.throws (field "foo" int) [Bool; Float; Int; String; Null; Array; Object];
 );
 
 describe "at" (fun () ->
   let open Json in
   let open! Decode in
 
-  Test.throws (at "foo" ["bar"] int) [Bool; Float; Int; String; Null; Array; Object];
-
   test "at boolean" (fun () ->
     expect @@
-      at "a" ["x"; "y"] boolean (Js.Json.parseExn {| { "a": { "x" : { "y" : false } }, "b": false } |})
+      at ["a"; "x"; "y"] boolean (Js.Json.parseExn {| { "a": { "x" : { "y" : false } }, "b": false } |})
       |> toEqual Js.false_);
   test "field nullAs" (fun () ->
     expect @@
-      at "a" ["x"] (nullAs Js.null) (Js.Json.parseExn {| { "a": { "x" : null }, "b": null } |})
+      at ["a"; "x"] (nullAs Js.null) (Js.Json.parseExn {| { "a": { "x" : null }, "b": null } |})
       |> toEqual Js.null);
+
+  Test.throws (at ["foo"; "bar"] int) [Bool; Float; Int; String; Null; Array; Object];
 );
 
 describe "optional" (fun () ->
@@ -347,20 +347,24 @@ describe "oneOf" (fun () ->
   let open Json in
   let open! Decode in
 
-  Test.throws (oneOf [int; field "x" int]) [Bool; Float; String; Null; Array; Object];
-
   test "object with field" (fun () ->
     expect @@ (oneOf [int; field "x" int]) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
+  test "int" (fun () ->
+    expect @@ (oneOf [int; field "x" int]) (Encode.int 23) |> toEqual 23);
+
+  Test.throws (oneOf [int; field "x" int]) [Bool; Float; String; Null; Array; Object];
 );
 
 describe "either" (fun () ->
   let open Json in
   let open! Decode in
 
-  Test.throws (either int (field "x" int)) [Bool; Float; String; Null; Array; Object];
-
   test "object with field" (fun () ->
     expect @@ (either int (field "x" int)) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
+  test "int" (fun () ->
+    expect @@ (either int (field "x" int)) (Encode.int 23) |> toEqual 23);
+
+  Test.throws (either int (field "x" int)) [Bool; Float; String; Null; Array; Object];
 );
 
 describe "withDefault" (fun () ->
@@ -387,19 +391,15 @@ describe "map" (fun () ->
   let open Json in
   let open! Decode in
 
-  Test.throws (int |> map ((+)2)) [Bool; Float; String; Null; Array; Object];
-
   test "int" (fun () ->
     expect @@ (int |> map ((+)2)) (Encode.int 23) |> toEqual 25);
+
+  Test.throws (int |> map ((+)2)) [Bool; Float; String; Null; Array; Object];
 );
 
 describe "andThen" (fun () ->
   let open Json in
   let open! Decode in
-
-  Test.throws (int |> andThen (fun _ -> int)) [Bool; Float; String; Null; Array; Object];
-  Test.throws (float |> andThen (fun _ -> int)) [Float];
-  Test.throws (int |> andThen (fun _ ->float)) [Float];
 
   test "int -> int" (fun () ->
     expect @@ (int |> andThen (fun _ -> int)) (Encode.int 23) |> toEqual 23);
@@ -408,6 +408,10 @@ describe "andThen" (fun () ->
     expect @@ (int |> andThen (fun _ -> float)) (Encode.int 23) |> toEqual 23.);
   test "int -> float andThen int" (fun () ->
     expect @@ (float |> andThen (fun _ -> int)) (Encode.int 23) |> toEqual 23);
+
+  Test.throws (int |> andThen (fun _ -> int)) [Bool; Float; String; Null; Array; Object];
+  Test.throws (float |> andThen (fun _ -> int)) [Float];
+  Test.throws ~prefix:"int to " (int |> andThen (fun _ -> float)) [Float];
 );
 
 describe "composite expressions" (fun () ->
