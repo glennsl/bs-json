@@ -208,8 +208,23 @@ and a value that is successfully decoded with the given decoder, [Error of strin
   Js.log \@\@ Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "y" int)
   (* prints [Error ...] *)
   Js.log \@\@ Js.Json.parseExn "123" |> Decode.(field "x" int)
-  (* prints [Ok None] *)
+  (* prints [Error ...] *)
   Js.log \@\@ Js.Json.parseExn "null" |> Decode.(field "x" int)
+]}
+*)
+
+val at : string list -> 'a decoder -> 'a decoder
+(** Same as [field] but takes a top level field and a list of nested fields for decoding nested values.
+    
+{b Returns} [Ok of 'a] if the JSON value is a JSON object with the given field
+and a value that is successfully decoded with the given decoder, [Error of string] otherwise.
+@example {[
+  open Json
+  let _ =
+  (* prints [Ok 23] *)
+  Js.log \@\@ Js.Json.parseExn {| { "x": {"foo": 23}, "y": 42 } |} |> Decode.(at "x" ["foo"] int)
+  (* prints [Error ...] *)
+  Js.log \@\@ Js.Json.parseExn {| { "x": null, "y": "b" } |} |> Decode.(at "x" ["foo"] int)
 ]}
 *)
 

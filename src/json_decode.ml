@@ -95,6 +95,12 @@ let field key decode json =
   else
     raise @@ Decode_error ("Expected object, got " ^ Js.Json.stringify json)
 
+let rec at key_path decoder =
+    match key_path with 
+      | [key] -> field key decoder
+      | first::rest -> field first (at rest decoder) 
+      | [] -> raise @@ Invalid_argument ("Expected key_path to contain at least one element")
+
 let optional decode json =
   match decode json with
   | exception Decode_error _ -> None
