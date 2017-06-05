@@ -277,11 +277,17 @@ describe "at" (fun () ->
 
   test "at boolean" (fun () ->
     expect @@
-      at ["a"; "x"; "y"] boolean (Js.Json.parseExn {| { "a": { "x" : { "y" : false } }, "b": false } |})
+      at ["a"; "x"; "y"] boolean (Js.Json.parseExn {| {
+        "a": { "x" : { "y" : false } }, 
+        "b": false 
+      } |})
       |> toEqual Js.false_);
   test "field nullAs" (fun () ->
     expect @@
-      at ["a"; "x"] (nullAs Js.null) (Js.Json.parseExn {| { "a": { "x" : null }, "b": null } |})
+      at ["a"; "x"] (nullAs Js.null) (Js.Json.parseExn {| {
+        "a": { "x" : null }, 
+        "b": null 
+      } |})
       |> toEqual Js.null);
 
   Test.throws (at ["foo"; "bar"] int) [Bool; Float; Int; String; Null; Array; Object];
@@ -409,8 +415,8 @@ describe "andThen" (fun () ->
   test "int -> float andThen int" (fun () ->
     expect @@ (float |> andThen (fun _ -> int)) (Encode.int 23) |> toEqual 23);
 
-  Test.throws (int |> andThen (fun _ -> int)) [Bool; Float; String; Null; Array; Object];
-  Test.throws (float |> andThen (fun _ -> int)) [Float];
+  Test.throws ~prefix:"int andThen int " (int |> andThen (fun _ -> int)) [Bool; Float; String; Null; Array; Object];
+  Test.throws ~prefix:"float andThen int " (float |> andThen (fun _ -> int)) [Float];
   Test.throws ~prefix:"int to " (int |> andThen (fun _ -> float)) [Float];
 );
 
