@@ -4,20 +4,6 @@ Experimental JSON encode/decode library for BuckleScript.
 
 The Decode module in particular provides a basic set of decoder functions to be composed into more complex decoders. A decoder is a function that takes a `Js.Json.t` and either returns a value of the desired type if successful or raises a `Decode_error` exception if not. Other functions accept a decoder and produce another decoder. Like `array`, which when given a decoder for type `t` will return a decoder that tries to produce a value of type `t array`. So to decode an `int array` you combine `Json.Decode.int` with `Json.Decode.array` into `Json.Decode.(array int)`. An array of arrays of ints? `Json.Deocde.(array (array int))`. Dict containing arrays of ints? `Json.Decode.(dict (array int))`.
 
-## Installation
-
-```sh
-npm install --save buckletypes/bs-json
-```
-
-Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
-```js
-{
-  ...
-  "bs-dependencies": ["bs-json"]
-}
-```
-
 ## Example
 
 ```ml
@@ -93,3 +79,17 @@ let line = data |> Js.Json.parseExn
 ```
 
 See [examples](https://github.com/BuckleTypes/bs-json/blob/master/examples/) for more.
+
+## Installation
+
+```sh
+npm install --save buckletypes/bs-json
+```
+
+Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
+```js
+{
+  ...
+  "bs-dependencies": ["bs-json"]
+}
+```
