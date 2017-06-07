@@ -21,6 +21,7 @@ Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
 ## Example
 
 ```ml
+(* OCaml *)
 type line = {
   start: point;
   end_: point;
@@ -53,6 +54,42 @@ let data = {| {
 
 let line = data |> Js.Json.parseExn
                 |> Decode.line
+```
+
+```reason
+/* Reason */
+type line = {
+  start: point,
+  end_: point,
+  thickness: option int
+}
+and point = {
+  x: float,
+  y: float
+};
+
+module Decode = {
+  let point json =>
+    Json.Decode.{
+      x: json |> field "x" float,
+      y: json |> field "y" float
+    };
+  
+  let line json =>
+    Json.Decode.{
+      start:     json |> field "start" point,
+      end_:      json |> field "end" point,
+      thickness: json |> optional (field "thickness" int)
+    };
+};
+
+let data = {| {
+  "start": { "x": 1.1, "y": -0.4 },
+  "end":   { "x": 5.3, "y": 3.8 }
+} |};
+
+let line = data |> Js.Json.parseExn
+                |> Decode.line;
 ```
 
 See [examples](https://github.com/BuckleTypes/bs-json/blob/master/examples/) for more.
