@@ -83,7 +83,7 @@ See [examples](https://github.com/BuckleTypes/bs-json/blob/master/examples/) for
 ## Installation
 
 ```sh
-npm install --save buckletypes/bs-json
+npm install --save bs-json
 ```
 
 Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
