@@ -13,6 +13,8 @@ third-party libraries.
 type 'a decoder = Js.Json.t -> 'a
 (** The type of a decoder combinator *)
 
+exception Decode_error of string
+
 val boolean : Js.boolean decoder
 (** Decodes a JSON value into a [Js.boolean]
     
