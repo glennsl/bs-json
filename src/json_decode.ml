@@ -3,13 +3,13 @@ external unsafeCreateUninitializedArray : int -> 'a array = "Array" [@@bs.new]
 
 type 'a decoder = Js.Json.t -> 'a
 
-exception Decode_error of string
+exception DecodeError of string
 
 let boolean json = 
   if Js.typeof json = "boolean" then
     (Obj.magic (json : Js.Json.t) : Js.boolean)
   else
-    raise @@ Decode_error ("Expected boolean, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected boolean, got " ^ Js.Json.stringify json)
 
 let bool json = 
   boolean json |> Js.to_bool
@@ -18,20 +18,20 @@ let float json =
   if Js.typeof json = "number" then
     (Obj.magic (json : Js.Json.t) : float)
   else
-    raise @@ Decode_error ("Expected number, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected number, got " ^ Js.Json.stringify json)
 
 let int json = 
   let f = float json in
   if isInteger f then
     (Obj.magic (f : float) : int)
   else
-    raise @@ Decode_error ("Expected integer, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected integer, got " ^ Js.Json.stringify json)
 
 let string json = 
   if Js.typeof json = "string" then
     (Obj.magic (json : Js.Json.t) : string)
   else
-    raise @@ Decode_error ("Expected string, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected string, got " ^ Js.Json.stringify json)
 
 let nullable decode json =
   if (Obj.magic json : 'a Js.null) == Js.null then
@@ -44,7 +44,7 @@ let nullAs value json =
   if (Obj.magic json : 'a Js.null) == Js.null then
     value
   else 
-    raise @@ Decode_error ("Expected null, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected null, got " ^ Js.Json.stringify json)
 
 let array decode json = 
   if Js.Array.isArray json then begin
@@ -58,7 +58,7 @@ let array decode json =
     target
   end
   else
-    raise @@ Decode_error ("Expected array, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
 
 let list decode json =
   json |> array decode |> Array.to_list
@@ -80,7 +80,7 @@ let dict decode json =
     target
   end
   else
-    raise @@ Decode_error ("Expected object, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected object, got " ^ Js.Json.stringify json)
 
 let field key decode json =
   if Js.typeof json = "object" && 
@@ -90,10 +90,10 @@ let field key decode json =
     let dict = (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
     match Js.Dict.get dict key with
     | Some value -> decode value
-    | None -> raise @@ Decode_error ("Expected field '" ^ key ^ "'")
+    | None -> raise @@ DecodeError ("Expected field '" ^ key ^ "'")
   end
   else
-    raise @@ Decode_error ("Expected object, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected object, got " ^ Js.Json.stringify json)
 
 let rec at key_path decoder =
     match key_path with 
@@ -103,12 +103,12 @@ let rec at key_path decoder =
 
 let optional decode json =
   match decode json with
-  | exception Decode_error _ -> None
+  | exception DecodeError _ -> None
   | v -> Some v
 
 let rec oneOf decoders json =
   match decoders with
-  | [] -> raise @@ Decode_error ("Expected oneOf " ^ string_of_int (List.length decoders) ^ ", got " ^ Js.Json.stringify json)
+  | [] -> raise @@ DecodeError ("Expected oneOf " ^ string_of_int (List.length decoders) ^ ", got " ^ Js.Json.stringify json)
   | decode :: rest ->
     match decode json with
     | v -> v

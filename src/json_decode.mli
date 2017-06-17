@@ -1,7 +1,7 @@
 (** Provides a set of low level combinator primitives to decode Js.Json.t data
 structures
 A decoder combinator will return the decoded value if successful, or raise a 
-[Decode_error of string] if unsuccessful, where the string argument contains the
+[DecodeError of string] if unsuccessful, where the string argument contains the
 error message.
 Decoders are designed to be combined to produce more complex decoders that can
 decode arbitrary data structures, though the emphasis for this library is for
@@ -13,14 +13,14 @@ third-party libraries.
 type 'a decoder = Js.Json.t -> 'a
 (** The type of a decoder combinator *)
 
-exception Decode_error of string
+exception DecodeError of string
 
 val boolean : Js.boolean decoder
 (** Decodes a JSON value into a [Js.boolean]
     
 {b Returns} a [Js.boolean] if the JSON value is a number.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
@@ -28,9 +28,9 @@ val boolean : Js.boolean decoder
   let _ = Js.Json.parseExn "true" |> Decode.boolean
   (* returns Js.false_ *)
   let _ = Js.Json.parseExn "false" |> Decode.boolean
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "123" |> Decode.boolean
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "null" |> Decode.boolean
 ]}
 *)
@@ -40,7 +40,7 @@ val bool : bool decoder
     
 {b Returns} a [bool] if the JSON value is a number.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
@@ -48,9 +48,9 @@ val bool : bool decoder
   let _ = Js.Json.parseExn "true" |> Decode.bool
   (* returns false *)
   let _ = Js.Json.parseExn "false" |> Decode.bool
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "123" |> Decode.bool
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "null" |> Decode.bool
 ]}
 *)
@@ -60,7 +60,7 @@ val float : float decoder
     
 {b Returns} a [float] if the JSON value is a number.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
@@ -68,9 +68,9 @@ val float : float decoder
   let _ = Js.Json.parseExn "1.23" |> Decode.float
   (* returns 23. *)
   let _ = Js.Json.parseExn "23" |> Decode.float
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "true" |> Decode.float
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "null" |> Decode.float
 ]}
 *)
@@ -80,17 +80,17 @@ val int : int decoder
     
 {b Returns} an [int] if the JSON value is a number.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
   (* returns 23 *)
   let _ = Js.Json.parseExn "23" |> Decode.int
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "1.23" |> Decode.int
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "true" |> Decode.int
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "null" |> Decode.int
 ]}
 *)
@@ -100,15 +100,15 @@ val string : string decoder
     
 {b Returns} a [string] if the JSON value is a number.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
   (* returns "foo" *)
   let _ = Js.Json.parseExn "\"foo\"" |> Decode.string
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "1.23" |> Decode.string
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "null" |> Decode.string
 ]}
 *)
@@ -119,13 +119,13 @@ val nullable : 'a decoder -> 'a Js.null decoder
 {b Returns} [Js.null] if the JSON value is [null], or an ['a Js.null] if the
 given decoder succeeds,
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
   (* returns (Js.Null.return 23) *)
   let _ = Js.Json.parseExn "23" |> Decode.(nullable int)
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "1.23" |> Decode.(nullable int)
   (* returns Js.null *)
   let _ = Js.Json.parseExn "null" |> Decode.(nullable int)
@@ -137,11 +137,11 @@ val nullAs : 'a -> 'a decoder
     
 {b Returns} an ['a] if the JSON value is [null].
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "\"x\"" |> Decode.nullAs "x"
   (* returns "x" *)
   let _ = Js.Json.parseExn "null" |> Decode.nullAs "x"
@@ -156,15 +156,15 @@ val array : 'a decoder -> 'a array decoder
 {b Returns} an ['a array] if the JSON value is a JSON array and all its
 elements are successfully decoded.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
   (* returns [| 1; 2; 3 |] *)
   let _ = Js.Json.parseExn "[1, 2, 3]" |> Decode.(array int)
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "[1, 2, "c"]" |> Decode.(array int)
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "123" |> Decode.(array int)
   (* returns None *)
   let _ = Js.Json.parseExn "null" |> Decode.(array int)
@@ -177,15 +177,15 @@ val list : 'a decoder -> 'a list decoder
 {b Returns} an ['a list] if the JSON value is a JSON array and all its
 elements are successfully decoded.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
   (* returns [1; 2; 3] *)
   let _ = Js.Json.parseExn "[1, 2, 3]" |> Decode.(list int)
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "[1, 2, "c"]" |> Decode.(list int)
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "123" |> Decode.(list int)
   (* returns None *)
   let _ = Js.Json.parseExn "null" |> Decode.(list int)
@@ -198,15 +198,15 @@ val dict : 'a decoder -> 'a Js.Dict.t decoder
 {b Returns} an ['a Js.Dict.t] if the JSON value is a JSON object and all its
 values are successfully decoded.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
   (* returns (Js.Dict.fromList [("x", 23); ("y", 42)]) *)
   let _ = Js.Json.parseExn {| { "x": 23, "y": 42 } |} |> Decode.(dict int)
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(dict int)
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "123" |> Decode.(dict int)
   (* returns None *)
   let _ = Js.Json.parseExn "null" |> Decode.(dict int)
@@ -219,7 +219,7 @@ val field : string -> 'a decoder -> 'a decoder
 {b Returns} an ['a] if the JSON value is a JSON object with the given field
 and a value that is successfully decoded with the given decoder.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
@@ -227,11 +227,11 @@ and a value that is successfully decoded with the given decoder.
   let _ = Js.Json.parseExn {| { "x": 23, "y": 42 } |} |> Decode.(field "x" int)
   (* returns 23 *)
   let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "x" int)
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "y" int)
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "123" |> Decode.(field "x" int)
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "null" |> Decode.(field "x" int)
 ]}
 *)
@@ -242,13 +242,13 @@ val at : string list -> 'a decoder -> 'a decoder
 {b Returns} an ['a] if the JSON value is a JSON object with the given field
 and a value that is successfully decoded with the given decoder.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
   (* returns 23 *)
   let _ = Js.Json.parseExn {| { "x": {"foo": 23}, "y": 42 } |} |> Decode.(at "x" ["foo"] int)
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn {| { "x": null, "y": "b" } |} |> Decode.(at "x" ["foo"] int)
 ]}
 *)
@@ -259,8 +259,8 @@ val optional : 'a decoder -> 'a option decoder
 {b Returns} [Some of 'a] if the given decoder is successful, [None] if
 it is not.
 
-This decoder will never raise a [Decode_error]. Its purpose is to catch and
-transform [Decode_error]'s of a given decoder into [None]s by mapping its
+This decoder will never raise a [DecodeError]. Its purpose is to catch and
+transform [DecodeError]'s of a given decoder into [None]s by mapping its
 [result] into an [option]. This prevents a decoder error from terminating
 a composite decoder, and is useful to decode optional JSON object fields.
 
@@ -282,7 +282,7 @@ a composite decoder, and is useful to decode optional JSON object fields.
   let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "x" (optional int))
   (* returns None *)
   let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "y" (optional int))
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "z" (optional int))
 ]}
 *)
@@ -292,7 +292,7 @@ val oneOf : 'a decoder list -> 'a decoder
 
 {b Returns} an ['a] if one of the decoders succeed.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
@@ -300,7 +300,7 @@ val oneOf : 'a decoder list -> 'a decoder
   let _ = Js.Json.parseExn "23" |> Decode.(oneOf [int; field "x" int])
   (* returns 42 *)
   let _ = Js.Json.parseExn {| { "x": 42 } |}  |> Decode.(oneOf [int; field "x" int])
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "null" |> Decode.(oneOf [int; field "x" int]
 ]}
 *)
@@ -310,7 +310,7 @@ val either : 'a decoder -> 'a decoder -> 'a decoder
 
 {b Returns} an ['a] if one of the decoders succeed.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
@@ -318,7 +318,7 @@ val either : 'a decoder -> 'a decoder -> 'a decoder
   let _ = Js.Json.parseExn "23" |> Decode.(either int (field "x" int))
   (* returns 42 *)
   let _ = Js.Json.parseExn {| { "x": 42 } |}  |> Decode.(either int (field "x" int))
-  (* raises Decode_error *)
+  (* raises DecodeError *)
   let _ = Js.Json.parseExn "null" |> Decode.(either int (field "x" int))
 ]}
 *)
@@ -328,7 +328,7 @@ val withDefault : 'a -> 'a decoder -> 'a decoder
 
 {b Returns} an ['a] if one of the decoders succeed.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
@@ -346,7 +346,7 @@ val map : ('a -> 'b) -> 'a decoder -> 'b decoder
 
 {b Returns} a ['b] if the given decoder succeeds.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   open Json
@@ -360,7 +360,7 @@ val andThen : ('a -> 'b decoder) -> 'a decoder -> 'b decoder
 
 {b Returns} an ['a] if both decoders succeed.
 
-@raise [Decode_error] if unsuccessful 
+@raise [DecodeError] if unsuccessful 
 
 @example {[
   (* Deoce a JSON tree structure *)
