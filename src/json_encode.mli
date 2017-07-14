@@ -15,8 +15,11 @@ external int : int -> Js.Json.t = "%identity"
 external boolean : Js.boolean -> Js.Json.t = "%identity" 
 (** [boolean b] makes a JSON boolean of the [Js.boolean] [b] *)
 
-external object_ : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
-(** [object_ dict] makes a JSON objet of the [Js.Dict.t] [dict] *)
+external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
+(** [dict d] makes a JSON objet of the [Js.Dict.t] [d] *)
+
+val object_ : (string * Js.Json.t) list -> Js.Json.t
+(** [object_ props] makes a JSON objet of the [props] list of properties *)
 
 external array : Js.Json.t array -> Js.Json.t = "%identity"
 (** [array a] makes a JSON array of the [Js.Json.t array] [a] *)

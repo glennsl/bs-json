@@ -19,13 +19,19 @@ test "int" (fun () ->
 test "boolean" (fun () ->
   expect @@ boolean Js.true_ |> toEqual @@ Obj.magic Js.true_);
 
-test "object_ - empty" (fun () ->
-  expect @@ object_ @@ Js.Dict.empty () |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
+test "dict - empty" (fun () ->
+  expect @@ dict @@ Js.Dict.empty () |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
 
-test "object_ - simple" (fun () ->
+test "dict - simple" (fun () ->
   let o = Js.Dict.empty () in
   Js.Dict.set o "x" (int 42);
-  expect @@ object_ o |> toEqual @@ Obj.magic o);
+  expect @@ dict o |> toEqual @@ Obj.magic o);
+
+test "object_ - empty" (fun () ->
+  expect @@ object_ @@ [] |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
+
+test "object_ - simple" (fun () ->
+  expect @@ object_ [("x", int 42)] |> toEqual @@ Obj.magic (Js.Dict.fromList [("x", 42)]));
 
 test "array int" (fun () ->
   expect @@ array ([|1;2;3|] |> Array.map int) |> toEqual @@ Obj.magic [|1;2;3|]);

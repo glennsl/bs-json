@@ -5,7 +5,7 @@ let mapJsonObjectString f decoder (encoder: int -> Js.Json.t) str =
   Json.Decode.(dict decoder json)
     |> Js.Dict.map ((fun v -> f v) [@bs])
     |> Js.Dict.map ((fun v -> encoder v) [@bs])
-    |> Json.Encode.object_
+    |> Json.Encode.dict
     |> Js.Json.stringify
 
 let sum =

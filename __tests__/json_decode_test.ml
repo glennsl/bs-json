@@ -25,7 +25,7 @@ module Test = struct
     | Array -> test (prefix ^ "array") (fun () ->
       expectFn decoder (Encode.array [||]) |> toThrow);
     | Object -> test (prefix ^ "object") (fun () ->
-      expectFn decoder (Encode.object_ @@ Js.Dict.empty ()) |> toThrow);
+      expectFn decoder (Encode.object_ []) |> toThrow);
     | Bool -> test (prefix ^ "boolean") (fun () ->
       expectFn decoder (Encode.boolean Js.true_) |> toThrow);
   ;;
@@ -208,7 +208,7 @@ describe "dict" (fun () ->
 
   test "object" (fun () ->
     expect @@
-      dict int (Encode.object_ @@ Js.Dict.empty ())
+      dict int (Encode.object_ [])
       |> toEqual (Js.Dict.empty ()));
 
   test "dict boolean" (fun () ->
@@ -310,7 +310,7 @@ describe "optional" (fun () ->
   test "array -> int" (fun () ->
     expect @@ (optional int) (Encode.array [||]) |> toEqual None);
   test "object -> int" (fun () ->
-    expect @@ (optional int) (Encode.object_ @@ Js.Dict.empty ()) |> toEqual None);
+    expect @@ (optional int) (Encode.object_ []) |> toEqual None);
 
   test "boolean -> boolean " (fun () ->
     expect @@ optional boolean (Encode.boolean Js.true_) |> toEqual (Some Js.true_));
@@ -390,7 +390,7 @@ describe "withDefault" (fun () ->
   test "array" (fun () ->
     expect @@ (withDefault 0 int) (Encode.array [||]) |> toEqual 0);
   test "object" (fun () ->
-    expect @@ (withDefault 0 int) (Encode.object_ @@ Js.Dict.empty ()) |> toEqual 0);
+    expect @@ (withDefault 0 int) (Encode.object_ []) |> toEqual 0);
 );
 
 describe "map" (fun () ->
