@@ -93,3 +93,9 @@ Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
   "bs-dependencies": ["bs-json"]
 }
 ```
+
+## Changes
+
+### 0.2.0
+* Renamed `Json.Encode.object_` to `Json.Encode.dict`
+* Added `Json.Encode.object_` taking a list of properties instead of a Json.Dict.t as before
