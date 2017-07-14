@@ -36,6 +36,9 @@ test "object_ - simple" (fun () ->
 test "array int" (fun () ->
   expect @@ array ([|1;2;3|] |> Array.map int) |> toEqual @@ Obj.magic [|1;2;3|]);
 
+test "list int" (fun () ->
+  expect @@ list int [1;2;3] |> toEqual @@ Obj.magic [|1;2;3|]);
+
 test "stringArray" (fun () ->
   expect @@ stringArray [|"a";"b"|]  |> toEqual @@ Obj.magic [|"a";"b"|]);
 

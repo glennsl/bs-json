@@ -1,5 +1,8 @@
 (** Provides functions for encoding a JSON data structure *)
 
+type 'a encoder = 'a -> Js.Json.t
+(** The type of a encoder combinator *)
+
 external null : Js.Json.t = "" [@@bs.val]
 (** [null] is the singleton null JSON value *)
 
@@ -23,6 +26,9 @@ val object_ : (string * Js.Json.t) list -> Js.Json.t
 
 external array : Js.Json.t array -> Js.Json.t = "%identity"
 (** [array a] makes a JSON array of the [Js.Json.t array] [a] *)
+
+val list : 'a encoder -> 'a list encoder
+(** [list encoder l] makes a JSON array of the [list] [l] using the given [encoder] *)
 
 (** The functions below are specialized for specific array type which 
     happened to be already JSON object in the BuckleScript runtime. Therefore
