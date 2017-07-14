@@ -14,3 +14,13 @@ let _ =
   |> Json.Encode.array
   |> Js.Json.stringify
   |> Js.log
+
+(* prints { x: 42, foo: 'bar' } *)
+let _ =
+  Json.Encode.(
+    object_ [
+      ("x", int 42);
+      ("foo", string "bar")
+    ]
+    |> Js.log
+  )
