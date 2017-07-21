@@ -78,7 +78,7 @@ let line = data |> Js.Json.parseExn
                 |> Decode.line;
 ```
 
-See [examples](https://github.com/BuckleTypes/bs-json/blob/master/examples/) for more.
+See [examples](https://github.com/reasonml-community/bs-json/blob/master/examples/) for more.
 
 ## Installation
 
