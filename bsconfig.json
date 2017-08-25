@@ -1,10 +1,16 @@
 {
   "name": "bs-json",
+  "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
   "sources": [
     "src",
-    { "dir": "examples", "type": "dev" },
-    { "dir": "__tests__", "type": "dev" }
+    {
+      "dir": "examples",
+      "type": "dev"
+    },
+    {
+      "dir": "__tests__",
+      "type": "dev"
+    }
   ],
-  "bs-dev-dependencies": ["bs-jest"],
-  "bsc-flags": ["-bs-no-version-header"]
+  "bs-dev-dependencies": ["bs-jest"]
 }

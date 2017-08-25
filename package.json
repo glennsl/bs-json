@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "bsb -make-world -w",
     "build": "bsb -make-world",
+    "start": "bsb -make-world -w",
     "test": "npm run build && jest && npm run test:examples",
     "test:examples": "npm run build && ./run_examples.sh",
     "watch:bsb": "bsb -make-world -w",
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/reasonml-community/bs-json#readme",
   "devDependencies": {
-    "bs-platform": "^1.8.2",
+    "bs-platform": "^1.9.0",
     "bs-jest": "reasonml-community/bs-jest"
   }
 }
