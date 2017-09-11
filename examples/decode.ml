@@ -20,3 +20,6 @@ let _ =
         "bar": [9, 8, 7]
       }
     |})
+
+let () =
+  assert ((1, "bar") = Json.Decode.(pair int string) (Js.Json.parseExn "[1, \"bar\"]"))
