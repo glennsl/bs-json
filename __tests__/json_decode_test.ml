@@ -202,6 +202,30 @@ describe "list" (fun () ->
   Test.throws (list int) [Bool; Float; Int; String; Null; Object];
 );
 
+describe "pair" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "pair string int" (fun () ->
+    expect @@ pair string int (Js.Json.parseExn {| ["a", 3] |})
+    |> toEqual ("a", 3));
+  test "pair int int" (fun () ->
+    expect @@ pair int int (Js.Json.parseExn {| [4, 3] |})
+    |> toEqual (4, 3));
+  test "pair missing" (fun () ->
+    expectFn (pair int int) (Js.Json.parseExn {| [4] |})
+    |> toThrow);
+  test "pair too large" (fun () ->
+    expectFn (pair int int) (Js.Json.parseExn {| [3, 4, 5] |})
+    |> toThrow);
+  test "pair bad left type" (fun () ->
+    expectFn (pair int int) (Js.Json.parseExn {| ["3", 4] |})
+    |> toThrow);
+  test "pair bad right type" (fun () ->
+    expectFn (pair string string) (Js.Json.parseExn {| ["3", 4] |})
+    |> toThrow);
+);
+
 describe "dict" (fun () ->
   let open Json in
   let open! Decode in

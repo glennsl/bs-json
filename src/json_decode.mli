@@ -192,6 +192,26 @@ elements are successfully decoded.
 ]}
 *)
 
+val pair : 'a decoder -> 'b decoder -> ('a * 'b) decoder
+(** Decodes a JSON array with two elements into an ['a * 'b] tuple using the
+    first decoder on the left element and the second decoder on the right
+
+{b Returns} an ['a * 'b] if the JSON value is a JSON array of length 2 and both
+    its elements are successfully decoded.
+
+@raise [DecodeError] if unsuccessful
+
+@example {[
+  open Json
+  (* returns (1, "bar") *)
+  let _ = Js.Json.parseExn "[1, \"bar\"]" |> Decode.(pair int string)
+  (* raises DecodeError *)
+  let _ = Js.Json.parseExn "[1, 2]" |> Decode.(pair int string)
+  (* raises DecodeError *)
+  let _ = Js.Json.parseExn "[1, 2, 3]" |> Decode.(pair int int)
+]}
+*)
+
 val dict : 'a decoder -> 'a Js.Dict.t decoder
 (** Decodes a JSON object into a dict using the given decoder on each of its values
     

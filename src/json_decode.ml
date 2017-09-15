@@ -63,6 +63,18 @@ let array decode json =
 let list decode json =
   json |> array decode |> Array.to_list
 
+let pair left right json =
+  if Js.Array.isArray json then begin
+    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
+    let l = Js.Array.length source in
+    if l = 2 then
+      left source.(0), right source.(1)
+    else
+      raise @@ DecodeError ("Expected array of length 2, got array of length " ^ string_of_int l)
+  end
+  else
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+
 let dict decode json = 
   if Js.typeof json = "object" && 
       not (Js.Array.isArray json) && 
