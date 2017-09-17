@@ -49,9 +49,9 @@ let nullAs value json =
 let array decode json = 
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
-    let l = Js.Array.length source in
-    let target = unsafeCreateUninitializedArray l in
-    for i = 0 to l - 1 do
+    let length = Js.Array.length source in
+    let target = unsafeCreateUninitializedArray length in
+    for i = 0 to length - 1 do
       let value = decode (Array.unsafe_get source i) in
       Array.unsafe_set target i value;
     done;
@@ -66,11 +66,11 @@ let list decode json =
 let pair left right json =
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
-    let l = Js.Array.length source in
-    if l = 2 then
+    let length = Js.Array.length source in
+    if length = 2 then
       (left (Array.unsafe_get source 0), right (Array.unsafe_get source 1))
     else
-      raise @@ DecodeError ("Expected array of length 2, got array of length " ^ string_of_int l)
+      raise @@ DecodeError ({j|Expected array of length 2, got array of length $length|j})
   end
   else
     raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
@@ -102,7 +102,7 @@ let field key decode json =
     let dict = (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
     match Js.Dict.get dict key with
     | Some value -> decode value
-    | None -> raise @@ DecodeError ("Expected field '" ^ key ^ "'")
+    | None -> raise @@ DecodeError ({j|Expected field '$(key)'|j})
   end
   else
     raise @@ DecodeError ("Expected object, got " ^ Js.Json.stringify json)
@@ -120,7 +120,9 @@ let optional decode json =
 
 let rec oneOf decoders json =
   match decoders with
-  | [] -> raise @@ DecodeError ("Expected oneOf " ^ string_of_int (List.length decoders) ^ ", got " ^ Js.Json.stringify json)
+  | [] ->
+    let length = List.length decoders in
+    raise @@ DecodeError ({j|Expected oneOf $length, got |j} ^ Js.Json.stringify json)
   | decode :: rest ->
     match decode json with
     | v -> v
