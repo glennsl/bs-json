@@ -68,7 +68,7 @@ let pair left right json =
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let l = Js.Array.length source in
     if l = 2 then
-      left source.(0), right source.(1)
+      (left (Array.unsafe_get source 0), right (Array.unsafe_get source 1))
     else
       raise @@ DecodeError ("Expected array of length 2, got array of length " ^ string_of_int l)
   end
