@@ -96,7 +96,7 @@ Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
-### 0.3.0
+### 0.2.2
 * Added `Json.Decode.pair`
 
 ### 0.2.1
