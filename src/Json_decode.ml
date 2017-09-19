@@ -1,5 +1,7 @@
-external isInteger : float -> bool = "Number.isInteger" [@@bs.val]
-external unsafeCreateUninitializedArray : int -> 'a array = "Array" [@@bs.new]
+external _unsafeCreateUninitializedArray : int -> 'a array = "Array" [@@bs.new]
+
+let _isInteger value =
+  Js.Float.isFinite value && (float_of_int (Js.Math.floor value)) == value
 
 type 'a decoder = Js.Json.t -> 'a
 
@@ -22,7 +24,7 @@ let float json =
 
 let int json = 
   let f = float json in
-  if isInteger f then
+  if _isInteger f then
     (Obj.magic (f : float) : int)
   else
     raise @@ DecodeError ("Expected integer, got " ^ Js.Json.stringify json)
@@ -50,7 +52,7 @@ let array decode json =
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let length = Js.Array.length source in
-    let target = unsafeCreateUninitializedArray length in
+    let target = _unsafeCreateUninitializedArray length in
     for i = 0 to length - 1 do
       let value = decode (Array.unsafe_get source i) in
       Array.unsafe_set target i value;
