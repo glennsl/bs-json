@@ -96,6 +96,9 @@ Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 0.2.3
+* Fixed embarrassing bug where an API was used that isn't available on IE (honestly more embarrassed on behalf IE though)
+
 ### 0.2.2
 * Added `Json.Decode.pair`
 
