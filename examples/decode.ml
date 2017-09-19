@@ -1,5 +1,4 @@
 (* Decoding a fixed JSON data structure using Json.Decode *)
-
 let mapJsonObjectString f decoder (encoder: int -> Js.Json.t) str =
   let json = Js.Json.parseExn str in
   Json.Decode.(dict decoder json)
@@ -20,3 +19,12 @@ let _ =
         "bar": [9, 8, 7]
       }
     |})
+
+(* Error handling *)
+let _ =
+  let json = {|{ "y": 42 } |} |> Js.Json.parseExn in
+  match Json.Decode.(field "x" int json) with
+  | x ->
+    Js.log x
+  | exception Json.Decode.DecodeError msg ->
+    Js.log ("Error:" ^ msg)
