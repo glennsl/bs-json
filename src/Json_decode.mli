@@ -267,9 +267,9 @@ and a value that is successfully decoded with the given decoder.
 @example {[
   open Json
   (* returns 23 *)
-  let _ = Js.Json.parseExn {| { "x": {"foo": 23}, "y": 42 } |} |> Decode.(at "x" ["foo"] int)
+  let _ = Js.Json.parseExn {| { "x": {"foo": 23}, "y": 42 } |} |> Decode.(at ["x"; "foo"] int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn {| { "x": null, "y": "b" } |} |> Decode.(at "x" ["foo"] int)
+  let _ = Js.Json.parseExn {| { "x": null, "y": "b" } |} |> Decode.(at ["x"; "foo"] int)
 ]}
 *)
 
