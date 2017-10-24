@@ -48,6 +48,20 @@ let nullAs value json =
   else 
     raise @@ DecodeError ("Expected null, got " ^ Js.Json.stringify json)
 
+let arrayOfUndecodedValues json = 
+  if Js.Array.isArray json then begin
+    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
+    let length = Js.Array.length source in
+    let target = _unsafeCreateUninitializedArray length in
+    for i = 0 to length - 1 do
+      let value = (Array.unsafe_get source i) in
+      Array.unsafe_set target i value;
+    done;
+    target
+  end
+  else
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+  
 let array decode json = 
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in

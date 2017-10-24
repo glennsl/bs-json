@@ -136,6 +136,21 @@ describe "array" (fun () ->
   let open Json in
   let open! Decode in
 
+  test "arrayOfUndecodedValues" (fun () ->
+    expect @@ arrayOfUndecodedValues (Encode.array [||]) |> toEqual [||]);
+
+  test "arrayOfUndecodedValues boolean" (fun () ->
+    let x = Js.Json.parseExn {|true|} in
+    let y = Js.Json.parseExn {|1|} in
+    expect @@
+      arrayOfUndecodedValues (Js.Json.parseExn {| [true, 1] |})
+      |> toEqual [| x ; y |]);
+);
+
+describe "array" (fun () ->
+  let open Json in
+  let open! Decode in
+
   test "array" (fun () ->
     expect @@ (array int) (Encode.array [||]) |> toEqual [||]);
 
