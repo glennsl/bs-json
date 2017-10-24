@@ -150,6 +150,28 @@ val nullAs : 'a -> 'a decoder
 ]}
 *)
 
+val arrayOfUndecodedValues : Js.Json.t -> Js.Json.t array
+(** Decodes a JSON array into an [Js.Json.t array] 
+
+{b Returns} an [Js.Json.t array] if the JSON value is a JSON array. It leaves all of
+its elements encoded. Then the user can decode each individual element.
+
+@raise [DecodeError] if unsuccessful 
+
+@example {[
+  open Json
+  (* returns [| 1; 2; 3 |] *)
+  let _ = Js.Json.parseExn "[1, 2, 3]" |> Decode.arrayOfUndecodedValues
+  (* returns [| 1; 2; "c" |] *)
+  let _ = Js.Json.parseExn "[1, 2, "c"]" |> Decode.arrayOfUndecodedValues
+  (* raises DecodeError *)
+  let _ = Js.Json.parseExn "123" |> Decode.arrayOfUndecodedValues
+  (* returns None *)
+  let _ = Js.Json.parseExn "null" |> Decode.arrayOfUndecodedValues
+]}
+
+**)
+  
 val array : 'a decoder -> 'a array decoder
 (** Decodes a JSON array into an ['a array] using the given decoder on each element
     
