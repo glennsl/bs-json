@@ -21,4 +21,7 @@ let list encode l =
 
 external stringArray : string array -> Js.Json.t = "%identity"
 external numberArray : float array -> Js.Json.t = "%identity"
-external booleanArray : Js.boolean array -> Js.Json.t = "%identity"
+
+external jsbooleanArray : Js.boolean array -> Js.Json.t = "%identity"
+
+let booleanArray arr = arr |> Array.map Js.Boolean.to_js_boolean |> jsbooleanArray

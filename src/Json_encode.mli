@@ -40,5 +40,8 @@ external stringArray : string array -> Js.Json.t = "%identity"
 external numberArray : float array -> Js.Json.t = "%identity"
 (** [numberArray a] makes a JSON array of the [float array] [a] *)
 
-external booleanArray : Js.boolean array -> Js.Json.t = "%identity"
+external jsbooleanArray : Js.boolean array -> Js.Json.t = "%identity"
+
+val booleanArray : bool array -> Js.Json.t
+
 (** [booleanArray] makes a JSON array of the [Js.boolean array] [a] *)

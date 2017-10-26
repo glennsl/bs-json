@@ -46,4 +46,4 @@ test "nubmerArray" (fun () ->
   expect @@ numberArray [|0.;4.|] |> toEqual @@ Obj.magic [|0;4|]);
 
 test "booleanArray" (fun () ->
-  expect @@ booleanArray [|Js.true_;Js.false_|] |> toEqual @@ Obj.magic [|Js.true_;Js.false_|]);
+  expect @@ booleanArray [|true;false|] |> toEqual @@ Obj.magic [|Js.true_;Js.false_|]);
