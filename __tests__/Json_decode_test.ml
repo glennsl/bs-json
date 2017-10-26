@@ -27,7 +27,7 @@ module Test = struct
     | Object -> test (prefix ^ "object") (fun () ->
       expectFn decoder (Encode.object_ []) |> toThrow);
     | Bool -> test (prefix ^ "boolean") (fun () ->
-      expectFn decoder (Encode.boolean Js.true_) |> toThrow);
+      expectFn decoder (Encode.boolean true) |> toThrow);
   ;;
 
   let rec throws ?(prefix = "") decoder = function
@@ -44,7 +44,7 @@ describe "boolean" (fun () ->
   let open Decode in
 
   test "boolean" (fun () ->
-    expect @@ boolean (Encode.boolean Js.true_) |> toEqual Js.true_);
+    expect @@ boolean (Encode.boolean true) |> toEqual Js.true_);
 
   Test.throws boolean [Float; Int; String; Null; Array; Object];
 );
@@ -54,9 +54,9 @@ describe "bool" (fun () ->
   let open Decode in
 
   test "bool" (fun () ->
-    expect @@ bool (Encode.boolean Js.true_) |> toEqual true);
+    expect @@ bool (Encode.boolean true) |> toEqual true);
   test "bool - false" (fun () ->
-    expect @@ bool (Encode.boolean Js.false_) |> toEqual false);
+    expect @@ bool (Encode.boolean false) |> toEqual false);
     
   Test.throws bool [Float; Int; String; Null; Array; Object];
 );
@@ -103,7 +103,7 @@ describe "nullable" (fun () ->
     expect @@ (nullable int) Encode.null |> toEqual Js.null);
 
   test "boolean -> boolean " (fun () ->
-    expect @@ nullable boolean (Encode.boolean Js.true_) |> toEqual (Js.Null.return Js.true_));
+    expect @@ nullable boolean (Encode.boolean true) |> toEqual (Js.Null.return Js.true_));
   test "float -> float" (fun () ->
     expect @@ nullable float (Encode.float 1.23) |> toEqual (Js.Null.return 1.23));
   test "string -> string" (fun () ->
@@ -322,7 +322,7 @@ describe "optional" (fun () ->
   let open! Decode in
 
   test "boolean -> int" (fun () ->
-    expect @@ (optional int) (Encode.boolean Js.true_) |> toEqual None);
+    expect @@ (optional int) (Encode.boolean true) |> toEqual None);
   test "float -> int" (fun () ->
     expect @@ (optional int) (Encode.float 1.23) |> toEqual None);
   test "int -> int" (fun () ->
@@ -337,7 +337,7 @@ describe "optional" (fun () ->
     expect @@ (optional int) (Encode.object_ []) |> toEqual None);
 
   test "boolean -> boolean " (fun () ->
-    expect @@ optional boolean (Encode.boolean Js.true_) |> toEqual (Some Js.true_));
+    expect @@ optional boolean (Encode.boolean true) |> toEqual (Some Js.true_));
   test "float -> float" (fun () ->
     expect @@ optional float (Encode.float 1.23) |> toEqual (Some 1.23));
   test "string -> string" (fun () ->
@@ -402,7 +402,7 @@ describe "withDefault" (fun () ->
   let open! Decode in
 
   test "boolean" (fun () ->
-    expect @@ (withDefault 0 int) (Encode.boolean Js.true_) |> toEqual 0);
+    expect @@ (withDefault 0 int) (Encode.boolean true) |> toEqual 0);
   test "float" (fun () ->
     expect @@ (withDefault 0 int) (Encode.float 1.23) |> toEqual 0);
   test "int" (fun () ->

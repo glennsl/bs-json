@@ -17,7 +17,7 @@ test "int" (fun () ->
   expect @@ int 23 |> toEqual @@ Obj.magic 23);
 
 test "boolean" (fun () ->
-  expect @@ boolean Js.true_ |> toEqual @@ Obj.magic Js.true_);
+  expect @@ boolean true |> toEqual @@ Obj.magic Js.true_);
 
 test "dict - empty" (fun () ->
   expect @@ dict @@ Js.Dict.empty () |> toEqual @@ Obj.magic @@ Js.Dict.empty ());

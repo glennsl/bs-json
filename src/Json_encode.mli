@@ -15,8 +15,8 @@ external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 (** [int n] makes a JSON number of the [int] [n] *)
 
-external boolean : Js.boolean -> Js.Json.t = "%identity" 
-(** [boolean b] makes a JSON boolean of the [Js.boolean] [b] *)
+val boolean : bool -> Js.Json.t
+(** [boolean b] makes a JSON boolean of the [boolean] [b] *)
 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 (** [dict d] makes a JSON objet of the [Js.Dict.t] [d] *)
