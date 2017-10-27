@@ -2,5 +2,6 @@ node_modules/
 lib/*
 !lib/js
 .merlin
+.bsb.lock
 npm-debug.log
 .DS_Store
