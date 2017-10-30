@@ -15,8 +15,8 @@ external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 (** [int n] makes a JSON number of the [int] [n] *)
 
-external boolean : Js.boolean -> Js.Json.t = "%identity" 
-(** [boolean b] makes a JSON boolean of the [Js.boolean] [b] *)
+val boolean : bool -> Js.Json.t
+(** [boolean b] makes a JSON boolean of the [boolean] [b] *)
 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 (** [dict d] makes a JSON objet of the [Js.Dict.t] [d] *)
@@ -40,5 +40,8 @@ external stringArray : string array -> Js.Json.t = "%identity"
 external numberArray : float array -> Js.Json.t = "%identity"
 (** [numberArray a] makes a JSON array of the [float array] [a] *)
 
-external booleanArray : Js.boolean array -> Js.Json.t = "%identity"
+external jsbooleanArray : Js.boolean array -> Js.Json.t = "%identity"
+
+val booleanArray : bool array -> Js.Json.t
+
 (** [booleanArray] makes a JSON array of the [Js.boolean array] [a] *)

@@ -17,7 +17,7 @@ test "int" (fun () ->
   expect @@ int 23 |> toEqual @@ Obj.magic 23);
 
 test "boolean" (fun () ->
-  expect @@ boolean Js.true_ |> toEqual @@ Obj.magic Js.true_);
+  expect @@ boolean true |> toEqual @@ Obj.magic Js.true_);
 
 test "dict - empty" (fun () ->
   expect @@ dict @@ Js.Dict.empty () |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
@@ -46,4 +46,4 @@ test "nubmerArray" (fun () ->
   expect @@ numberArray [|0.;4.|] |> toEqual @@ Obj.magic [|0;4|]);
 
 test "booleanArray" (fun () ->
-  expect @@ booleanArray [|Js.true_;Js.false_|] |> toEqual @@ Obj.magic [|Js.true_;Js.false_|]);
+  expect @@ booleanArray [|true;false|] |> toEqual @@ Obj.magic [|Js.true_;Js.false_|]);
