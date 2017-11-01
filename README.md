@@ -47,7 +47,7 @@ let line = data |> Js.Json.parseExn
 type line = {
   start: point,
   end_: point,
-  thickness: option int
+  thickness: option(int)
 }
 and point = {
   x: float,
@@ -55,17 +55,17 @@ and point = {
 };
 
 module Decode = {
-  let point json =>
+  let point = (json) =>
     Json.Decode.{
-      x: json |> field "x" float,
-      y: json |> field "y" float
+      x: json |> field("x", float),
+      y: json |> field("y", float)
     };
-  
-  let line json =>
+
+  let line = (json) =>
     Json.Decode.{
-      start:     json |> field "start" point,
-      end_:      json |> field "end" point,
-      thickness: json |> optional (field "thickness" int)
+      start:     json |> field("start", point),
+      end_:      json |> field("end", point),
+      thickness: json |> optional(field("thickness", int))
     };
 };
 
