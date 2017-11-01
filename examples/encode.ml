@@ -11,7 +11,7 @@ let _ =
 let _ =
   [| "foo"; "bar" |]
   |> Js.Array.map Json.Encode.string
-  |> Json.Encode.array
+  |> Json.Encode.jsonArray
   |> Js.Json.stringify
   |> Js.log
 

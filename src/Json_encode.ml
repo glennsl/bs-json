@@ -24,6 +24,9 @@ let object_ props: Js.Json.t =
         |> dict
 
 external array : Js.Json.t array -> Js.Json.t = "%identity"
+let arrayOf encode l =
+  l |> Array.map encode
+    |> array
 let list encode l =
   l |> List.map encode
     |> Array.of_list
@@ -31,6 +34,7 @@ let list encode l =
 
 let pair encodeA encodeB (a, b) = array [| encodeA a; encodeB b|]
 
+external jsonArray : Js.Json.t array -> Js.Json.t = "%identity"
 external stringArray : string array -> Js.Json.t = "%identity"
 external numberArray : float array -> Js.Json.t = "%identity"
 external booleanArray : Js.boolean array -> Js.Json.t = "%identity"
