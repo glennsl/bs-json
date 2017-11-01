@@ -37,14 +37,26 @@ val object_ : (string * Js.Json.t) list -> Js.Json.t
 (** [object_ props] makes a JSON objet of the [props] list of properties *)
 
 external array : Js.Json.t array -> Js.Json.t = "%identity"
-(** [array a] makes a JSON array of the [Js.Json.t array] [a] *)
+[@@deprecated "Use `jsonArray` instead"]
+(** [array a] makes a JSON array of the [Js.Json.t array] [a] 
+ *  @deprecated Use [jsonArray] instead.
+ *)
+
+val arrayOf : 'a encoder -> 'a array encoder
+(** [arrayOf encoder l] makes a JSON array of the [list] [l] using the given [encoder] 
+ *  NOTE: This will be renamed `array` once the existing and deprecated `array` function
+ *  has been removed.
+ *)
 
 val list : 'a encoder -> 'a list encoder
-(** [list encoder l] makes a JSON array of the [list] [l] using the given [encoder] *)
+(** [list encoder a] makes a JSON array of the [array] [a] using the given [encoder] *)
 
 (** The functions below are specialized for specific array type which 
     happened to be already JSON object in the BuckleScript runtime. Therefore
     they are more efficient (constant time rather than linear conversion). *) 
+
+external jsonArray : Js.Json.t array -> Js.Json.t = "%identity"
+(** [jsonArray a] makes a JSON array of the [Js.Json.t array] [a] *)
 
 external stringArray : string array -> Js.Json.t = "%identity"
 (** [stringArray a] makes a JSON array of the [string array] [a] *) 

@@ -23,7 +23,7 @@ module Test = struct
     | Null -> test (prefix ^ "null") (fun () ->
       expectFn decoder Encode.null |> toThrow);
     | Array -> test (prefix ^ "array") (fun () ->
-      expectFn decoder (Encode.array [||]) |> toThrow);
+      expectFn decoder (Encode.jsonArray [||]) |> toThrow);
     | Object -> test (prefix ^ "object") (fun () ->
       expectFn decoder (Encode.object_ []) |> toThrow);
     | Bool -> test (prefix ^ "boolean") (fun () ->
@@ -137,7 +137,7 @@ describe "array" (fun () ->
   let open! Decode in
 
   test "array" (fun () ->
-    expect @@ (array int) (Encode.array [||]) |> toEqual [||]);
+    expect @@ (array int) (Encode.jsonArray [||]) |> toEqual [||]);
 
   test "array boolean" (fun () ->
     expect @@
@@ -172,7 +172,7 @@ describe "list" (fun () ->
   let open! Decode in
 
   test "array" (fun () ->
-    expect @@ (list int) (Encode.array [||]) |> toEqual []);
+    expect @@ (list int) (Encode.jsonArray [||]) |> toEqual []);
 
   test "list boolean" (fun () ->
     expect @@
@@ -332,7 +332,7 @@ describe "optional" (fun () ->
   test "null -> int" (fun () ->
     expect @@ (optional int) Encode.null |> toEqual None);
   test "array -> int" (fun () ->
-    expect @@ (optional int) (Encode.array [||]) |> toEqual None);
+    expect @@ (optional int) (Encode.jsonArray [||]) |> toEqual None);
   test "object -> int" (fun () ->
     expect @@ (optional int) (Encode.object_ []) |> toEqual None);
 
@@ -412,7 +412,7 @@ describe "withDefault" (fun () ->
   test "null" (fun () ->
     expect @@ (withDefault 0 int) Encode.null |> toEqual 0);
   test "array" (fun () ->
-    expect @@ (withDefault 0 int) (Encode.array [||]) |> toEqual 0);
+    expect @@ (withDefault 0 int) (Encode.jsonArray [||]) |> toEqual 0);
   test "object" (fun () ->
     expect @@ (withDefault 0 int) (Encode.object_ []) |> toEqual 0);
 );

@@ -65,7 +65,7 @@ let _ =
 let _ =
   [| "foo", "bar" |]
   |> Js.Array.map Encode.int
-  |> Encode.array
+  |> Encode.jsonArray
   |> stringify
   |> Js.log
 ]}

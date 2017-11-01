@@ -34,11 +34,14 @@ test "object_ - empty" (fun () ->
 test "object_ - simple" (fun () ->
   expect @@ object_ [("x", int 42)] |> toEqual @@ Obj.magic (Js.Dict.fromList [("x", 42)]));
 
-test "array int" (fun () ->
-  expect @@ array ([|1;2;3|] |> Array.map int) |> toEqual @@ Obj.magic [|1;2;3|]);
+test "arrayOf int" (fun () ->
+  expect @@ arrayOf int [|1;2;3|] |> toEqual @@ Obj.magic [|1;2;3|]);
 
 test "list int" (fun () ->
   expect @@ list int [1;2;3] |> toEqual @@ Obj.magic [|1;2;3|]);
+
+test "jsonArray int" (fun () ->
+  expect @@ jsonArray ([|1;2;3|] |> Array.map int) |> toEqual @@ Obj.magic [|1;2;3|]);
 
 test "stringArray" (fun () ->
   expect @@ stringArray [|"a";"b"|]  |> toEqual @@ Obj.magic [|"a";"b"|]);
