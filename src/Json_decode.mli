@@ -344,11 +344,10 @@ val either : 'a decoder -> 'a decoder -> 'a decoder
 *)
 
 val withDefault : 'a -> 'a decoder -> 'a decoder
-(** Tries each [decoder] in order, retunring the result of the first that succeeds
+(** Tries the given [decoder] and returns its result if it succeeds, or the
+given default value if it fails.
 
-{b Returns} an ['a] if one of the decoders succeed.
-
-@raise [DecodeError] if unsuccessful 
+{b Returns} an ['a].
 
 @example {[
   open Json
