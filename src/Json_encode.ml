@@ -6,9 +6,13 @@ external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 external boolean : Js.boolean -> Js.Json.t = "%identity" 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
+
+let bool b = b |> Js.Boolean.to_js_boolean |> boolean 
+
 let object_ props: Js.Json.t =
   props |> Js.Dict.fromList
         |> dict
+
 external array : Js.Json.t array -> Js.Json.t = "%identity"
 let list encode l =
   l |> List.map encode
