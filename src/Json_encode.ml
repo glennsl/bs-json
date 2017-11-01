@@ -11,6 +11,10 @@ let optional encode o = match o with
   | None -> null
   | Some v -> encode v
 
+let withDefault d encode o = match o with
+  | None -> d
+  | Some v -> encode v
+
 
 let bool b = b |> Js.Boolean.to_js_boolean |> boolean 
 

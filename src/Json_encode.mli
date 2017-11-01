@@ -22,6 +22,8 @@ val bool : bool -> Js.Json.t
 
 val optional : 'a encoder -> 'a option -> Js.Json.t
 
+val withDefault : Js.Json.t -> 'a encoder -> 'a option -> Js.Json.t
+
 val pair : 'a encoder -> 'b encoder -> ('a * 'b) -> Js.Json.t
 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
