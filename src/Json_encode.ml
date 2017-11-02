@@ -7,13 +7,13 @@ external int : int -> Js.Json.t = "%identity"
 external boolean : Js.boolean -> Js.Json.t = "%identity" 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 
-let nullable encode =
-  fun | None -> null
-      | Some v -> encode v
+let nullable encode = function
+  | None -> null
+  | Some v -> encode v
 
-let withDefault d encode =
-  fun | None -> d
-      | Some v -> encode v
+let withDefault d encode = function
+  | None -> d
+  | Some v -> encode v
 
 let bool b =
   b |> Js.Boolean.to_js_boolean
