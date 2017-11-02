@@ -2,6 +2,7 @@ open Jest
 open Expect
 open! Json.Encode
 
+
 let _ =
 
 test "null" (fun () ->
@@ -42,8 +43,29 @@ test "list int" (fun () ->
 test "stringArray" (fun () ->
   expect @@ stringArray [|"a";"b"|]  |> toEqual @@ Obj.magic [|"a";"b"|]);
 
-test "nubmerArray" (fun () ->
+test "numberArray" (fun () ->
   expect @@ numberArray [|0.;4.|] |> toEqual @@ Obj.magic [|0;4|]);
 
 test "booleanArray" (fun () ->
   expect @@ booleanArray [|Js.true_;Js.false_|] |> toEqual @@ Obj.magic [|Js.true_;Js.false_|]);
+
+
+test "nullable (None)" (fun () -> 
+  expect @@  nullable string None|> toEqual @@ Js.Json.null
+);
+
+test "nullable (Some)" (fun () -> 
+  expect @@  nullable string (Some "success") |> toEqual @@ Js.Json.string "success"
+);
+
+test "withDefault (None)" (fun () ->
+  expect @@ withDefault (Js.Json.string "default") string None |> toEqual @@ Js.Json.string "default"
+);
+
+test "withDefault (Some)" (fun () ->
+  expect @@ withDefault (Js.Json.string "default") string (Some "success") |> toEqual @@ Js.Json.string "success"
+);
+
+test "pair" (fun () -> 
+  expect @@ pair string float ("hello", 1.2) |> toEqual @@ Js.Json.array [|Js.Json.string "hello"; Js.Json.number 1.2|]
+);
