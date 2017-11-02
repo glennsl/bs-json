@@ -6,6 +6,9 @@ type 'a encoder = 'a -> Js.Json.t
 external null : Js.Json.t = "" [@@bs.val]
 (** [null] is the singleton null JSON value *)
 
+external undefined : Js.Json.t = "" [@@bs.val]
+(** [undefined] values will not show up in the json output *)
+
 external string : string -> Js.Json.t = "%identity"
 (** [string s] makes a JSON string of the [string] [s] *)
 
@@ -19,15 +22,22 @@ external boolean : Js.boolean -> Js.Json.t = "%identity"
 (** [boolean b] makes a JSON boolean of the [Js.boolean] [b] *)
 
 val bool : bool -> Js.Json.t
+(** [bool b] makes a json boolean of the [bool] [b]*)
+
+val nullable : 'a encoder -> 'a option -> Js.Json.t
+(** [nullable encoder option] returns either the encoded value or [Js.Json.null]*)
 
 val optional : 'a encoder -> 'a option -> Js.Json.t
+(** [optional encoder option] returns either the encoded value or [undefined]*)
 
 val withDefault : Js.Json.t -> 'a encoder -> 'a option -> Js.Json.t
+(** [withDefault ] *)
 
 val pair : 'a encoder -> 'b encoder -> ('a * 'b) -> Js.Json.t
+(** [pair encoder encoder tuple] creates a json array from a tuple of size 2*)
 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
-(** [dict d] makes a JSON objet of the [Js.Dict.t] [d] *)
+(** [dict d] makes a JSON object of the [Js.Dict.t] [d] *)
 
 val object_ : (string * Js.Json.t) list -> Js.Json.t
 (** [object_ props] makes a JSON objet of the [props] list of properties *)
