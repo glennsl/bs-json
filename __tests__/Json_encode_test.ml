@@ -2,7 +2,6 @@ open Jest
 open Expect
 open! Json.Encode
 
-external undef : Js.Json.t = "undefined" [@@bs.val]
 
 let _ =
 
@@ -58,15 +57,6 @@ test "nullable (None)" (fun () ->
 test "nullable (Some)" (fun () -> 
   expect @@  nullable string (Some "success") |> toEqual @@ Js.Json.string "success"
 );
-
-test "optional (None)" (fun () -> 
-  expect @@ optional string None |> toEqual @@ undef;
-);
-
-test "optional (Some)" (fun () -> 
-  expect @@ optional string (Some "success") |> toEqual @@ Js.Json.string "success";
-);
-
 
 test "withDefault (None)" (fun () ->
   expect @@ withDefault (Js.Json.string "default") string None |> toEqual @@ Js.Json.string "default"
