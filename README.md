@@ -96,6 +96,15 @@ Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
 
 ## Changes
 
+### 0.2.4
+* Added `Json.Encode.bool`
+* Added `Json.Encode.pair`
+' Added `Json.Encode.withDefault`
+* Added `Json.Encode.nullable`
+* Added `Json.Encode.arrayOf`
+* Added `Json.Encode.jsonArray` as replacement for `Json.Encode.array`
+* Deprecated `Json.Encode.array`
+
 ### 0.2.3
 * Fixed embarrassing bug where an API was used that isn't available on IE (honestly more embarrassed on behalf IE though)
 
