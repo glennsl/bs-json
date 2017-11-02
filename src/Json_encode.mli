@@ -25,7 +25,7 @@ val nullable : 'a encoder -> 'a option -> Js.Json.t
 (** [nullable encoder option] returns either the encoded value or [Js.Json.null]*)
 
 val withDefault : Js.Json.t -> 'a encoder -> 'a option -> Js.Json.t
-(** [withDefault ]  returns the encoded value if present, oterwise default*)
+(** [withDefault default encoder option] returns the encoded value if present, oterwise [default]*)
 
 val pair : 'a encoder -> 'b encoder -> ('a * 'b) -> Js.Json.t
 (** [pair encoder encoder tuple] creates a JSON array from a tuple of size 2*)
