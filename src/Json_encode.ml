@@ -1,27 +1,23 @@
 type 'a encoder = 'a -> Js.Json.t
 
 external null : Js.Json.t = "" [@@bs.val]
-external undefined : Js.Json.t = "" [@@bs.val]
 external string : string -> Js.Json.t = "%identity"
 external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 external boolean : Js.boolean -> Js.Json.t = "%identity" 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 
+let nullable encode =
+  fun | None -> null
+      | Some v -> encode v
 
-let optional encode o = match o with
-  | None -> undefined
-  | Some v -> encode v
+let withDefault d encode =
+  fun | None -> d
+      | Some v -> encode v
 
-let nullable encode o = match o with
-  | None -> null
-  | Some v -> encode v
-
-let withDefault d encode o = match o with
-  | None -> d
-  | Some v -> encode v
-
-let bool b = b |> Js.Boolean.to_js_boolean |> boolean 
+let bool b =
+  b |> Js.Boolean.to_js_boolean
+    |> boolean 
 
 let object_ props: Js.Json.t =
   props |> Js.Dict.fromList
