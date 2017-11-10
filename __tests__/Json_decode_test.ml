@@ -79,6 +79,11 @@ describe "int" (fun () ->
 
   test "int" (fun () ->
     expect @@ int (Encode.int 23) |> toEqual 23);
+
+  test "int > 32-bit" (fun () ->
+    (* Use %raw since integer literals > Int32.max_int overflow without warning *)
+    let big_int = [%raw "2147483648"] in
+    expect @@ int (Encode.int big_int) |> toEqual big_int);
   
   Test.throws int [Bool; Float; String; Null; Array; Object];
 );

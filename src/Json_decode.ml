@@ -1,7 +1,7 @@
 external _unsafeCreateUninitializedArray : int -> 'a array = "Array" [@@bs.new]
 
 let _isInteger value =
-  Js.Float.isFinite value && (float_of_int (Js.Math.floor value)) == value
+  Js.Float.isFinite value && Js.Math.floor_float value == value
 
 type 'a decoder = Js.Json.t -> 'a
 
