@@ -99,7 +99,7 @@ Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
 ### 0.2.4
 * Added `Json.Encode.bool`
 * Added `Json.Encode.pair`
-' Added `Json.Encode.withDefault`
+* Added `Json.Encode.withDefault`
 * Added `Json.Encode.nullable`
 * Added `Json.Encode.arrayOf`
 * Added `Json.Encode.jsonArray` as replacement for `Json.Encode.array`
