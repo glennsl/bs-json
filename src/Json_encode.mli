@@ -19,22 +19,31 @@ external boolean : Js.boolean -> Js.Json.t = "%identity"
 (** [boolean b] makes a JSON boolean of the [Js.boolean] [b] *)
 
 val bool : bool -> Js.Json.t
-(** [bool b] makes a JSON boolean of the [bool] [b]*) 
+(** [bool b] makes a JSON boolean of the [bool] [b] *)
 
 val nullable : 'a encoder -> 'a option -> Js.Json.t
-(** [nullable encoder option] returns either the encoded value or [Js.Json.null]*)
+(** [nullable encoder option] returns either the encoded value or [Js.Json.null] *)
 
 val withDefault : Js.Json.t -> 'a encoder -> 'a option -> Js.Json.t
-(** [withDefault default encoder option] returns the encoded value if present, oterwise [default]*)
+(** [withDefault default encoder option] returns the encoded value if present, oterwise [default] *)
 
 val pair : 'a encoder -> 'b encoder -> ('a * 'b) -> Js.Json.t
-(** [pair encoder encoder tuple] creates a JSON array from a tuple of size 2*)
+(** [pair encoder encoder tuple] creates a JSON array from a tuple of size 2 *)
+
+val tuple2 : 'a encoder -> 'b encoder -> ('a * 'b) -> Js.Json.t
+(** [tuple2 encoder encoder tuple] creates a JSON array from a tuple of size 2. Alias of [pair] *)
+
+val tuple3 : 'a encoder -> 'b encoder -> 'c encoder -> ('a * 'b * 'c) -> Js.Json.t
+(** [tuple3 enc enc enc tuple] creates a JSON array from a tuple of size 3 *)
+
+val tuple4 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> ('a * 'b * 'c * 'd) -> Js.Json.t
+(** [tuple4 enc enc enc enc tuple] creates a JSON array from a tuple of size 4 *)
 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 (** [dict d] makes a JSON object of the [Js.Dict.t] [d] *)
 
 val object_ : (string * Js.Json.t) list -> Js.Json.t
-(** [object_ props] makes a JSON objet of the [props] list of properties *)
+(** [object_ props] makes a JSON object of the [props] list of properties *)
 
 external array : Js.Json.t array -> Js.Json.t = "%identity"
 [@@deprecated "Use `jsonArray` instead"]

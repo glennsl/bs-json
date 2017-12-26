@@ -32,7 +32,13 @@ let list encode l =
     |> Array.of_list
     |> array
 
-let pair encodeA encodeB (a, b) = array [| encodeA a; encodeB b|]
+let pair encodeA encodeB (a, b) =
+  array [|encodeA a; encodeB b|]
+let tuple2 = pair
+let tuple3 encodeA encodeB encodeC (a, b, c) =
+  array [|encodeA a; encodeB b; encodeC c|]
+let tuple4 encodeA encodeB encodeC encodeD (a, b, c, d) =
+  array [|encodeA a; encodeB b; encodeC c; encodeD d|]
 
 external jsonArray : Js.Json.t array -> Js.Json.t = "%identity"
 external stringArray : string array -> Js.Json.t = "%identity"

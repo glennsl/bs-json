@@ -111,5 +111,23 @@ test "withDefault (Some)" (fun () ->
 test "pair" (fun () -> 
   expect @@
     pair string float ("hello", 1.2)
-    |> toEqual @@ Js.Json.array [|Js.Json.string "hello"; Js.Json.number 1.2|]
+    |> toEqual @@ jsonArray [|string "hello"; float 1.2|]
+);
+
+test "tuple2" (fun () -> 
+  expect @@
+    tuple2 string float ("hello", 1.2)
+    |> toEqual @@ jsonArray [|string "hello"; float 1.2|]
+);
+
+test "tuple3" (fun () -> 
+  expect @@
+    tuple3 string float int ("hello", 1.2, 4)
+    |> toEqual @@ jsonArray [|string "hello"; float 1.2; int 4|]
+);
+
+test "tuple4" (fun () -> 
+  expect @@
+    tuple4 string float int bool ("hello", 1.2, 4, true)
+    |> toEqual @@ jsonArray [|string "hello"; float 1.2; int 4; bool true|]
 );
