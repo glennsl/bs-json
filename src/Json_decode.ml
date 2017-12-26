@@ -116,9 +116,8 @@ let rec at key_path decoder =
       | [] -> raise @@ Invalid_argument ("Expected key_path to contain at least one element")
 
 let optional decode json =
-  match decode json with
-  | exception DecodeError _ -> None
-  | v -> Some v
+  try Some (decode json) with
+  | DecodeError _ -> None
 
 let rec oneOf decoders json =
   match decoders with
@@ -126,17 +125,15 @@ let rec oneOf decoders json =
     let length = List.length decoders in
     raise @@ DecodeError ({j|Expected oneOf $length, got |j} ^ Js.Json.stringify json)
   | decode :: rest ->
-    match decode json with
-    | v -> v
-    | exception _ -> oneOf rest json
+    try decode json with
+    | _ -> oneOf rest json
 
 let either a b =
   oneOf [a;b]
 
 let withDefault default decode json =
-  match decode json with
-  | v -> v
-  | exception _ -> default
+  try decode json with
+  | _ -> default
 
 let map f decode json =
   f (decode json)
