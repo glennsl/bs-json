@@ -408,6 +408,12 @@ describe "oneOf" (fun () ->
   test "int" (fun () ->
     expect @@ (oneOf [int; field "x" int]) (Encode.int 23) |> toEqual 23);
 
+  test "non-DecodeError exceptions in decoder should pass through" (fun () ->
+    expectFn
+      (oneOf [(fun _ -> failwith "fail")]) (Encode.null)
+      |> toThrow);
+  
+
   Test.throws (oneOf [int; field "x" int]) [Bool; Float; String; Null; Array; Object];
 );
 
@@ -441,6 +447,11 @@ describe "withDefault" (fun () ->
     expect @@ (withDefault 0 int) (Encode.jsonArray [||]) |> toEqual 0);
   test "object" (fun () ->
     expect @@ (withDefault 0 int) (Encode.object_ []) |> toEqual 0);
+
+  test "non-DecodeError exceptions in decoder should pass through" (fun () ->
+    expectFn
+      (withDefault 4 (fun _ -> failwith "fail")) (Encode.int 0)
+      |> toThrow);
 );
 
 describe "map" (fun () ->

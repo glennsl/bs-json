@@ -126,14 +126,14 @@ let rec oneOf decoders json =
     raise @@ DecodeError ({j|Expected oneOf $length, got |j} ^ Js.Json.stringify json)
   | decode :: rest ->
     try decode json with
-    | _ -> oneOf rest json
+    | DecodeError _ -> oneOf rest json
 
 let either a b =
   oneOf [a;b]
 
 let withDefault default decode json =
   try decode json with
-  | _ -> default
+  | DecodeError _ -> default
 
 let map f decode json =
   f (decode json)
