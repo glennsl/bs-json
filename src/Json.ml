@@ -15,3 +15,5 @@ let parseOrRaise s =
       | Some m  -> m
       | None    -> "Unknown error"
     in raise @@ ParseError message
+
+external stringify : Js.Json.t -> string = "JSON.stringify" [@@bs.val]

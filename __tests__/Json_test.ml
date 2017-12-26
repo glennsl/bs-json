@@ -28,3 +28,8 @@ describe "parseOrRaise" (fun () ->
       parseOrRaise "{"
       |> toThrow);
 );
+
+test "stringify" (fun () ->
+  expect @@
+    stringify Encode.null
+    |> toEqual "null");
