@@ -30,6 +30,11 @@ test "boolean" (fun () ->
     boolean Js.true_
     |> toEqual @@ Obj.magic Js.true_);
 
+test "bool" (fun () ->
+  expect @@
+    bool true
+    |> toEqual @@ Obj.magic Js.true_);
+
 test "date" (fun () ->
   expect @@
     date (Js.Date.fromString "2012-04-23T18:25:43.511Z")
