@@ -84,6 +84,9 @@ describe "int" (fun () ->
     (* Use %raw since integer literals > Int32.max_int overflow without warning *)
     let big_int = [%raw "2147483648"] in
     expect @@ int (Encode.int big_int) |> toEqual big_int);
+  test "infinity" (fun () ->
+    let inf = [%raw "Infinity"] in
+    expectFn int (Encode.int inf) |> toThrow);
   
   Test.throws int [Bool; Float; String; Null; Array; Object];
 );
@@ -211,23 +214,26 @@ describe "pair" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "pair string int" (fun () ->
+  test "string int" (fun () ->
     expect @@ pair string int (Js.Json.parseExn {| ["a", 3] |})
     |> toEqual ("a", 3));
-  test "pair int int" (fun () ->
+  test "int int" (fun () ->
     expect @@ pair int int (Js.Json.parseExn {| [4, 3] |})
     |> toEqual (4, 3));
-  test "pair missing" (fun () ->
+  test "too small" (fun () ->
     expectFn (pair int int) (Js.Json.parseExn {| [4] |})
     |> toThrow);
-  test "pair too large" (fun () ->
+  test "too large" (fun () ->
     expectFn (pair int int) (Js.Json.parseExn {| [3, 4, 5] |})
     |> toThrow);
-  test "pair bad left type" (fun () ->
+  test "bad left type" (fun () ->
     expectFn (pair int int) (Js.Json.parseExn {| ["3", 4] |})
     |> toThrow);
-  test "pair bad right type" (fun () ->
+  test "bad right type" (fun () ->
     expectFn (pair string string) (Js.Json.parseExn {| ["3", 4] |})
+    |> toThrow);
+  test "not array" (fun () ->
+    expectFn (pair int int) (Js.Json.parseExn {| 4 |})
     |> toThrow);
 );
 
@@ -319,6 +325,16 @@ describe "at" (fun () ->
       } |})
       |> toEqual Js.null);
 
+  test "missing key" (fun () ->
+    expectFn 
+      (at ["a"; "y"] (nullAs Js.null)) (Js.Json.parseExn {| {
+        "a": { "x" : null }, 
+        "b": null 
+      } |})
+      |> toThrow);
+  test "empty list of keys should raise Invalid_argument" (fun () ->
+    expectFn (at []) int |> toThrow);
+
   Test.throws (at ["foo"; "bar"] int) [Bool; Float; Int; String; Null; Array; Object];
 );
 
@@ -375,6 +391,11 @@ describe "optional" (fun () ->
   test "field optional - no such field" (fun () ->
     expectFn
       (field "y" (optional int)) (Js.Json.parseExn {| { "x": 2} |})
+      |> toThrow);
+
+  test "non-DecodeError exceptions in decoder should pass through" (fun () ->
+    expectFn
+      (optional (fun _ -> failwith "fail")) (Encode.null)
       |> toThrow);
 );
 
