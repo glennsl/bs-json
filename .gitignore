@@ -5,3 +5,4 @@ lib/*
 .bsb.lock
 npm-debug.log
 .DS_Store
+coverage/
