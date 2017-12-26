@@ -126,3 +126,11 @@ let _ =
 
 module Decode = Json_decode
 module Encode = Json_encode
+
+exception ParseError of string
+
+val parse: string -> Js.Json.t option
+(** [parse s] returns [Some json] if s is a valid json string, [None] otherwise *)
+
+val parseOrRaise: string -> Js.Json.t
+(** [parse s] returns a [Js.Json.t] if s is a valid json string, raises [ParseError] otherwise *)
