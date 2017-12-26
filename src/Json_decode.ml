@@ -1,5 +1,7 @@
 external _unsafeCreateUninitializedArray : int -> 'a array = "Array" [@@bs.new]
 
+external _stringify : Js.Json.t -> string = "JSON.stringify" [@@bs.val]
+
 let _isInteger value =
   Js.Float.isFinite value && Js.Math.floor_float value == value
 
@@ -11,7 +13,7 @@ let boolean json =
   if Js.typeof json = "boolean" then
     (Obj.magic (json : Js.Json.t) : Js.boolean)
   else
-    raise @@ DecodeError ("Expected boolean, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected boolean, got " ^ _stringify json)
 
 let bool json = 
   boolean json |> Js.to_bool
@@ -20,20 +22,20 @@ let float json =
   if Js.typeof json = "number" then
     (Obj.magic (json : Js.Json.t) : float)
   else
-    raise @@ DecodeError ("Expected number, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected number, got " ^ _stringify json)
 
 let int json = 
   let f = float json in
   if _isInteger f then
     (Obj.magic (f : float) : int)
   else
-    raise @@ DecodeError ("Expected integer, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected integer, got " ^ _stringify json)
 
 let string json = 
   if Js.typeof json = "string" then
     (Obj.magic (json : Js.Json.t) : string)
   else
-    raise @@ DecodeError ("Expected string, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected string, got " ^ _stringify json)
 
 let date json =
   json |> string
@@ -50,7 +52,7 @@ let nullAs value json =
   if (Obj.magic json : 'a Js.null) == Js.null then
     value
   else 
-    raise @@ DecodeError ("Expected null, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected null, got " ^ _stringify json)
 
 let array decode json = 
   if Js.Array.isArray json then begin
@@ -64,7 +66,7 @@ let array decode json =
     target
   end
   else
-    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected array, got " ^ _stringify json)
 
 let list decode json =
   json |> array decode |> Array.to_list
@@ -80,7 +82,7 @@ let pair decodeA decodeB json =
       raise @@ DecodeError ({j|Expected array of length 2, got array of length $length|j})
   end
   else
-    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected array, got " ^ _stringify json)
 
 let tuple2 = pair
 
@@ -96,7 +98,7 @@ let tuple3 decodeA decodeB decodeC json =
       raise @@ DecodeError ({j|Expected array of length 3, got array of length $length|j})
   end
   else
-    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected array, got " ^ _stringify json)
 
 let tuple4 decodeA decodeB decodeC decodeD json =
   if Js.Array.isArray json then begin
@@ -111,7 +113,7 @@ let tuple4 decodeA decodeB decodeC decodeD json =
       raise @@ DecodeError ({j|Expected array of length 4, got array of length $length|j})
   end
   else
-    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected array, got " ^ _stringify json)
 
 let dict decode json = 
   if Js.typeof json = "object" && 
@@ -130,7 +132,7 @@ let dict decode json =
     target
   end
   else
-    raise @@ DecodeError ("Expected object, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected object, got " ^ _stringify json)
 
 let field key decode json =
   if Js.typeof json = "object" && 
@@ -143,7 +145,7 @@ let field key decode json =
     | None -> raise @@ DecodeError ({j|Expected field '$(key)'|j})
   end
   else
-    raise @@ DecodeError ("Expected object, got " ^ Js.Json.stringify json)
+    raise @@ DecodeError ("Expected object, got " ^ _stringify json)
 
 let rec at key_path decoder =
     match key_path with 
@@ -159,7 +161,7 @@ let rec oneOf decoders json =
   match decoders with
   | [] ->
     let length = List.length decoders in
-    raise @@ DecodeError ({j|Expected oneOf $length, got |j} ^ Js.Json.stringify json)
+    raise @@ DecodeError ({j|Expected oneOf $length, got |j} ^ _stringify json)
   | decode :: rest ->
     try decode json with
     | DecodeError _ -> oneOf rest json

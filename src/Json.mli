@@ -30,98 +30,77 @@ depending on your needs. This module provides two fairly low level methods
 of decoding, the assertive, more convenient but also more rigid {! Decode}
 module and the more flexible but cumbersome {! reifyType} and {! test} functions.
 The third way is to use a opinionated third-party APIs that makes other tradeoffs.
+
 @example {[
-(* Parsing a JSON string using Js.Json.parse *)
-open Js.Json
+(* Parsing a JSON string using Json.parse *)
 let arrayOfInts str
-  match parse str with
-  | Ok value ->
-    match Decode.(array int value)
+  match Json.parse str with
+  | Some value ->
+    match Json.Decode.(array int value)
     | Ok arr -> arr
     | Error _ -> []
-  | Error message -> failWith message
+  | None -> failWith "Unable to parse JSON"
+
 (* prints `[3, 2, 1]` *)
-let _ = Js.log \@\@ arrayOfInts "[1, 2, 3]" |> Js.Array.reverse
+let _ = Js.log (arrayOfInts "[1, 2, 3]" |> Js.Array.reverse)
 ]}
+
 @example {[
-(* Stringifying a value using Js.Json.stringifyAny *)
-open Js.Json
+(* Stringifying a value using Json.stringify *)
+
 (* prints `null` *)
 let _ =
-  match stringifyAny Js.null with
-  | Some str -> Js.log str
-  | None -> Js.log "Unable to stringify value"
+  Json.stringify (Encode.int 42)
+  |> Js.log
 ]}
+
 @example {[
-(* Encoding a JSON data structure using Js.Json.Encode *)
-open Js.Json
+(* Encoding a JSON data structure using Json.Encode *)
+
 (* prints ["foo", "bar"] *)
 let _ =
   [| "foo", "bar" |]
-  |> Encode.stringArray
-  |> stringify
+  |> Json.Encode.stringArray
+  |> Json.stringify
   |> Js.log
+
 (* prints ["foo", "bar"] *)
 let _ =
   [| "foo", "bar" |]
   |> Js.Array.map Encode.int
-  |> Encode.jsonArray
-  |> stringify
+  |> Json.Encode.jsonArray
+  |> Json.stringify
   |> Js.log
 ]}
+
 @example {[
-(* Decoding a fixed JSON data structure using Js.Json.Decode *)
-open Js.Json
+(* Decoding a fixed JSON data structure using Json.Decode *)
 let mapJsonObjectString f decoder encoder str =
-  match parse str with
+  match Json.parse str with
   | Ok json ->
-    match Decode.(dict decoder json) with
+    match Json.Decode.(dict decoder json) with
     | Ok dict ->
       dict |> Js.Dict.map f
            |> Js.Dict.map encoder
-           |> Encode.dict
-           |> Js.stringify
+           |> Json.Encode.dict
+           |> Json.stringify
     | Error _ -> []
   | Error _ -> []
+
 let sum ns =
   Array.fold_left (+) 0
+
 (* prints `{ "foo": 6, "bar": 24 }` *)
 let _ =
-  Js.log \@\@
-    mapJsonObjectString sun Decode.(array int) Encode.int {|
+  Js.log (
+    mapJsonObjectString sun Json.Decode.(array int) Json.Encode.int {|
       {
         "foo": [1, 2, 3],
         "bar": [9, 8, 7]
       }
     |} 
+  )
 ]}
-@example {[
-(* Decoding a highly dynamic JSON data structure using reifyType *)
-open Js.Json
-let getIds s =
-  let json = 
-    try parse s with
-    | _ -> failwith "Error parsing JSON string"
-  in 
-  match reifyType json with
-  | (Object, value) ->
-    (* In this branch, compiler infer value : t Js.Dict.t *)
-    begin match Js.Dict.get value "ids" with
-    | Some ids -> 
-      begin match reifyType ids with
-      | (Array, ids) -> 
-        (* In this branch compiler infer ids : t array *)
-        ids
-      | _ -> failWith "Expected an array"
-      end 
-    | None -> failWith "Expected an `ids` property"
-    end 
-  | _ -> failWith "Expected an object"
-(* prints `1, 2, 3` *)
-let _ =
-  Js.log \@\@ getIds {| { "ids" : [1, 2, 3 ] } |} 
-]}
-@see <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON> MDN
 *) 
 
 module Decode = Json_decode

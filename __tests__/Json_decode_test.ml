@@ -159,27 +159,27 @@ describe "array" (fun () ->
 
   test "array boolean" (fun () ->
     expect @@
-      array boolean (Js.Json.parseExn {| [true, false, true] |})
+      array boolean (parseOrRaise {| [true, false, true] |})
       |> toEqual [| Js.true_; Js.false_; Js.true_ |]);
   test "array float" (fun () ->
     expect @@
-      array float (Js.Json.parseExn {| [1, 2, 3] |})
+      array float (parseOrRaise {| [1, 2, 3] |})
       |> toEqual [| 1.; 2.; 3. |]);
   test "array int" (fun () ->
     expect @@
-      array int (Js.Json.parseExn {| [1, 2, 3] |})
+      array int (parseOrRaise {| [1, 2, 3] |})
       |> toEqual [| 1; 2; 3 |]);
   test "array string" (fun () ->
     expect @@
-      array string (Js.Json.parseExn {| ["a", "b", "c"] |})
+      array string (parseOrRaise {| ["a", "b", "c"] |})
       |> toEqual [| "a"; "b"; "c" |]);
   test "array nullAs" (fun () ->
     expect @@
-      array (nullAs Js.null) (Js.Json.parseExn {| [null, null, null] |})
+      array (nullAs Js.null) (parseOrRaise {| [null, null, null] |})
       |> toEqual [| Js.null; Js.null; Js.null |]);
   test "array int -> array boolean" (fun () ->
     expectFn
-      (array boolean) (Js.Json.parseExn {| [1, 2, 3] |})
+      (array boolean) (parseOrRaise {| [1, 2, 3] |})
       |> toThrow);
 
   Test.throws (array int) [Bool; Float; Int; String; Null; Object];
@@ -194,27 +194,27 @@ describe "list" (fun () ->
 
   test "list boolean" (fun () ->
     expect @@
-      list boolean (Js.Json.parseExn {| [true, false, true] |})
+      list boolean (parseOrRaise {| [true, false, true] |})
       |> toEqual [Js.true_; Js.false_; Js.true_]);
   test "list float" (fun () ->
     expect @@
-      list float (Js.Json.parseExn {| [1, 2, 3] |})
+      list float (parseOrRaise {| [1, 2, 3] |})
       |> toEqual [ 1.; 2.; 3.]);
   test "list int" (fun () ->
     expect @@
-      list int (Js.Json.parseExn {| [1, 2, 3] |})
+      list int (parseOrRaise {| [1, 2, 3] |})
       |> toEqual [1; 2; 3]);
   test "list string" (fun () ->
     expect @@
-      list string (Js.Json.parseExn {| ["a", "b", "c"] |})
+      list string (parseOrRaise {| ["a", "b", "c"] |})
       |> toEqual ["a"; "b"; "c"]);
   test "list nullAs" (fun () ->
     expect @@
-      list (nullAs Js.null) (Js.Json.parseExn {| [null, null, null] |})
+      list (nullAs Js.null) (parseOrRaise {| [null, null, null] |})
       |> toEqual [Js.null; Js.null; Js.null]);
   test "array int -> list boolean" (fun () ->
     expectFn
-      (list boolean) (Js.Json.parseExn {| [1, 2, 3] |})
+      (list boolean) (parseOrRaise {| [1, 2, 3] |})
       |> toThrow);
 
   Test.throws (list int) [Bool; Float; Int; String; Null; Object];
@@ -225,25 +225,25 @@ describe "pair" (fun () ->
   let open! Decode in
 
   test "heterogenous" (fun () ->
-    expect @@ pair string int (Js.Json.parseExn {| ["a", 3] |})
+    expect @@ pair string int (parseOrRaise {| ["a", 3] |})
     |> toEqual ("a", 3));
   test "int int" (fun () ->
-    expect @@ pair int int (Js.Json.parseExn {| [4, 3] |})
+    expect @@ pair int int (parseOrRaise {| [4, 3] |})
     |> toEqual (4, 3));
   test "too small" (fun () ->
-    expectFn (pair int int) (Js.Json.parseExn {| [4] |})
+    expectFn (pair int int) (parseOrRaise {| [4] |})
     |> toThrow);
   test "too large" (fun () ->
-    expectFn (pair int int) (Js.Json.parseExn {| [3, 4, 5] |})
+    expectFn (pair int int) (parseOrRaise {| [3, 4, 5] |})
     |> toThrow);
   test "bad type a" (fun () ->
-    expectFn (pair int int) (Js.Json.parseExn {| ["3", 4] |})
+    expectFn (pair int int) (parseOrRaise {| ["3", 4] |})
     |> toThrow);
   test "bad type b" (fun () ->
-    expectFn (pair string string) (Js.Json.parseExn {| ["3", 4] |})
+    expectFn (pair string string) (parseOrRaise {| ["3", 4] |})
     |> toThrow);
   test "not array" (fun () ->
-    expectFn (pair int int) (Js.Json.parseExn {| 4 |})
+    expectFn (pair int int) (parseOrRaise {| 4 |})
     |> toThrow);
 );
 
@@ -252,22 +252,22 @@ describe "tuple2" (fun () ->
   let open! Decode in
 
   test "heterogenous" (fun () ->
-    expect @@ tuple2 string int (Js.Json.parseExn {| ["a", 3] |})
+    expect @@ tuple2 string int (parseOrRaise {| ["a", 3] |})
     |> toEqual ("a", 3));
   test "too small" (fun () ->
-    expectFn (tuple2 int int) (Js.Json.parseExn {| [4] |})
+    expectFn (tuple2 int int) (parseOrRaise {| [4] |})
     |> toThrow);
   test "too large" (fun () ->
-    expectFn (tuple2 int int) (Js.Json.parseExn {| [3, 4, 5] |})
+    expectFn (tuple2 int int) (parseOrRaise {| [3, 4, 5] |})
     |> toThrow);
   test "bad type a" (fun () ->
-    expectFn (tuple2 int int) (Js.Json.parseExn {| ["3", 4] |})
+    expectFn (tuple2 int int) (parseOrRaise {| ["3", 4] |})
     |> toThrow);
   test "bad type b" (fun () ->
-    expectFn (tuple2 string string) (Js.Json.parseExn {| ["3", 4] |})
+    expectFn (tuple2 string string) (parseOrRaise {| ["3", 4] |})
     |> toThrow);
   test "not array" (fun () ->
-    expectFn (tuple2 int int) (Js.Json.parseExn {| 4 |})
+    expectFn (tuple2 int int) (parseOrRaise {| 4 |})
     |> toThrow);
 );
 
@@ -276,22 +276,22 @@ describe "tuple3" (fun () ->
   let open! Decode in
 
   test "heterogenous" (fun () ->
-    expect @@ tuple3 string int float (Js.Json.parseExn {| ["a", 3, 4.5] |})
+    expect @@ tuple3 string int float (parseOrRaise {| ["a", 3, 4.5] |})
     |> toEqual ("a", 3, 4.5));
   test "too small" (fun () ->
-    expectFn (tuple3 int int int) (Js.Json.parseExn {| [4] |})
+    expectFn (tuple3 int int int) (parseOrRaise {| [4] |})
     |> toThrow);
   test "too large" (fun () ->
-    expectFn (tuple3 int int int) (Js.Json.parseExn {| [3, 4, 5, 6, 7] |})
+    expectFn (tuple3 int int int) (parseOrRaise {| [3, 4, 5, 6, 7] |})
     |> toThrow);
   test "bad type a" (fun () ->
-    expectFn (tuple3 int int int) (Js.Json.parseExn {| ["3", 4, 5] |})
+    expectFn (tuple3 int int int) (parseOrRaise {| ["3", 4, 5] |})
     |> toThrow);
   test "bad type b" (fun () ->
-    expectFn (tuple3 string string string) (Js.Json.parseExn {| ["3", 4, "5"] |})
+    expectFn (tuple3 string string string) (parseOrRaise {| ["3", 4, "5"] |})
     |> toThrow);
   test "not array" (fun () ->
-    expectFn (tuple3 int int int) (Js.Json.parseExn {| 4 |})
+    expectFn (tuple3 int int int) (parseOrRaise {| 4 |})
     |> toThrow);
 );
 
@@ -300,22 +300,22 @@ describe "tuple4" (fun () ->
   let open! Decode in
 
   test "heterogenous" (fun () ->
-    expect @@ tuple4 string int float bool (Js.Json.parseExn {| ["a", 3, 4.5, true] |})
+    expect @@ tuple4 string int float bool (parseOrRaise {| ["a", 3, 4.5, true] |})
     |> toEqual ("a", 3, 4.5, true));
   test "too small" (fun () ->
-    expectFn (tuple4 int int int int) (Js.Json.parseExn {| [4] |})
+    expectFn (tuple4 int int int int) (parseOrRaise {| [4] |})
     |> toThrow);
   test "too large" (fun () ->
-    expectFn (tuple4 int int int int) (Js.Json.parseExn {| [3, 4, 5, 6, 7, 8] |})
+    expectFn (tuple4 int int int int) (parseOrRaise {| [3, 4, 5, 6, 7, 8] |})
     |> toThrow);
   test "bad type a" (fun () ->
-    expectFn (tuple4 int int int int) (Js.Json.parseExn {| ["3", 4, 5, 6] |})
+    expectFn (tuple4 int int int int) (parseOrRaise {| ["3", 4, 5, 6] |})
     |> toThrow);
   test "bad type b" (fun () ->
-    expectFn (tuple4 string string string string) (Js.Json.parseExn {| ["3", 4, "5", "6"] |})
+    expectFn (tuple4 string string string string) (parseOrRaise {| ["3", 4, "5", "6"] |})
     |> toThrow);
   test "not array" (fun () ->
-    expectFn (tuple4 int int int int) (Js.Json.parseExn {| 4 |})
+    expectFn (tuple4 int int int int) (parseOrRaise {| 4 |})
     |> toThrow);
 );
 
@@ -330,27 +330,27 @@ describe "dict" (fun () ->
 
   test "dict boolean" (fun () ->
     expect @@
-      dict boolean (Js.Json.parseExn {| { "a": true, "b": false } |})
+      dict boolean (parseOrRaise {| { "a": true, "b": false } |})
       |> toEqual (Obj.magic [%obj { a = Js.true_; b = Js.false_ }]));
   test "dict float" (fun () ->
     expect @@
-      dict float (Js.Json.parseExn {| { "a": 1.2, "b": 2.3 } |})
+      dict float (parseOrRaise {| { "a": 1.2, "b": 2.3 } |})
       |> toEqual (Obj.magic [%obj { a = 1.2; b = 2.3 }]));
   test "dict int" (fun () ->
     expect @@
-      dict int (Js.Json.parseExn {| { "a": 1, "b": 2 } |})
+      dict int (parseOrRaise {| { "a": 1, "b": 2 } |})
       |> toEqual (Obj.magic [%obj { a = 1; b = 2 }]));
   test "dict string" (fun () ->
     expect @@
-      dict string (Js.Json.parseExn {| { "a": "x", "b": "y" } |})
+      dict string (parseOrRaise {| { "a": "x", "b": "y" } |})
       |> toEqual (Obj.magic [%obj { a = "x"; b = "y" }]));
   test "dict nullAs" (fun () ->
     expect @@
-      dict (nullAs Js.null) (Js.Json.parseExn {| { "a": null, "b": null } |})
+      dict (nullAs Js.null) (parseOrRaise {| { "a": null, "b": null } |})
       |> toEqual (Obj.magic [%obj { a = Js.null; b = Js.null }]));
   test "dict null -> dict string" (fun () ->
     expectFn
-      (dict string) (Js.Json.parseExn {| { "a": null, "b": null } |})
+      (dict string) (parseOrRaise {| { "a": null, "b": null } |})
       |> toThrow);
 
   Test.throws (dict int) [Bool; Float; Int; String; Null; Array];
@@ -362,27 +362,27 @@ describe "field" (fun () ->
 
   test "field boolean" (fun () ->
     expect @@
-      field "b" boolean (Js.Json.parseExn {| { "a": true, "b": false } |})
+      field "b" boolean (parseOrRaise {| { "a": true, "b": false } |})
       |> toEqual Js.false_);
   test "field float" (fun () ->
     expect @@
-      field "b" float (Js.Json.parseExn {| { "a": 1.2, "b": 2.3 } |})
+      field "b" float (parseOrRaise {| { "a": 1.2, "b": 2.3 } |})
       |> toEqual 2.3);
   test "field int" (fun () ->
     expect @@
-      field "b" int (Js.Json.parseExn {| { "a": 1, "b": 2 } |})
+      field "b" int (parseOrRaise {| { "a": 1, "b": 2 } |})
       |> toEqual 2);
   test "field string" (fun () ->
     expect @@
-      field "b" string (Js.Json.parseExn {| { "a": "x", "b": "y" } |})
+      field "b" string (parseOrRaise {| { "a": "x", "b": "y" } |})
       |> toEqual "y");
   test "field nullAs" (fun () ->
     expect @@
-      field "b" (nullAs Js.null) (Js.Json.parseExn {| { "a": null, "b": null } |})
+      field "b" (nullAs Js.null) (parseOrRaise {| { "a": null, "b": null } |})
       |> toEqual Js.null);
   test "field null -> field string" (fun () ->
     expectFn
-      (field "b" string) (Js.Json.parseExn {| { "a": null, "b": null } |})
+      (field "b" string) (parseOrRaise {| { "a": null, "b": null } |})
       |> toThrow);
 
   Test.throws (field "foo" int) [Bool; Float; Int; String; Null; Array; Object];
@@ -394,14 +394,14 @@ describe "at" (fun () ->
 
   test "at boolean" (fun () ->
     expect @@
-      at ["a"; "x"; "y"] boolean (Js.Json.parseExn {| {
+      at ["a"; "x"; "y"] boolean (parseOrRaise {| {
         "a": { "x" : { "y" : false } }, 
         "b": false 
       } |})
       |> toEqual Js.false_);
   test "field nullAs" (fun () ->
     expect @@
-      at ["a"; "x"] (nullAs Js.null) (Js.Json.parseExn {| {
+      at ["a"; "x"] (nullAs Js.null) (parseOrRaise {| {
         "a": { "x" : null }, 
         "b": null 
       } |})
@@ -409,7 +409,7 @@ describe "at" (fun () ->
 
   test "missing key" (fun () ->
     expectFn 
-      (at ["a"; "y"] (nullAs Js.null)) (Js.Json.parseExn {| {
+      (at ["a"; "y"] (nullAs Js.null)) (parseOrRaise {| {
         "a": { "x" : null }, 
         "b": null 
       } |})
@@ -452,27 +452,27 @@ describe "optional" (fun () ->
 
   test "optional field" (fun () ->
     expect @@
-      (optional (field "x" int) (Js.Json.parseExn {| { "x": 2} |}))
+      (optional (field "x" int) (parseOrRaise {| { "x": 2} |}))
       |> toEqual (Some 2));
   test "optional field - incorrect type" (fun () ->
     expect @@
-      (optional (field "x" int) (Js.Json.parseExn {| { "x": 2.3} |}))
+      (optional (field "x" int) (parseOrRaise {| { "x": 2.3} |}))
       |> toEqual None);
   test "optional field - no such field" (fun () ->
     expect @@
-      (optional (field "y" int) (Js.Json.parseExn {| { "x": 2} |}))
+      (optional (field "y" int) (parseOrRaise {| { "x": 2} |}))
       |> toEqual None);
   test "field optional" (fun () ->
     expect @@
-      (field "x" (optional int) (Js.Json.parseExn {| { "x": 2} |}))
+      (field "x" (optional int) (parseOrRaise {| { "x": 2} |}))
       |> toEqual (Some 2));
   test "field optional - incorrect type" (fun () ->
     expect @@
-      (field "x" (optional int) (Js.Json.parseExn {| { "x": 2.3} |}))
+      (field "x" (optional int) (parseOrRaise {| { "x": 2.3} |}))
       |> toEqual None);
   test "field optional - no such field" (fun () ->
     expectFn
-      (field "y" (optional int)) (Js.Json.parseExn {| { "x": 2} |})
+      (field "y" (optional int)) (parseOrRaise {| { "x": 2} |})
       |> toThrow);
 
   test "non-DecodeError exceptions in decoder should pass through" (fun () ->
@@ -486,7 +486,7 @@ describe "oneOf" (fun () ->
   let open! Decode in
 
   test "object with field" (fun () ->
-    expect @@ (oneOf [int; field "x" int]) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
+    expect @@ (oneOf [int; field "x" int]) (parseOrRaise {| { "x": 2} |}) |> toEqual 2);
   test "int" (fun () ->
     expect @@ (oneOf [int; field "x" int]) (Encode.int 23) |> toEqual 23);
 
@@ -504,7 +504,7 @@ describe "either" (fun () ->
   let open! Decode in
 
   test "object with field" (fun () ->
-    expect @@ (either int (field "x" int)) (Js.Json.parseExn {| { "x": 2} |}) |> toEqual 2);
+    expect @@ (either int (field "x" int)) (parseOrRaise {| { "x": 2} |}) |> toEqual 2);
   test "int" (fun () ->
     expect @@ (either int (field "x" int)) (Encode.int 23) |> toEqual 23);
 
@@ -569,18 +569,18 @@ describe "composite expressions" (fun () ->
   
   test "dict array array int" (fun () ->
     expect @@
-      (dict (array (array int)) (Js.Json.parseExn {| { "a": [[1, 2], [3]], "b": [[4], [5, 6]] } |}))
+      (dict (array (array int)) (parseOrRaise {| { "a": [[1, 2], [3]], "b": [[4], [5, 6]] } |}))
       |> toEqual (Obj.magic [%obj { a = [| [|1; 2|]; [|3|] |]; b = [| [|4|]; [|5; 6|] |] }]));
   test "dict array array int - heterogenous structure" (fun () ->
     expectFn 
-      (dict (array (array int))) (Js.Json.parseExn {| { "a": [[1, 2], [true]], "b": [[4], [5, 6]] } |})
+      (dict (array (array int))) (parseOrRaise {| { "a": [[1, 2], [true]], "b": [[4], [5, 6]] } |})
       |> toThrow);
   test "dict array array int - heterogenous structure 2" (fun () ->
     expectFn
-      (dict (array (array int))) (Js.Json.parseExn {| { "a": [[1, 2], "foo"], "b": [[4], [5, 6]] } |})
+      (dict (array (array int))) (parseOrRaise {| { "a": [[1, 2], "foo"], "b": [[4], [5, 6]] } |})
       |> toThrow);
   test "field" (fun () ->
-    let json = Js.Json.parseExn {| { "foo": [1, 2, 3], "bar": "baz" } |} in
+    let json = parseOrRaise {| { "foo": [1, 2, 3], "bar": "baz" } |} in
     expect @@
       (field "foo" (array int) json, field "bar" string json)
       |> toEqual ([| 1; 2; 3 |], "baz"));

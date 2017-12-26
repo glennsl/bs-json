@@ -25,13 +25,13 @@ val boolean : Js.boolean decoder
 @example {[
   open Json
   (* returns Js.true_ *)
-  let _ = Js.Json.parseExn "true" |> Decode.boolean
+  let _ = Json.parseOrRaise "true" |> Decode.boolean
   (* returns Js.false_ *)
-  let _ = Js.Json.parseExn "false" |> Decode.boolean
+  let _ = Json.parseOrRaise "false" |> Decode.boolean
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "123" |> Decode.boolean
+  let _ = Json.parseOrRaise "123" |> Decode.boolean
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "null" |> Decode.boolean
+  let _ = Json.parseOrRaise "null" |> Decode.boolean
 ]}
 *)
 
@@ -45,13 +45,13 @@ val bool : bool decoder
 @example {[
   open Json
   (* returns true *)
-  let _ = Js.Json.parseExn "true" |> Decode.bool
+  let _ = Json.parseOrRaise "true" |> Decode.bool
   (* returns false *)
-  let _ = Js.Json.parseExn "false" |> Decode.bool
+  let _ = Json.parseOrRaise "false" |> Decode.bool
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "123" |> Decode.bool
+  let _ = Json.parseOrRaise "123" |> Decode.bool
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "null" |> Decode.bool
+  let _ = Json.parseOrRaise "null" |> Decode.bool
 ]}
 *)
 
@@ -65,13 +65,13 @@ val float : float decoder
 @example {[
   open Json
   (* returns 1.23 *)
-  let _ = Js.Json.parseExn "1.23" |> Decode.float
+  let _ = Json.parseOrRaise "1.23" |> Decode.float
   (* returns 23. *)
-  let _ = Js.Json.parseExn "23" |> Decode.float
+  let _ = Json.parseOrRaise "23" |> Decode.float
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "true" |> Decode.float
+  let _ = Json.parseOrRaise "true" |> Decode.float
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "null" |> Decode.float
+  let _ = Json.parseOrRaise "null" |> Decode.float
 ]}
 *)
 
@@ -85,13 +85,13 @@ val int : int decoder
 @example {[
   open Json
   (* returns 23 *)
-  let _ = Js.Json.parseExn "23" |> Decode.int
+  let _ = Json.parseOrRaise "23" |> Decode.int
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "1.23" |> Decode.int
+  let _ = Json.parseOrRaise "1.23" |> Decode.int
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "true" |> Decode.int
+  let _ = Json.parseOrRaise "true" |> Decode.int
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "null" |> Decode.int
+  let _ = Json.parseOrRaise "null" |> Decode.int
 ]}
 *)
 
@@ -105,11 +105,11 @@ val string : string decoder
 @example {[
   open Json
   (* returns "foo" *)
-  let _ = Js.Json.parseExn "\"foo\"" |> Decode.string
+  let _ = Json.parseOrRaise "\"foo\"" |> Decode.string
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "1.23" |> Decode.string
+  let _ = Json.parseOrRaise "1.23" |> Decode.string
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "null" |> Decode.string
+  let _ = Json.parseOrRaise "null" |> Decode.string
 ]}
 *)
 
@@ -132,11 +132,11 @@ given decoder succeeds,
 @example {[
   open Json
   (* returns (Js.Null.return 23) *)
-  let _ = Js.Json.parseExn "23" |> Decode.(nullable int)
+  let _ = Json.parseOrRaise "23" |> Decode.(nullable int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "1.23" |> Decode.(nullable int)
+  let _ = Json.parseOrRaise "1.23" |> Decode.(nullable int)
   (* returns Js.null *)
-  let _ = Js.Json.parseExn "null" |> Decode.(nullable int)
+  let _ = Json.parseOrRaise "null" |> Decode.(nullable int)
 ]}
 *)
 
@@ -150,11 +150,11 @@ val nullAs : 'a -> 'a decoder
 @example {[
   open Json
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "\"x\"" |> Decode.nullAs "x"
+  let _ = Json.parseOrRaise "\"x\"" |> Decode.nullAs "x"
   (* returns "x" *)
-  let _ = Js.Json.parseExn "null" |> Decode.nullAs "x"
+  let _ = Json.parseOrRaise "null" |> Decode.nullAs "x"
   (* returns None *)
-  let _ = Js.Json.parseExn "null" |> Decode.nullAs None
+  let _ = Json.parseOrRaise "null" |> Decode.nullAs None
 ]}
 *)
 
@@ -169,13 +169,13 @@ elements are successfully decoded.
 @example {[
   open Json
   (* returns [| 1; 2; 3 |] *)
-  let _ = Js.Json.parseExn "[1, 2, 3]" |> Decode.(array int)
+  let _ = Json.parseOrRaise "[1, 2, 3]" |> Decode.(array int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "[1, 2, "c"]" |> Decode.(array int)
+  let _ = Json.parseOrRaise "[1, 2, "c"]" |> Decode.(array int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "123" |> Decode.(array int)
+  let _ = Json.parseOrRaise "123" |> Decode.(array int)
   (* returns None *)
-  let _ = Js.Json.parseExn "null" |> Decode.(array int)
+  let _ = Json.parseOrRaise "null" |> Decode.(array int)
 ]}
 *)
 
@@ -190,13 +190,13 @@ elements are successfully decoded.
 @example {[
   open Json
   (* returns [1; 2; 3] *)
-  let _ = Js.Json.parseExn "[1, 2, 3]" |> Decode.(list int)
+  let _ = Json.parseOrRaise "[1, 2, 3]" |> Decode.(list int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "[1, 2, "c"]" |> Decode.(list int)
+  let _ = Json.parseOrRaise "[1, 2, "c"]" |> Decode.(list int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "123" |> Decode.(list int)
+  let _ = Json.parseOrRaise "123" |> Decode.(list int)
   (* returns None *)
-  let _ = Js.Json.parseExn "null" |> Decode.(list int)
+  let _ = Json.parseOrRaise "null" |> Decode.(list int)
 ]}
 *)
 
@@ -212,11 +212,11 @@ val pair : 'a decoder -> 'b decoder -> ('a * 'b) decoder
 @example {[
   open Json
   (* returns (1, "bar") *)
-  let _ = Js.Json.parseExn "[1, \"bar\"]" |> Decode.(pair int string)
+  let _ = Json.parseOrRaise "[1, \"bar\"]" |> Decode.(pair int string)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "[1, 2]" |> Decode.(pair int string)
+  let _ = Json.parseOrRaise "[1, 2]" |> Decode.(pair int string)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "[1, 2, 3]" |> Decode.(pair int int)
+  let _ = Json.parseOrRaise "[1, 2, 3]" |> Decode.(pair int int)
 ]}
 *)
 
@@ -234,11 +234,11 @@ val tuple2 : 'a decoder -> 'b decoder -> ('a * 'b) decoder
 @example {[
   open Json
   (* returns (1, "bar") *)
-  let _ = Js.Json.parseExn "[1, \"bar\"]" |> Decode.(tuple2 int string)
+  let _ = Json.parseOrRaise "[1, \"bar\"]" |> Decode.(tuple2 int string)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "[1, 2]" |> Decode.(tuple2 int string)
+  let _ = Json.parseOrRaise "[1, 2]" |> Decode.(tuple2 int string)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "[1, 2, 3]" |> Decode.(tuple2 int int)
+  let _ = Json.parseOrRaise "[1, 2, 3]" |> Decode.(tuple2 int int)
 ]}
 *)
 
@@ -273,13 +273,13 @@ values are successfully decoded.
 @example {[
   open Json
   (* returns (Js.Dict.fromList [("x", 23); ("y", 42)]) *)
-  let _ = Js.Json.parseExn {| { "x": 23, "y": 42 } |} |> Decode.(dict int)
+  let _ = Json.parseOrRaise {| { "x": 23, "y": 42 } |} |> Decode.(dict int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(dict int)
+  let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(dict int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "123" |> Decode.(dict int)
+  let _ = Json.parseOrRaise "123" |> Decode.(dict int)
   (* returns None *)
-  let _ = Js.Json.parseExn "null" |> Decode.(dict int)
+  let _ = Json.parseOrRaise "null" |> Decode.(dict int)
 ]}
 *)
 
@@ -294,15 +294,15 @@ and a value that is successfully decoded with the given decoder.
 @example {[
   open Json
   (* returns 23 *)
-  let _ = Js.Json.parseExn {| { "x": 23, "y": 42 } |} |> Decode.(field "x" int)
+  let _ = Json.parseOrRaise {| { "x": 23, "y": 42 } |} |> Decode.(field "x" int)
   (* returns 23 *)
-  let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "x" int)
+  let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(field "x" int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "y" int)
+  let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(field "y" int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "123" |> Decode.(field "x" int)
+  let _ = Json.parseOrRaise "123" |> Decode.(field "x" int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "null" |> Decode.(field "x" int)
+  let _ = Json.parseOrRaise "null" |> Decode.(field "x" int)
 ]}
 *)
 
@@ -317,9 +317,9 @@ and a value that is successfully decoded with the given decoder.
 @example {[
   open Json
   (* returns 23 *)
-  let _ = Js.Json.parseExn {| { "x": {"foo": 23}, "y": 42 } |} |> Decode.(at ["x"; "foo"] int)
+  let _ = Json.parseOrRaise {| { "x": {"foo": 23}, "y": 42 } |} |> Decode.(at ["x"; "foo"] int)
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn {| { "x": null, "y": "b" } |} |> Decode.(at ["x"; "foo"] int)
+  let _ = Json.parseOrRaise {| { "x": null, "y": "b" } |} |> Decode.(at ["x"; "foo"] int)
 ]}
 *)
 
@@ -337,23 +337,23 @@ a composite decoder, and is useful to decode optional JSON object fields.
 @example {[
   open Json
   (* returns (Some 23) *)
-  let _ = Js.Json.parseExn "23" |> Decode.(optional int)
+  let _ = Json.parseOrRaise "23" |> Decode.(optional int)
   (* returns None *)
-  let _ = Js.Json.parseExn 1.23 |> Decode.(optional int)
+  let _ = Json.parseOrRaise 1.23 |> Decode.(optional int)
   (* returns None *)
-  let _ = Js.Json.parseExn "null" |> Decode.(optional int)
+  let _ = Json.parseOrRaise "null" |> Decode.(optional int)
   (* returns (Some 23) *)
-  let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "x" int))
+  let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "x" int))
   (* returns None *)
-  let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "y" int))
+  let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "y" int))
   (* returns None *)
-  let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "z" int))
+  let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(optional (field "z" int))
   (* returns (Some 23) *)
-  let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "x" (optional int))
+  let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(field "x" (optional int))
   (* returns None *)
-  let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "y" (optional int))
+  let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(field "y" (optional int))
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn {| { "x": 23, "y": "b" } |} |> Decode.(field "z" (optional int))
+  let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(field "z" (optional int))
 ]}
 *)
 
@@ -367,11 +367,11 @@ val oneOf : 'a decoder list -> 'a decoder
 @example {[
   open Json
   (* returns 23 *)
-  let _ = Js.Json.parseExn "23" |> Decode.(oneOf [int; field "x" int])
+  let _ = Json.parseOrRaise "23" |> Decode.(oneOf [int; field "x" int])
   (* returns 42 *)
-  let _ = Js.Json.parseExn {| { "x": 42 } |}  |> Decode.(oneOf [int; field "x" int])
+  let _ = Json.parseOrRaise {| { "x": 42 } |}  |> Decode.(oneOf [int; field "x" int])
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "null" |> Decode.(oneOf [int; field "x" int]
+  let _ = Json.parseOrRaise "null" |> Decode.(oneOf [int; field "x" int]
 ]}
 *)
 
@@ -385,11 +385,11 @@ val either : 'a decoder -> 'a decoder -> 'a decoder
 @example {[
   open Json
   (* returns 23 *)
-  let _ = Js.Json.parseExn "23" |> Decode.(either int (field "x" int))
+  let _ = Json.parseOrRaise "23" |> Decode.(either int (field "x" int))
   (* returns 42 *)
-  let _ = Js.Json.parseExn {| { "x": 42 } |}  |> Decode.(either int (field "x" int))
+  let _ = Json.parseOrRaise {| { "x": 42 } |}  |> Decode.(either int (field "x" int))
   (* raises DecodeError *)
-  let _ = Js.Json.parseExn "null" |> Decode.(either int (field "x" int))
+  let _ = Json.parseOrRaise "null" |> Decode.(either int (field "x" int))
 ]}
 *)
 
@@ -402,11 +402,11 @@ given default value if it fails.
 @example {[
   open Json
   (* returns 23 *)
-  let _ = Js.Json.parseExn "23" |> Decode.withDefault 0 int
+  let _ = Json.parseOrRaise "23" |> Decode.withDefault 0 int
   (* returns 0 *)
-  let _ = Js.Json.parseExn "\"x\"" |> Decode.withDefault 0 int
+  let _ = Json.parseOrRaise "\"x\"" |> Decode.withDefault 0 int
   (* returns 0 *)
-  let _ = Js.Json.parseExn "null" |> Decode.withDefault 0 int
+  let _ = Json.parseOrRaise "null" |> Decode.withDefault 0 int
 ]}
 *)
 
@@ -420,7 +420,7 @@ val map : ('a -> 'b) -> 'a decoder -> 'b decoder
 @example {[
   open Json
   (* returns 46 *)
-  let _ = Js.Json.parseExn "23" |> Decode.map (fun x -> x * x) int
+  let _ = Json.parseOrRaise "23" |> Decode.map (fun x -> x * x) int
 ]}
 *)
 
@@ -468,7 +468,7 @@ val andThen : ('a -> 'b decoder) -> 'a decoder -> 'b decoder
 
   let myTree =
     json
-    |> Js.Json.parseExn 
+    |> Json.parseOrRaise 
     |> decodeTree int
 ]}
 *)

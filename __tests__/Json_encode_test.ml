@@ -97,25 +97,25 @@ test "booleanArray" (fun () ->
 test "nullable (None)" (fun () -> 
   expect @@
     nullable string None
-    |> toEqual @@ Js.Json.null
+    |> toEqual @@ null
 );
 
 test "nullable (Some)" (fun () -> 
   expect @@
     nullable string (Some "success")
-    |> toEqual @@ Js.Json.string "success"
+    |> toEqual @@ string "success"
 );
 
 test "withDefault (None)" (fun () ->
   expect @@
-    withDefault (Js.Json.string "default") string None
-    |> toEqual @@ Js.Json.string "default"
+    withDefault (string "default") string None
+    |> toEqual @@ string "default"
 );
 
 test "withDefault (Some)" (fun () ->
   expect @@
-    withDefault (Js.Json.string "default") string (Some "success")
-    |> toEqual @@ Js.Json.string "success"
+    withDefault (string "default") string (Some "success")
+    |> toEqual @@ string "success"
 );
 
 test "pair" (fun () -> 

@@ -25,7 +25,7 @@ val date : Js.Date.t -> Js.Json.t
 (** [bool b] makes an ISO 8601 JSON string of the [Js.Date.t] [b] *)
 
 val nullable : 'a encoder -> 'a option -> Js.Json.t
-(** [nullable encoder option] returns either the encoded value or [Js.Json.null] *)
+(** [nullable encoder option] returns either the encoded value or [null] *)
 
 val withDefault : Js.Json.t -> 'a encoder -> 'a option -> Js.Json.t
 (** [withDefault default encoder option] returns the encoded value if present, oterwise [default] *)

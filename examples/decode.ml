@@ -1,11 +1,11 @@
 (* Decoding a fixed JSON data structure using Json.Decode *)
 let mapJsonObjectString f decoder (encoder: int -> Js.Json.t) str =
-  let json = Js.Json.parseExn str in
+  let json = Json.parseOrRaise str in
   Json.Decode.(dict decoder json)
     |> Js.Dict.map ((fun v -> f v) [@bs])
     |> Js.Dict.map ((fun v -> encoder v) [@bs])
     |> Json.Encode.dict
-    |> Js.Json.stringify
+    |> Json.stringify
 
 let sum =
   Array.fold_left (+) 0
@@ -22,7 +22,7 @@ let _ =
 
 (* Error handling *)
 let _ =
-  let json = {|{ "y": 42 } |} |> Js.Json.parseExn in
+  let json = {|{ "y": 42 } |} |> Json.parseOrRaise in
   match Json.Decode.(field "x" int json) with
   | x ->
     Js.log x

@@ -4,7 +4,7 @@
 let _ =
   [| "foo"; "bar" |]
   |> Json.Encode.stringArray
-  |> Js.Json.stringify
+  |> Json.stringify
   |> Js.log
 
 (* prints ["foo", "bar"] *)
@@ -12,7 +12,7 @@ let _ =
   [| "foo"; "bar" |]
   |> Js.Array.map Json.Encode.string
   |> Json.Encode.jsonArray
-  |> Js.Json.stringify
+  |> Json.stringify
   |> Js.log
 
 (* prints { x: 42, foo: 'bar' } *)

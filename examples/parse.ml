@@ -1,7 +1,7 @@
-(* Parsing a JSON string using Js.Json.parse *)
+(* Parsing a JSON string using Json.parseOrRaise *)
 
 let arrayOfInts str =
-  let json = Js.Json.parseExn str in
+  let json = Json.parseOrRaise str in
   Json.Decode.(array int json)
 
 (* prints `[3, 2, 1]` *)

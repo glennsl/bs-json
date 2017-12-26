@@ -44,7 +44,7 @@ let data = {| {
   "end":   { "x": 5.3, "y": 3.8 }
 } |}
 
-let line = data |> Js.Json.parseExn
+let line = data |> Json.parseOrRaise
                 |> Decode.line
 ```
 
@@ -80,7 +80,7 @@ let data = {| {
   "end":   { "x": 5.3, "y": 3.8 }
 } |};
 
-let line = data |> Js.Json.parseExn
+let line = data |> Json.parseOrRaise
                 |> Decode.line;
 ```
 
