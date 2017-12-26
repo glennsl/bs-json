@@ -35,6 +35,10 @@ let string json =
   else
     raise @@ DecodeError ("Expected string, got " ^ Js.Json.stringify json)
 
+let date json =
+  json |> string
+       |> Js.Date.fromString
+
 let nullable decode json =
   if (Obj.magic json : 'a Js.null) == Js.null then
     Js.null

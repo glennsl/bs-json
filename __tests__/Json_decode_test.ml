@@ -101,6 +101,16 @@ describe "string" (fun () ->
   Test.throws string [Bool; Float; Int; Null; Array; Object];
 );
 
+describe "date" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "ISO8601-formatted string" (fun () ->
+    expect @@ date (Encode.string "2012-04-23T18:25:43.511Z") |> toEqual (Js.Date.fromString "2012-04-23T18:25:43.511Z"));
+
+  Test.throws date [Bool; Float; Int; Null; Array; Object];
+);
+
 describe "nullable" (fun () ->
   let open Json in
   let open! Decode in

@@ -113,6 +113,14 @@ val string : string decoder
 ]}
 *)
 
+val date : Js.Date.t decoder
+(** Decodes an ISO8601-fot\rmatted JSON string into a [Js.Date.t]
+    
+{b Returns} a [Js.Date.t] if the JSON value is an IS8601-formatted string.
+
+@raise [DecodeError] if unsuccessful 
+*)
+
 val nullable : 'a decoder -> 'a Js.null decoder
 (** Decodes a JSON value into an ['a Js.null]
     

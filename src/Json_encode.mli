@@ -21,6 +21,9 @@ external boolean : Js.boolean -> Js.Json.t = "%identity"
 val bool : bool -> Js.Json.t
 (** [bool b] makes a JSON boolean of the [bool] [b] *)
 
+val date : Js.Date.t -> Js.Json.t
+(** [bool b] makes an ISO 8601 JSON string of the [Js.Date.t] [b] *)
+
 val nullable : 'a encoder -> 'a option -> Js.Json.t
 (** [nullable encoder option] returns either the encoded value or [Js.Json.null] *)
 
