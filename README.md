@@ -2,6 +2,12 @@
 
 Experimental JSON encode/decode library for BuckleScript.
 
+[![npm](https://img.shields.io/npm/v/bs-json.svg)](https://npmjs.org/bs-json)
+[![Travis](https://img.shields.io/travis/reasonml-community/bs-json/master.svg)]()
+[![Coveralls](https://img.shields.io/coveralls/reasonml-community/bs-json/master.svg)](https://coveralls.io/github/reasonml-community/bs-json?branch=master)
+[![Issues](https://img.shields.io/github/issues/reasonml-community/bs-json.svg)]()
+[![Last Commit](https://img.shields.io/github/last-commit/reasonml-community/bs-json.svg)]()
+
 The Decode module in particular provides a basic set of decoder functions to be composed into more complex decoders. A decoder is a function that takes a `Js.Json.t` and either returns a value of the desired type if successful or raises a `DecodeError` exception if not. Other functions accept a decoder and produce another decoder. Like `array`, which when given a decoder for type `t` will return a decoder that tries to produce a value of type `t array`. So to decode an `int array` you combine `Json.Decode.int` with `Json.Decode.array` into `Json.Decode.(array int)`. An array of arrays of ints? `Json.Decode.(array (array int))`. Dict containing arrays of ints? `Json.Decode.(dict (array int))`.
 
 ## Example
