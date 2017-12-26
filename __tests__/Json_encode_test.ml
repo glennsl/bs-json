@@ -6,69 +6,110 @@ open! Json.Encode
 let _ =
 
 test "null" (fun () ->
-  expect null |> toEqual @@ Obj.magic Js.null);
+  expect
+    null
+    |> toEqual @@ Obj.magic Js.null);
 
 test "string" (fun () ->
-  expect @@ string "foo" |> toEqual @@ Obj.magic "foo");
+  expect @@
+    string "foo"
+    |> toEqual @@ Obj.magic "foo");
 
 test "float" (fun () ->
-  expect @@ float 1.23 |> toEqual @@ Obj.magic 1.23);
+  expect @@
+    float 1.23
+    |> toEqual @@ Obj.magic 1.23);
 
 test "int" (fun () ->
-  expect @@ int 23 |> toEqual @@ Obj.magic 23);
+  expect @@
+    int 23
+    |> toEqual @@ Obj.magic 23);
 
 test "boolean" (fun () ->
-  expect @@ boolean Js.true_ |> toEqual @@ Obj.magic Js.true_);
+  expect @@
+    boolean Js.true_
+    |> toEqual @@ Obj.magic Js.true_);
 
 test "dict - empty" (fun () ->
-  expect @@ dict @@ Js.Dict.empty () |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
+  expect @@
+    dict @@ Js.Dict.empty ()
+    |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
 
 test "dict - simple" (fun () ->
   let o = Js.Dict.empty () in
   Js.Dict.set o "x" (int 42);
-  expect @@ dict o |> toEqual @@ Obj.magic o);
+
+  expect @@
+    dict o
+    |> toEqual @@ Obj.magic o);
 
 test "object_ - empty" (fun () ->
-  expect @@ object_ @@ [] |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
+  expect @@
+    object_ @@ []
+    |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
 
 test "object_ - simple" (fun () ->
-  expect @@ object_ [("x", int 42)] |> toEqual @@ Obj.magic (Js.Dict.fromList [("x", 42)]));
+  expect @@
+    object_ [("x", int 42)]
+    |> toEqual @@ Obj.magic (Js.Dict.fromList [("x", 42)]));
 
 test "arrayOf int" (fun () ->
-  expect @@ arrayOf int [|1;2;3|] |> toEqual @@ Obj.magic [|1;2;3|]);
+  expect @@
+    arrayOf int [|1;2;3|]
+    |> toEqual @@ Obj.magic [|1;2;3|]);
 
 test "list int" (fun () ->
-  expect @@ list int [1;2;3] |> toEqual @@ Obj.magic [|1;2;3|]);
+  expect @@
+    list int [1;2;3]
+    |> toEqual @@ Obj.magic [|1;2;3|]);
 
 test "jsonArray int" (fun () ->
-  expect @@ jsonArray ([|1;2;3|] |> Array.map int) |> toEqual @@ Obj.magic [|1;2;3|]);
+  expect @@
+    jsonArray ([|1;2;3|] |> Array.map int)
+    |> toEqual @@ Obj.magic [|1;2;3|]);
 
 test "stringArray" (fun () ->
-  expect @@ stringArray [|"a";"b"|]  |> toEqual @@ Obj.magic [|"a";"b"|]);
+  expect @@
+    stringArray [|"a";"b"|] 
+    |> toEqual @@ Obj.magic [|"a";"b"|]);
 
 test "numberArray" (fun () ->
-  expect @@ numberArray [|0.;4.|] |> toEqual @@ Obj.magic [|0;4|]);
+  expect @@
+    numberArray [|0.;4.|]
+    |> toEqual @@ Obj.magic [|0;4|]);
 
 test "booleanArray" (fun () ->
-  expect @@ booleanArray [|Js.true_;Js.false_|] |> toEqual @@ Obj.magic [|Js.true_;Js.false_|]);
+  expect @@
+    booleanArray [|Js.true_;Js.false_|]
+    |> toEqual @@ Obj.magic [|Js.true_;Js.false_|]);
 
 
 test "nullable (None)" (fun () -> 
-  expect @@  nullable string None|> toEqual @@ Js.Json.null
+  expect @@
+    nullable string None
+    |> toEqual @@ Js.Json.null
 );
 
 test "nullable (Some)" (fun () -> 
-  expect @@  nullable string (Some "success") |> toEqual @@ Js.Json.string "success"
+  expect @@
+    nullable string (Some "success")
+    |> toEqual @@ Js.Json.string "success"
 );
 
 test "withDefault (None)" (fun () ->
-  expect @@ withDefault (Js.Json.string "default") string None |> toEqual @@ Js.Json.string "default"
+  expect @@
+    withDefault (Js.Json.string "default") string None
+    |> toEqual @@ Js.Json.string "default"
 );
 
 test "withDefault (Some)" (fun () ->
-  expect @@ withDefault (Js.Json.string "default") string (Some "success") |> toEqual @@ Js.Json.string "success"
+  expect @@
+    withDefault (Js.Json.string "default") string (Some "success")
+    |> toEqual @@ Js.Json.string "success"
 );
 
 test "pair" (fun () -> 
-  expect @@ pair string float ("hello", 1.2) |> toEqual @@ Js.Json.array [|Js.Json.string "hello"; Js.Json.number 1.2|]
+  expect @@
+    pair string float ("hello", 1.2)
+    |> toEqual @@ Js.Json.array [|Js.Json.string "hello"; Js.Json.number 1.2|]
 );
