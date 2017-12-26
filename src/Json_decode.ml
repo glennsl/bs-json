@@ -65,14 +65,46 @@ let array decode json =
 let list decode json =
   json |> array decode |> Array.to_list
 
-let pair left right json =
+let pair decodeA decodeB json =
   if Js.Array.isArray json then begin
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let length = Js.Array.length source in
     if length = 2 then
-      (left (Array.unsafe_get source 0), right (Array.unsafe_get source 1))
+      decodeA (Array.unsafe_get source 0),
+      decodeB (Array.unsafe_get source 1)
     else
       raise @@ DecodeError ({j|Expected array of length 2, got array of length $length|j})
+  end
+  else
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+
+let tuple2 = pair
+
+let tuple3 decodeA decodeB decodeC json =
+  if Js.Array.isArray json then begin
+    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
+    let length = Js.Array.length source in
+    if length = 3 then
+      decodeA (Array.unsafe_get source 0),
+      decodeB (Array.unsafe_get source 1),
+      decodeC (Array.unsafe_get source 2)
+    else
+      raise @@ DecodeError ({j|Expected array of length 3, got array of length $length|j})
+  end
+  else
+    raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)
+
+let tuple4 decodeA decodeB decodeC decodeD json =
+  if Js.Array.isArray json then begin
+    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
+    let length = Js.Array.length source in
+    if length = 4 then
+      decodeA (Array.unsafe_get source 0),
+      decodeB (Array.unsafe_get source 1),
+      decodeC (Array.unsafe_get source 2),
+      decodeD (Array.unsafe_get source 3)
+    else
+      raise @@ DecodeError ({j|Expected array of length 4, got array of length $length|j})
   end
   else
     raise @@ DecodeError ("Expected array, got " ^ Js.Json.stringify json)

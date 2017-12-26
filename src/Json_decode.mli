@@ -193,8 +193,8 @@ elements are successfully decoded.
 *)
 
 val pair : 'a decoder -> 'b decoder -> ('a * 'b) decoder
-(** Decodes a JSON array with two elements into an ['a * 'b] tuple using the
-    first decoder on the left element and the second decoder on the right
+(** Decodes a JSON array with two elements into an ['a * 'b] tuple using
+    each of the given decoders in order.
 
 {b Returns} an ['a * 'b] if the JSON value is a JSON array of length 2 and both
     its elements are successfully decoded.
@@ -210,6 +210,48 @@ val pair : 'a decoder -> 'b decoder -> ('a * 'b) decoder
   (* raises DecodeError *)
   let _ = Js.Json.parseExn "[1, 2, 3]" |> Decode.(pair int int)
 ]}
+*)
+
+val tuple2 : 'a decoder -> 'b decoder -> ('a * 'b) decoder
+(** Decodes a JSON array with two elements into an ['a * 'b] tuple using
+    each of the given decoders in order.
+
+{b Alias of [pair]}
+
+{b Returns} an ['a * 'b] if the JSON value is a JSON array of length 2 and both
+    its elements are successfully decoded.
+
+@raise [DecodeError] if unsuccessful
+
+@example {[
+  open Json
+  (* returns (1, "bar") *)
+  let _ = Js.Json.parseExn "[1, \"bar\"]" |> Decode.(tuple2 int string)
+  (* raises DecodeError *)
+  let _ = Js.Json.parseExn "[1, 2]" |> Decode.(tuple2 int string)
+  (* raises DecodeError *)
+  let _ = Js.Json.parseExn "[1, 2, 3]" |> Decode.(tuple2 int int)
+]}
+*)
+
+val tuple3 : 'a decoder -> 'b decoder -> 'c decoder -> ('a * 'b * 'c) decoder
+(** Decodes a JSON array with three elements into an ['a * 'b * 'c] tuple using
+    each of the given decoders in order.
+
+{b Returns} an ['a * 'b * 'c] if the JSON value is a JSON array of length 3 and
+    all its elements are successfully decoded.
+
+@raise [DecodeError] if unsuccessful
+*)
+
+val tuple4 : 'a decoder -> 'b decoder -> 'c decoder -> 'd decoder -> ('a * 'b * 'c * 'd) decoder
+(** Decodes a JSON array with four elements into an ['a * 'b * 'c * 'd] tuple
+    using each of the given decoders in order.
+
+{b Returns} an ['a * 'b * 'c * 'd] if the JSON value is a JSON array of length 4
+    and all its elements are successfully decoded.
+
+@raise [DecodeError] if unsuccessful
 *)
 
 val dict : 'a decoder -> 'a Js.Dict.t decoder

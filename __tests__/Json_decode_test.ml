@@ -214,7 +214,7 @@ describe "pair" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "string int" (fun () ->
+  test "heterogenous" (fun () ->
     expect @@ pair string int (Js.Json.parseExn {| ["a", 3] |})
     |> toEqual ("a", 3));
   test "int int" (fun () ->
@@ -226,14 +226,86 @@ describe "pair" (fun () ->
   test "too large" (fun () ->
     expectFn (pair int int) (Js.Json.parseExn {| [3, 4, 5] |})
     |> toThrow);
-  test "bad left type" (fun () ->
+  test "bad type a" (fun () ->
     expectFn (pair int int) (Js.Json.parseExn {| ["3", 4] |})
     |> toThrow);
-  test "bad right type" (fun () ->
+  test "bad type b" (fun () ->
     expectFn (pair string string) (Js.Json.parseExn {| ["3", 4] |})
     |> toThrow);
   test "not array" (fun () ->
     expectFn (pair int int) (Js.Json.parseExn {| 4 |})
+    |> toThrow);
+);
+
+describe "tuple2" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "heterogenous" (fun () ->
+    expect @@ tuple2 string int (Js.Json.parseExn {| ["a", 3] |})
+    |> toEqual ("a", 3));
+  test "too small" (fun () ->
+    expectFn (tuple2 int int) (Js.Json.parseExn {| [4] |})
+    |> toThrow);
+  test "too large" (fun () ->
+    expectFn (tuple2 int int) (Js.Json.parseExn {| [3, 4, 5] |})
+    |> toThrow);
+  test "bad type a" (fun () ->
+    expectFn (tuple2 int int) (Js.Json.parseExn {| ["3", 4] |})
+    |> toThrow);
+  test "bad type b" (fun () ->
+    expectFn (tuple2 string string) (Js.Json.parseExn {| ["3", 4] |})
+    |> toThrow);
+  test "not array" (fun () ->
+    expectFn (tuple2 int int) (Js.Json.parseExn {| 4 |})
+    |> toThrow);
+);
+
+describe "tuple3" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "heterogenous" (fun () ->
+    expect @@ tuple3 string int float (Js.Json.parseExn {| ["a", 3, 4.5] |})
+    |> toEqual ("a", 3, 4.5));
+  test "too small" (fun () ->
+    expectFn (tuple3 int int int) (Js.Json.parseExn {| [4] |})
+    |> toThrow);
+  test "too large" (fun () ->
+    expectFn (tuple3 int int int) (Js.Json.parseExn {| [3, 4, 5, 6, 7] |})
+    |> toThrow);
+  test "bad type a" (fun () ->
+    expectFn (tuple3 int int int) (Js.Json.parseExn {| ["3", 4, 5] |})
+    |> toThrow);
+  test "bad type b" (fun () ->
+    expectFn (tuple3 string string string) (Js.Json.parseExn {| ["3", 4, "5"] |})
+    |> toThrow);
+  test "not array" (fun () ->
+    expectFn (tuple3 int int int) (Js.Json.parseExn {| 4 |})
+    |> toThrow);
+);
+
+describe "tuple4" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "heterogenous" (fun () ->
+    expect @@ tuple4 string int float bool (Js.Json.parseExn {| ["a", 3, 4.5, true] |})
+    |> toEqual ("a", 3, 4.5, true));
+  test "too small" (fun () ->
+    expectFn (tuple4 int int int int) (Js.Json.parseExn {| [4] |})
+    |> toThrow);
+  test "too large" (fun () ->
+    expectFn (tuple4 int int int int) (Js.Json.parseExn {| [3, 4, 5, 6, 7, 8] |})
+    |> toThrow);
+  test "bad type a" (fun () ->
+    expectFn (tuple4 int int int int) (Js.Json.parseExn {| ["3", 4, 5, 6] |})
+    |> toThrow);
+  test "bad type b" (fun () ->
+    expectFn (tuple4 string string string string) (Js.Json.parseExn {| ["3", 4, "5", "6"] |})
+    |> toThrow);
+  test "not array" (fun () ->
+    expectFn (tuple4 int int int int) (Js.Json.parseExn {| 4 |})
     |> toThrow);
 );
 
