@@ -174,6 +174,13 @@ transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js
 
 ## Changes
 
+### 1.0.0
+* Replaced `Json.Encoder.array` with `Json.Encode.arrayOf` renamed to `array`. Deprecated `arrayOf` alias.
+* Added `Json.parse`, `Json.parseOrRaise`, `Json.stringify`
+* Added `date` encoder and decoder
+* Added `tuple2`/`tuple3`/`tuple4` encoders and decoders
+* Fixed bug where js integers > 32-bit were rejected as integers by Json.Decode.int (#15)
+
 ### 0.2.4
 * Added `Json.Encode.bool`
 * Added `Json.Encode.pair`
@@ -184,7 +191,7 @@ transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js
 * Deprecated `Json.Encode.array`
 
 ### 0.2.3
-* Fixed embarrassing bug where an API was used that isn't available on IE (honestly more embarrassed on behalf IE though)
+* Fixed embarrassing bug where an API was used that isn't available on IE (honestly more embarrassed on behalf of IE though)
 
 ### 0.2.2
 * Added `Json.Decode.pair`
