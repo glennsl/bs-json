@@ -27,24 +27,24 @@ let object_ props: Js.Json.t =
   props |> Js.Dict.fromList
         |> dict
 
-external array : Js.Json.t array -> Js.Json.t = "%identity"
-let arrayOf encode l =
+external jsonArray : Js.Json.t array -> Js.Json.t = "%identity"
+let array encode l =
   l |> Array.map encode
-    |> array
+    |> jsonArray
+let arrayOf = array
 let list encode l =
   l |> List.map encode
     |> Array.of_list
-    |> array
+    |> jsonArray
 
 let pair encodeA encodeB (a, b) =
-  array [|encodeA a; encodeB b|]
+  jsonArray [|encodeA a; encodeB b|]
 let tuple2 = pair
 let tuple3 encodeA encodeB encodeC (a, b, c) =
-  array [|encodeA a; encodeB b; encodeC c|]
+  jsonArray [|encodeA a; encodeB b; encodeC c|]
 let tuple4 encodeA encodeB encodeC encodeD (a, b, c, d) =
-  array [|encodeA a; encodeB b; encodeC c; encodeD d|]
+  jsonArray [|encodeA a; encodeB b; encodeC c; encodeD d|]
 
-external jsonArray : Js.Json.t array -> Js.Json.t = "%identity"
 external stringArray : string array -> Js.Json.t = "%identity"
 external numberArray : float array -> Js.Json.t = "%identity"
 external booleanArray : Js.boolean array -> Js.Json.t = "%identity"

@@ -48,16 +48,18 @@ external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 val object_ : (string * Js.Json.t) list -> Js.Json.t
 (** [object_ props] makes a JSON object of the [props] list of properties *)
 
-external array : Js.Json.t array -> Js.Json.t = "%identity"
-[@@deprecated "Use `jsonArray` instead"]
-(** [array a] makes a JSON array of the [Js.Json.t array] [a] 
- *  @deprecated Use [jsonArray] instead.
- *)
-
-val arrayOf : 'a encoder -> 'a array encoder
+val array : 'a encoder -> 'a array encoder
 (** [arrayOf encoder l] makes a JSON array of the [list] [l] using the given [encoder] 
  *  NOTE: This will be renamed `array` once the existing and deprecated `array` function
  *  has been removed.
+ *)
+
+val arrayOf : 'a encoder -> 'a array encoder
+[@@deprecated "Use `array` instead"]
+(** [arrayOf encoder l] makes a JSON array of the [list] [l] using the given [encoder] 
+ *  NOTE: This will be renamed `array` once the existing and deprecated `array` function
+ *  has been removed.
+ *  @deprecated Use [array] instead
  *)
 
 val list : 'a encoder -> 'a list encoder
