@@ -1,6 +1,6 @@
 {
   "name": "bs-json",
-  "version": "0.2.4",
+  "version": "1.0.0",
   "description": "Compositional JSON encode/decode library for BuckleScript",
   "main": "index.js",
   "scripts": {
