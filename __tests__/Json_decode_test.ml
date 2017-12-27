@@ -10,31 +10,21 @@ module Test = struct
     | Array
     | Object
     | Bool
-  
-  (* TODO: tests for this function *)
-  let test decoder prefix = 
-    let open Json in function
-    | Float -> test (prefix ^ "float") (fun () ->
-        expectFn decoder (Encode.float 1.23) |> toThrow)
-    | Int -> test (prefix ^ "int") (fun () ->
-      expectFn decoder (Encode.int 23) |> toThrow);
-    | String -> test (prefix ^ "string") (fun () ->
-      expectFn decoder (Encode.string "test") |> toThrow);
-    | Null -> test (prefix ^ "null") (fun () ->
-      expectFn decoder Encode.null |> toThrow);
-    | Array -> test (prefix ^ "array") (fun () ->
-      expectFn decoder (Encode.jsonArray [||]) |> toThrow);
-    | Object -> test (prefix ^ "object") (fun () ->
-      expectFn decoder (Encode.object_ []) |> toThrow);
-    | Bool -> test (prefix ^ "boolean") (fun () ->
-      expectFn decoder (Encode.boolean Js.true_) |> toThrow);
-  ;;
 
-  let rec throws ?(prefix = "") decoder = function
-    | [] -> ();
-    | first::rest ->
-        test decoder prefix first;
-        throws decoder ~prefix rest 
+  let valueFor = 
+    let open! Json.Encode in function
+    | Float   -> float 1.23
+    | Int     -> int 23
+    | String  -> string "test"
+    | Null    -> null
+    | Array   -> jsonArray [||]
+    | Object  -> object_ []
+    | Bool    -> boolean Js.true_
+
+  let throws ?(name = "throws") decoder kinds =
+    testAll name (List.map valueFor kinds)  (fun value ->
+        expectFn decoder value |> toThrowException (Json.Decode.DecodeError ""))
+
 end
 
 let () = 
@@ -86,7 +76,9 @@ describe "int" (fun () ->
     expect @@ int (Encode.int big_int) |> toEqual big_int);
   test "infinity" (fun () ->
     let inf = [%raw "Infinity"] in
-    expectFn int (Encode.int inf) |> toThrow);
+    expectFn
+      int (Encode.int inf)
+      |> toThrowException(Decode.DecodeError "Expected integer, got null"));
   
   Test.throws int [Bool; Float; String; Null; Array; Object];
 );
@@ -106,7 +98,9 @@ describe "date" (fun () ->
   let open! Decode in
 
   test "ISO8601-formatted string" (fun () ->
-    expect @@ date (Encode.string "2012-04-23T18:25:43.511Z") |> toEqual (Js.Date.fromString "2012-04-23T18:25:43.511Z"));
+    expect @@
+      date (Encode.string "2012-04-23T18:25:43.511Z")
+      |> toEqual (Js.Date.fromString "2012-04-23T18:25:43.511Z"));
 
   Test.throws date [Bool; Float; Int; Null; Array; Object];
 );
@@ -180,7 +174,7 @@ describe "array" (fun () ->
   test "array int -> array boolean" (fun () ->
     expectFn
       (array boolean) (parseOrRaise {| [1, 2, 3] |})
-      |> toThrow);
+      |> toThrowException(DecodeError "Expected boolean, got 1"));
 
   Test.throws (array int) [Bool; Float; Int; String; Null; Object];
 );
@@ -215,7 +209,7 @@ describe "list" (fun () ->
   test "array int -> list boolean" (fun () ->
     expectFn
       (list boolean) (parseOrRaise {| [1, 2, 3] |})
-      |> toThrow);
+      |> toThrowException(DecodeError "Expected boolean, got 1"));
 
   Test.throws (list int) [Bool; Float; Int; String; Null; Object];
 );
@@ -232,19 +226,19 @@ describe "pair" (fun () ->
     |> toEqual (4, 3));
   test "too small" (fun () ->
     expectFn (pair int int) (parseOrRaise {| [4] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array of length 2, got array of length 1"));
   test "too large" (fun () ->
     expectFn (pair int int) (parseOrRaise {| [3, 4, 5] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array of length 2, got array of length 3"));
   test "bad type a" (fun () ->
     expectFn (pair int int) (parseOrRaise {| ["3", 4] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected number, got \"3\""));
   test "bad type b" (fun () ->
     expectFn (pair string string) (parseOrRaise {| ["3", 4] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected string, got 4"));
   test "not array" (fun () ->
     expectFn (pair int int) (parseOrRaise {| 4 |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array, got 4"));
 );
 
 describe "tuple2" (fun () ->
@@ -256,19 +250,19 @@ describe "tuple2" (fun () ->
     |> toEqual ("a", 3));
   test "too small" (fun () ->
     expectFn (tuple2 int int) (parseOrRaise {| [4] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array of length 2, got array of length 1"));
   test "too large" (fun () ->
     expectFn (tuple2 int int) (parseOrRaise {| [3, 4, 5] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array of length 2, got array of length 3"));
   test "bad type a" (fun () ->
     expectFn (tuple2 int int) (parseOrRaise {| ["3", 4] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected number, got \"3\""));
   test "bad type b" (fun () ->
     expectFn (tuple2 string string) (parseOrRaise {| ["3", 4] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected string, got 4"));
   test "not array" (fun () ->
     expectFn (tuple2 int int) (parseOrRaise {| 4 |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array, got 4"));
 );
 
 describe "tuple3" (fun () ->
@@ -280,19 +274,19 @@ describe "tuple3" (fun () ->
     |> toEqual ("a", 3, 4.5));
   test "too small" (fun () ->
     expectFn (tuple3 int int int) (parseOrRaise {| [4] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array of length 3, got array of length 1"));
   test "too large" (fun () ->
     expectFn (tuple3 int int int) (parseOrRaise {| [3, 4, 5, 6, 7] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array of length 3, got array of length 5"));
   test "bad type a" (fun () ->
     expectFn (tuple3 int int int) (parseOrRaise {| ["3", 4, 5] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected number, got \"3\""));
   test "bad type b" (fun () ->
     expectFn (tuple3 string string string) (parseOrRaise {| ["3", 4, "5"] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected string, got 4"));
   test "not array" (fun () ->
     expectFn (tuple3 int int int) (parseOrRaise {| 4 |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array, got 4"));
 );
 
 describe "tuple4" (fun () ->
@@ -304,19 +298,19 @@ describe "tuple4" (fun () ->
     |> toEqual ("a", 3, 4.5, true));
   test "too small" (fun () ->
     expectFn (tuple4 int int int int) (parseOrRaise {| [4] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array of length 4, got array of length 1"));
   test "too large" (fun () ->
     expectFn (tuple4 int int int int) (parseOrRaise {| [3, 4, 5, 6, 7, 8] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array of length 4, got array of length 6"));
   test "bad type a" (fun () ->
     expectFn (tuple4 int int int int) (parseOrRaise {| ["3", 4, 5, 6] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected number, got \"3\""));
   test "bad type b" (fun () ->
     expectFn (tuple4 string string string string) (parseOrRaise {| ["3", 4, "5", "6"] |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected string, got 4"));
   test "not array" (fun () ->
     expectFn (tuple4 int int int int) (parseOrRaise {| 4 |})
-    |> toThrow);
+    |> toThrowException(DecodeError "Expected array, got 4"));
 );
 
 describe "dict" (fun () ->
@@ -351,7 +345,7 @@ describe "dict" (fun () ->
   test "dict null -> dict string" (fun () ->
     expectFn
       (dict string) (parseOrRaise {| { "a": null, "b": null } |})
-      |> toThrow);
+      |> toThrowException(DecodeError "Expected string, got null"));
 
   Test.throws (dict int) [Bool; Float; Int; String; Null; Array];
 );
@@ -383,7 +377,7 @@ describe "field" (fun () ->
   test "field null -> field string" (fun () ->
     expectFn
       (field "b" string) (parseOrRaise {| { "a": null, "b": null } |})
-      |> toThrow);
+      |> toThrowException(DecodeError "Expected string, got null"));
 
   Test.throws (field "foo" int) [Bool; Float; Int; String; Null; Array; Object];
 );
@@ -413,9 +407,11 @@ describe "at" (fun () ->
         "a": { "x" : null }, 
         "b": null 
       } |})
-      |> toThrow);
+      |> toThrowException(DecodeError ""));
   test "empty list of keys should raise Invalid_argument" (fun () ->
-    expectFn (at []) int |> toThrow);
+    expectFn
+      (at []) int
+      |> toThrowException(Invalid_argument "Expected key_path to contain at least one element"));
 
   Test.throws (at ["foo"; "bar"] int) [Bool; Float; Int; String; Null; Array; Object];
 );
@@ -473,12 +469,12 @@ describe "optional" (fun () ->
   test "field optional - no such field" (fun () ->
     expectFn
       (field "y" (optional int)) (parseOrRaise {| { "x": 2} |})
-      |> toThrow);
+      |> toThrowException(DecodeError "Expected field 'y'"));
 
   test "non-DecodeError exceptions in decoder should pass through" (fun () ->
     expectFn
       (optional (fun _ -> failwith "fail")) (Encode.null)
-      |> toThrow);
+      |> toThrowException(Failure "fail"));
 );
 
 describe "oneOf" (fun () ->
@@ -493,7 +489,7 @@ describe "oneOf" (fun () ->
   test "non-DecodeError exceptions in decoder should pass through" (fun () ->
     expectFn
       (oneOf [(fun _ -> failwith "fail")]) (Encode.null)
-      |> toThrow);
+      |> toThrowException(Failure "fail"));
   
 
   Test.throws (oneOf [int; field "x" int]) [Bool; Float; String; Null; Array; Object];
@@ -533,7 +529,7 @@ describe "withDefault" (fun () ->
   test "non-DecodeError exceptions in decoder should pass through" (fun () ->
     expectFn
       (withDefault 4 (fun _ -> failwith "fail")) (Encode.int 0)
-      |> toThrow);
+      |> toThrowException(Failure "fail"));
 );
 
 describe "map" (fun () ->
@@ -558,9 +554,9 @@ describe "andThen" (fun () ->
   test "int -> float andThen int" (fun () ->
     expect @@ (float |> andThen (fun _ -> int)) (Encode.int 23) |> toEqual 23);
 
-  Test.throws ~prefix:"int andThen int " (int |> andThen (fun _ -> int)) [Bool; Float; String; Null; Array; Object];
-  Test.throws ~prefix:"float andThen int " (float |> andThen (fun _ -> int)) [Float];
-  Test.throws ~prefix:"int to " (int |> andThen (fun _ -> float)) [Float];
+  Test.throws ~name:"int andThen int " (int |> andThen (fun _ -> int)) [Bool; Float; String; Null; Array; Object];
+  Test.throws ~name:"float andThen int " (float |> andThen (fun _ -> int)) [Float];
+  Test.throws ~name:"int to " (int |> andThen (fun _ -> float)) [Float];
 );
 
 describe "composite expressions" (fun () ->
@@ -574,11 +570,11 @@ describe "composite expressions" (fun () ->
   test "dict array array int - heterogenous structure" (fun () ->
     expectFn 
       (dict (array (array int))) (parseOrRaise {| { "a": [[1, 2], [true]], "b": [[4], [5, 6]] } |})
-      |> toThrow);
+      |> toThrowException(DecodeError "Expected number, got true"));
   test "dict array array int - heterogenous structure 2" (fun () ->
     expectFn
       (dict (array (array int))) (parseOrRaise {| { "a": [[1, 2], "foo"], "b": [[4], [5, 6]] } |})
-      |> toThrow);
+      |> toThrowException(DecodeError "Expected array, got \"foo\""));
   test "field" (fun () ->
     let json = parseOrRaise {| { "foo": [1, 2, 3], "bar": "baz" } |} in
     expect @@

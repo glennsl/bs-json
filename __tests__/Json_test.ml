@@ -1,4 +1,3 @@
-
 open Jest
 open Expect
 open Json
@@ -26,7 +25,7 @@ describe "parseOrRaise" (fun () ->
   test "error" (fun () ->
     expectFn
       parseOrRaise "{"
-      |> toThrow);
+      |> toThrowException (ParseError "Unexpected end of JSON input"));
 );
 
 test "stringify" (fun () ->
