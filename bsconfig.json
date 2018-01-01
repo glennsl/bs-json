@@ -1,5 +1,5 @@
 {
-  "name": "bs-json",
+  "name": "@glennsl/bs-json",
   "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
   "sources": [
     "src",

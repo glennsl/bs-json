@@ -96,14 +96,14 @@ See [examples](https://github.com/glennsl/bs-json/blob/master/examples/) for mor
 ## Installation
 
 ```sh
-npm install --save bs-json
+npm install --save @glennsl/bs-json
 ```
 
 Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
 ```js
 {
   ...
-  "bs-dependencies": ["bs-json"]
+  "bs-dependencies": ["@glennsl/bs-json"]
 }
 ```
 
