@@ -33,7 +33,7 @@
   ],
   "devDependencies": {
     "bs-jest": "^0.3.0",
-    "bs-platform": "^1.9.0",
+    "bs-platform": "^2.1.0",
     "coveralls": "^3.0.0",
     "nyc": "^11.4.1"
   }
