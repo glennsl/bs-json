@@ -3,10 +3,10 @@
 Experimental JSON encode/decode library for BuckleScript.
 
 [![npm](https://img.shields.io/npm/v/bs-json.svg)](https://npmjs.org/bs-json)
-[![Travis](https://img.shields.io/travis/reasonml-community/bs-json/master.svg)]()
-[![Coveralls](https://img.shields.io/coveralls/reasonml-community/bs-json/master.svg)](https://coveralls.io/github/reasonml-community/bs-json?branch=master)
-[![Issues](https://img.shields.io/github/issues/reasonml-community/bs-json.svg)]()
-[![Last Commit](https://img.shields.io/github/last-commit/reasonml-community/bs-json.svg)]()
+[![Travis](https://img.shields.io/travis/glennsl/bs-json/master.svg)](https://travis-ci.org/glennsl/bs-json)
+[![Coveralls](https://img.shields.io/coveralls/glennsl/bs-json/master.svg)](https://coveralls.io/github/glennsl/bs-json?branch=master)
+[![Issues](https://img.shields.io/github/issues/glennsl/bs-json.svg)](https://github.com/glennsl/bs-json/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/glennsl/bs-json.svg)](https://github.com/glennsl/bs-json/commits/master)
 
 The Decode module in particular provides a basic set of decoder functions to be composed into more complex decoders. A
 decoder is a function that takes a `Js.Json.t` and either returns a value of the desired type if successful or raises a
@@ -89,7 +89,7 @@ let line = data |> Json.parseOrRaise
                 |> Decode.line;
 ```
 
-See [examples](https://github.com/reasonml-community/bs-json/blob/master/examples/) for more.
+See [examples](https://github.com/glennsl/bs-json/blob/master/examples/) for more.
 
 ## Installation
 
@@ -111,9 +111,9 @@ Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
 
 For the moment, please see the interface files:
 
-* [Json](https://github.com/reasonml-community/bs-json/blob/master/src/Json.mli)
-* [Json.Encode](https://github.com/reasonml-community/bs-json/blob/master/src/Json_encode.mli)
-* [Json.Decode](https://github.com/reasonml-community/bs-json/blob/master/src/Json_decode.mli)
+* [Json](https://github.com/glennsl/bs-json/blob/master/src/Json.mli)
+* [Json.Encode](https://github.com/glennsl/bs-json/blob/master/src/Json_encode.mli)
+* [Json.Decode](https://github.com/glennsl/bs-json/blob/master/src/Json_decode.mli)
 
 ### Writing custom decoders and encoders
 

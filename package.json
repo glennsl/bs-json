@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reasonml-community/bs-json.git"
+    "url": "git+https://github.com/glennsl/bs-json.git"
   },
   "keywords": [
     "bucklescript",
@@ -24,9 +24,9 @@
   "author": "glennsl",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/reasonml-community/bs-json/issues"
+    "url": "https://github.com/glennsl/bs-json/issues"
   },
-  "homepage": "https://github.com/reasonml-community/bs-json#readme",
+  "homepage": "https://github.com/glennsl/bs-json#readme",
   "devDependencies": {
     "bs-jest": "^0.3.0",
     "bs-platform": "^1.9.0",
