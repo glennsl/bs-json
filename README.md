@@ -2,11 +2,13 @@
 
 Experimental JSON encode/decode library for BuckleScript.
 
-[![npm](https://img.shields.io/npm/v/bs-json.svg)](https://npmjs.org/bs-json)
+[![npm](https://img.shields.io/npm/v/@glennsl/bs-json.svg)](https://npmjs.org/@glennsl/bs-json)
 [![Travis](https://img.shields.io/travis/glennsl/bs-json/master.svg)](https://travis-ci.org/glennsl/bs-json)
 [![Coveralls](https://img.shields.io/coveralls/glennsl/bs-json/master.svg)](https://coveralls.io/github/glennsl/bs-json?branch=master)
 [![Issues](https://img.shields.io/github/issues/glennsl/bs-json.svg)](https://github.com/glennsl/bs-json/issues)
 [![Last Commit](https://img.shields.io/github/last-commit/glennsl/bs-json.svg)](https://github.com/glennsl/bs-json/commits/master)
+
+_**NOTE:** NPM package has moved to `@glennsl/bs-json`. Remember to update both `package.json` AND `bsconfig.json`._
 
 The Decode module in particular provides a basic set of decoder functions to be composed into more complex decoders. A
 decoder is a function that takes a `Js.Json.t` and either returns a value of the desired type if successful or raises a
@@ -173,6 +175,10 @@ Encoders work exactly the same way, just in reverse. `'a encoder` is just an ali
 transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js.Json.t) -> 'a array -> Js.Json.t`.
 
 ## Changes
+
+### 1.0.1
+* Moved repository from `reasonml-community/bs-json` to `glennsl/bs-json`
+* Renamed NPM package from `bs-json` to `@glennsl/bs-json`
 
 ### 1.0.0
 * Replaced `Json.Encoder.array` with `Json.Encode.arrayOf` renamed to `array`. Deprecated `arrayOf` alias.
