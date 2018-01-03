@@ -1,6 +1,6 @@
 # bs-json
 
-Experimental JSON encode/decode library for BuckleScript.
+Compositional JSON encode/decode library for BuckleScript.
 
 [![npm](https://img.shields.io/npm/v/@glennsl/bs-json.svg)](https://npmjs.org/@glennsl/bs-json)
 [![Travis](https://img.shields.io/travis/glennsl/bs-json/master.svg)](https://travis-ci.org/glennsl/bs-json)
