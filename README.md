@@ -99,7 +99,7 @@ See [examples](https://github.com/glennsl/bs-json/blob/master/examples/) for mor
 npm install --save @glennsl/bs-json
 ```
 
-Then add `bs-json` to `bs-dependencies` in your `bsconfig.json`:
+Then add `@glennsl/bs-json` to `bs-dependencies` in your `bsconfig.json`:
 ```js
 {
   ...
