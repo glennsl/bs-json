@@ -60,7 +60,12 @@ let array decode json =
     let length = Js.Array.length source in
     let target = _unsafeCreateUninitializedArray length in
     for i = 0 to length - 1 do
-      let value = decode (Array.unsafe_get source i) in
+      let value = 
+        try
+          decode (Array.unsafe_get source i)
+        with
+          DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin array")
+        in
       Array.unsafe_set target i value;
     done;
     target
@@ -76,8 +81,11 @@ let pair decodeA decodeB json =
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let length = Js.Array.length source in
     if length = 2 then
-      decodeA (Array.unsafe_get source 0),
-      decodeB (Array.unsafe_get source 1)
+      try
+        decodeA (Array.unsafe_get source 0),
+        decodeB (Array.unsafe_get source 1)
+      with
+        DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin pair/tuple2")
     else
       raise @@ DecodeError ({j|Expected array of length 2, got array of length $length|j})
   end
@@ -91,9 +99,12 @@ let tuple3 decodeA decodeB decodeC json =
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let length = Js.Array.length source in
     if length = 3 then
-      decodeA (Array.unsafe_get source 0),
-      decodeB (Array.unsafe_get source 1),
-      decodeC (Array.unsafe_get source 2)
+      try
+        decodeA (Array.unsafe_get source 0),
+        decodeB (Array.unsafe_get source 1),
+        decodeC (Array.unsafe_get source 2)
+      with
+        DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin tuple3")
     else
       raise @@ DecodeError ({j|Expected array of length 3, got array of length $length|j})
   end
@@ -105,10 +116,13 @@ let tuple4 decodeA decodeB decodeC decodeD json =
     let source = (Obj.magic (json : Js.Json.t) : Js.Json.t array) in
     let length = Js.Array.length source in
     if length = 4 then
-      decodeA (Array.unsafe_get source 0),
-      decodeB (Array.unsafe_get source 1),
-      decodeC (Array.unsafe_get source 2),
-      decodeD (Array.unsafe_get source 3)
+      try
+        decodeA (Array.unsafe_get source 0),
+        decodeB (Array.unsafe_get source 1),
+        decodeC (Array.unsafe_get source 2),
+        decodeD (Array.unsafe_get source 3)
+      with
+        DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin tuple4")
     else
       raise @@ DecodeError ({j|Expected array of length 4, got array of length $length|j})
   end
@@ -126,7 +140,12 @@ let dict decode json =
     let target = Js.Dict.empty () in
     for i = 0 to l - 1 do
         let key = (Array.unsafe_get keys i) in
-        let value = decode (Js.Dict.unsafeGet source key) in
+        let value =
+          try
+            decode (Js.Dict.unsafeGet source key)
+          with
+            DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin dict")
+          in
         Js.Dict.set target key value;
     done;
     target
@@ -135,14 +154,22 @@ let dict decode json =
     raise @@ DecodeError ("Expected object, got " ^ _stringify json)
 
 let field key decode json =
-  if Js.typeof json = "object" && 
-      not (Js.Array.isArray json) && 
-      not ((Obj.magic json : 'a Js.null) == Js.null)
+  if 
+    Js.typeof json = "object" && 
+    not (Js.Array.isArray json) && 
+    not ((Obj.magic json : 'a Js.null) == Js.null)
   then begin
-    let dict = (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
+    let dict =
+      (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
     match Js.Dict.get dict key with
-    | Some value -> decode value
-    | None -> raise @@ DecodeError ({j|Expected field '$(key)'|j})
+    | Some value -> begin
+      try
+        decode value
+      with
+        DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tat field '" ^ key ^ "'")
+      end
+    | None ->
+      raise @@ DecodeError ({j|Expected field '$(key)'|j})
   end
   else
     raise @@ DecodeError ("Expected object, got " ^ _stringify json)
