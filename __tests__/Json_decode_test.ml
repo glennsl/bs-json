@@ -615,11 +615,11 @@ describe "composite expressions" (fun () ->
   test "dict array array int - heterogenous structure" (fun () ->
     expectFn 
       (dict (array (array int))) (parseOrRaise {| { "a": [[1, 2], [true]], "b": [[4], [5, 6]] } |})
-      |> toThrowException(DecodeError "Expected number, got true\n\tin array\n\tin array\n\tin dict"));
+      |> toThrowException(DecodeError "Expected number, got true\n\tin array at index 0\n\tin array at index 1\n\tin dict"));
   test "dict array array int - heterogenous structure 2" (fun () ->
     expectFn
       (dict (array (array int))) (parseOrRaise {| { "a": [[1, 2], "foo"], "b": [[4], [5, 6]] } |})
-      |> toThrowException(DecodeError "Expected array, got \"foo\"\n\tin array\n\tin dict"));
+      |> toThrowException(DecodeError "Expected array, got \"foo\"\n\tin array at index 1\n\tin dict"));
   test "field" (fun () ->
     let json = parseOrRaise {| { "foo": [1, 2, 3], "bar": "baz" } |} in
     expect @@
