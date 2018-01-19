@@ -1,6 +1,6 @@
 {
   "name": "@glennsl/bs-json",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Compositional JSON encode/decode library for BuckleScript",
   "main": "index.js",
   "scripts": {
