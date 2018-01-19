@@ -64,7 +64,7 @@ let array decode json =
         try
           decode (Array.unsafe_get source i)
         with
-          DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin array")
+          DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin array at index " ^ string_of_int i)
         in
       Array.unsafe_set target i value;
     done;
