@@ -1,12 +1,12 @@
 'use strict';
 
-var Jest                    = require("bs-jest/lib/js/src/jest.js");
-var Json                    = require("../src/Json.js");
+var Jest                    = require("bs-jest/src/jest.js");
+var Json                    = require("../src/Json.bs.js");
 var List                    = require("bs-platform/lib/js/list.js");
 var Curry                   = require("bs-platform/lib/js/curry.js");
 var Pervasives              = require("bs-platform/lib/js/pervasives.js");
-var Json_decode             = require("../src/Json_decode.js");
-var Json_encode             = require("../src/Json_encode.js");
+var Json_decode             = require("../src/Json_decode.bs.js");
+var Json_encode             = require("../src/Json_encode.bs.js");
 var Caml_builtin_exceptions = require("bs-platform/lib/js/caml_builtin_exceptions.js");
 
 function valueFor(param) {

@@ -1,6 +1,11 @@
 {
   "name": "@glennsl/bs-json",
   "bsc-flags": ["-bs-no-version-header", "-bs-super-errors"],
+  "package-specs": [{
+    "module": "commonjs",
+    "in-source": true
+  }],
+  "suffix": ".bs.js",
   "sources": [
     "src",
     {

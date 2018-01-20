@@ -1,7 +1,7 @@
 'use strict';
 
-var Jest = require("bs-jest/lib/js/src/jest.js");
-var Json = require("../src/Json.js");
+var Jest = require("bs-jest/src/jest.js");
+var Json = require("../src/Json.bs.js");
 
 describe("parse", (function () {
         Jest.test("success", (function () {

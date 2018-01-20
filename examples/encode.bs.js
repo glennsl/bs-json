@@ -1,7 +1,7 @@
 'use strict';
 
-var Json        = require("../src/Json.js");
-var Json_encode = require("../src/Json_encode.js");
+var Json        = require("../src/Json.bs.js");
+var Json_encode = require("../src/Json_encode.bs.js");
 
 console.log(Json.stringify(/* array */[
           "foo",

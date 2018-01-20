@@ -1,9 +1,9 @@
 'use strict';
 
-var Jest        = require("bs-jest/lib/js/src/jest.js");
+var Jest        = require("bs-jest/src/jest.js");
 var $$Array     = require("bs-platform/lib/js/array.js");
 var Js_dict     = require("bs-platform/lib/js/js_dict.js");
-var Json_encode = require("../src/Json_encode.js");
+var Json_encode = require("../src/Json_encode.bs.js");
 
 Jest.test("null", (function () {
         return Jest.Expect[/* toEqual */12](null, Jest.Expect[/* expect */0](null));

@@ -1,11 +1,11 @@
 'use strict';
 
-var Json        = require("../src/Json.js");
+var Json        = require("../src/Json.bs.js");
 var $$Array     = require("bs-platform/lib/js/array.js");
 var Curry       = require("bs-platform/lib/js/curry.js");
 var Js_exn      = require("bs-platform/lib/js/js_exn.js");
 var Js_dict     = require("bs-platform/lib/js/js_dict.js");
-var Json_decode = require("../src/Json_decode.js");
+var Json_decode = require("../src/Json_decode.bs.js");
 
 function mapJsonObjectString(f, decoder, encoder, str) {
   var json = Json.parseOrRaise(str);
