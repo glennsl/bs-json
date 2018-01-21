@@ -1,5 +1,5 @@
 #!/bin/bash
 
-for file in lib/js/examples/*.js; do
+for file in examples/*.bs.js; do
   node "$file"
 done
