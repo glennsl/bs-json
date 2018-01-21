@@ -19,44 +19,7 @@ ints? `Json.Decode.(array (array int))`. Dict containing arrays of ints? `Json.D
 
 ## Example
 
-```ml
-(* OCaml *)
-type line = {
-  start: point;
-  end_: point;
-  thickness: int option
-}
-and point = {
-  x: float;
-  y: float
-}
-
-module Decode = struct
-  let point json =
-    let open! Json.Decode in {
-      x = json |> field "x" float;
-      y = json |> field "y" float
-    }
-
-  let line json =
-    Json.Decode.{
-      start     = json |> field "start" point;
-      end_      = json |> field "end" point;
-      thickness = json |> optional (field "thickness" int)
-    }
-end
-
-let data = {| {
-  "start": { "x": 1.1, "y": -0.4 },
-  "end":   { "x": 5.3, "y": 3.8 }
-} |}
-
-let line = data |> Json.parseOrRaise
-                |> Decode.line
-```
-
 ```reason
-/* Reason */
 type line = {
   start: point,
   end_: point,
@@ -128,12 +91,14 @@ function `Js.Json.t -> int array`.
 If you've written a function that takes just `Js.Json.t` and returns user-defined types of your own, you've already been
 writing composable decoders! Let's look at `Decode.point` from the example above:
 
-```ml
-let point json =
-  let open! Json.Decode in {
-    x = json |> field "x" float;
-    y = json |> field "y" float
-  }
+```reason
+let point = json => {
+  open! Json.Decode;
+  {
+    x: json |> field("x", float),
+    y: json |> field("y", float)
+  };
+};
 ```
 
 This is a function `Js.Json.t -> point`, or a `point decoder`. So if we'd like to decode an array of points, we can just
@@ -145,8 +110,8 @@ To write a decoder _builder_ like `Json.Decode.array` we need to take another de
 currying we just need to apply it where we'd otherwise use a fixed decoder. Say we want to be able to decode both
 `int point`s and `float point`s. First we'd have to parameterize the type:
 
-```ml
-type 'a point = {
+```reason
+type point('a) = {
   x: 'a,
   y: 'a
 }
@@ -154,19 +119,21 @@ type 'a point = {
 
 Then we can change our `point` function from above to take and use a decoder argument:
 
-```ml
-let point decodeNumber json =
-  let open! Json.Decode in {
-    x = json |> field "x" decodeNumber;
-    y = json |> field "y" decodeNumber
-  }
+```reason
+let point = (decodeNumber, json) => {
+  open! Json.Decode;
+  {
+    x: json |> field("x", decodeNumber),
+    y: json |> field("y", decodeNumber)
+  };
+};
 ```
 
 And if we wish we can now create aliases for each variant:
 
-```ml
-let intPoint = point Json.Decode.int
-let floatPoint = point Json.Decode.float
+```reason
+let intPoint = point(Json.Decode.int);
+let floatPoint = point(Json.Decode.float);
 ```
 
 #### Encoders
