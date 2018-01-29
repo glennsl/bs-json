@@ -432,43 +432,52 @@ val andThen : ('a -> 'b decoder) -> 'a decoder -> 'b decoder
 @raise [DecodeError] if unsuccessful 
 
 @example {[
-  (* Deoce a JSON tree structure *)
+  (* Decode a JSON tree structure *)
   type 'a tree =
   | Node of 'a * 'a tree list
   | Leaf of 'a
 
-  let decodeTree decodeValue =
-  |> Decode.(
-      field "type" string
-      |> andThen (fun
-      | "node" -> Node (field "value" decodeValue) (field "children" (array decodeTree |> map Array.to_list))
-      | "leaf" -> Leaf (field "value" decodeValue)
-      )
-    )
+  module Decode = struct
+    open Json.Decode
 
-  let json =
-    {| {
+    let rec tree decoder =
+      field "type" string |> andThen (
+        function | "node" -> node decoder
+                | "leaf" -> leaf decoder
+                | _      -> failwith "unknown node type"
+      )
+
+    and node decoder json =
+      Node (
+        (json |> field "value" decoder),
+        (json |> field "children" (array (tree decoder) |> map Array.to_list))
+      )
+
+    and leaf decoder json =
+      Leaf (json |> field "value" decoder)
+  end
+
+  let json = {| {
+    "type": "node",
+    "value": 9,
+    "children": [{
       "type": "node",
-      "value": 9
+      "value": 5,
       "children": [{
         "type": "leaf",
-        "value": 5,
-        "children": [{
-          "type": "leaf",
-          "value": 3
-        }, {
-          "type": "leaf",
-          "value": 2
-        }]
+        "value": 3
       }, {
-          "type": "leaf",
-          "value": 4
+        "type": "leaf",
+        "value": 2
       }]
-    } |}
+    }, {
+        "type": "leaf",
+        "value": 4
+    }]
+  } |}
 
   let myTree =
-    json
-    |> Json.parseOrRaise 
-    |> decodeTree int
+    json |> Json.parseOrRaise 
+        |> Decode.tree Json.Decode.int
 ]}
 *)
