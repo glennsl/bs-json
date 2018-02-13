@@ -1,6 +1,6 @@
 'use strict';
 
-var Js_exn          = require("bs-platform/lib/js/js_exn.js");
+var Js_exn = require("bs-platform/lib/js/js_exn.js");
 var Caml_exceptions = require("bs-platform/lib/js/caml_exceptions.js");
 
 var ParseError = Caml_exceptions.create("Json.ParseError");
@@ -41,10 +41,10 @@ function stringify(prim) {
   return JSON.stringify(prim);
 }
 
-exports.Decode       = Decode;
-exports.Encode       = Encode;
-exports.ParseError   = ParseError;
-exports.parse        = parse;
+exports.Decode = Decode;
+exports.Encode = Encode;
+exports.ParseError = ParseError;
+exports.parse = parse;
 exports.parseOrRaise = parseOrRaise;
-exports.stringify    = stringify;
+exports.stringify = stringify;
 /* No side effect */

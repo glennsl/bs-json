@@ -1,6 +1,6 @@
 'use strict';
 
-var Json        = require("../src/Json.bs.js");
+var Json = require("../src/Json.bs.js");
 var Json_encode = require("../src/Json_encode.bs.js");
 
 console.log(Json.stringify(/* array */[
@@ -88,5 +88,5 @@ var data = /* record */[
 console.log(line(data));
 
 exports.Encode = Encode;
-exports.data   = data;
+exports.data = data;
 /*  Not a pure module */

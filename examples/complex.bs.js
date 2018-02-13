@@ -1,6 +1,6 @@
 'use strict';
 
-var Json        = require("../src/Json.bs.js");
+var Json = require("../src/Json.bs.js");
 var Json_decode = require("../src/Json_decode.bs.js");
 
 function point(json) {
@@ -30,5 +30,5 @@ var data = " {\n  \"start\": { \"x\": 1.1, \"y\": -0.4 },\n  \"end\":   { \"x\":
 console.log(line(Json.parseOrRaise(data)));
 
 exports.Decode = Decode;
-exports.data   = data;
+exports.data = data;
 /*  Not a pure module */

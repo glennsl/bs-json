@@ -1,9 +1,9 @@
 'use strict';
 
-var List       = require("bs-platform/lib/js/list.js");
-var $$Array    = require("bs-platform/lib/js/array.js");
-var Curry      = require("bs-platform/lib/js/curry.js");
-var Js_dict    = require("bs-platform/lib/js/js_dict.js");
+var List = require("bs-platform/lib/js/list.js");
+var $$Array = require("bs-platform/lib/js/array.js");
+var Curry = require("bs-platform/lib/js/curry.js");
+var Js_dict = require("bs-platform/lib/js/js_dict.js");
 var Js_boolean = require("bs-platform/lib/js/js_boolean.js");
 
 var bool = Js_boolean.to_js_boolean;
@@ -64,16 +64,16 @@ var tuple2 = pair;
 
 var arrayOf = array;
 
-exports.bool        = bool;
-exports.date        = date;
-exports.nullable    = nullable;
+exports.bool = bool;
+exports.date = date;
+exports.nullable = nullable;
 exports.withDefault = withDefault;
-exports.pair        = pair;
-exports.tuple2      = tuple2;
-exports.tuple3      = tuple3;
-exports.tuple4      = tuple4;
-exports.object_     = object_;
-exports.array       = array;
-exports.arrayOf     = arrayOf;
-exports.list        = list;
+exports.pair = pair;
+exports.tuple2 = tuple2;
+exports.tuple3 = tuple3;
+exports.tuple4 = tuple4;
+exports.object_ = object_;
+exports.array = array;
+exports.arrayOf = arrayOf;
+exports.list = list;
 /* Js_dict Not a pure module */

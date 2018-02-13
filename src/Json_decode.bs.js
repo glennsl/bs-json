@@ -1,11 +1,11 @@
 'use strict';
 
-var List                    = require("bs-platform/lib/js/list.js");
-var $$Array                 = require("bs-platform/lib/js/array.js");
-var Curry                   = require("bs-platform/lib/js/curry.js");
-var Js_exn                  = require("bs-platform/lib/js/js_exn.js");
-var Pervasives              = require("bs-platform/lib/js/pervasives.js");
-var Caml_exceptions         = require("bs-platform/lib/js/caml_exceptions.js");
+var List = require("bs-platform/lib/js/list.js");
+var $$Array = require("bs-platform/lib/js/array.js");
+var Curry = require("bs-platform/lib/js/curry.js");
+var Js_exn = require("bs-platform/lib/js/js_exn.js");
+var Pervasives = require("bs-platform/lib/js/pervasives.js");
+var Caml_exceptions = require("bs-platform/lib/js/caml_exceptions.js");
 var Caml_builtin_exceptions = require("bs-platform/lib/js/caml_builtin_exceptions.js");
 
 function _isInteger(value) {
@@ -400,27 +400,27 @@ function andThen(b, a, json) {
 var tuple2 = pair;
 
 exports.DecodeError = DecodeError;
-exports.$$boolean   = $$boolean;
-exports.bool        = bool;
-exports.$$float     = $$float;
-exports.$$int       = $$int;
-exports.string      = string;
-exports.date        = date;
-exports.nullable    = nullable;
-exports.nullAs      = nullAs;
-exports.array       = array;
-exports.list        = list;
-exports.pair        = pair;
-exports.tuple2      = tuple2;
-exports.tuple3      = tuple3;
-exports.tuple4      = tuple4;
-exports.dict        = dict;
-exports.field       = field;
-exports.at          = at;
-exports.optional    = optional;
-exports.oneOf       = oneOf;
-exports.either      = either;
+exports.$$boolean = $$boolean;
+exports.bool = bool;
+exports.$$float = $$float;
+exports.$$int = $$int;
+exports.string = string;
+exports.date = date;
+exports.nullable = nullable;
+exports.nullAs = nullAs;
+exports.array = array;
+exports.list = list;
+exports.pair = pair;
+exports.tuple2 = tuple2;
+exports.tuple3 = tuple3;
+exports.tuple4 = tuple4;
+exports.dict = dict;
+exports.field = field;
+exports.at = at;
+exports.optional = optional;
+exports.oneOf = oneOf;
+exports.either = either;
 exports.withDefault = withDefault;
-exports.map         = map;
-exports.andThen     = andThen;
+exports.map = map;
+exports.andThen = andThen;
 /* No side effect */

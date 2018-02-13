@@ -1,10 +1,10 @@
 'use strict';
 
-var Json        = require("../src/Json.bs.js");
-var List        = require("bs-platform/lib/js/list.js");
-var $$Array     = require("bs-platform/lib/js/array.js");
-var Block       = require("bs-platform/lib/js/block.js");
-var Pervasives  = require("bs-platform/lib/js/pervasives.js");
+var Json = require("../src/Json.bs.js");
+var List = require("bs-platform/lib/js/list.js");
+var $$Array = require("bs-platform/lib/js/array.js");
+var Block = require("bs-platform/lib/js/block.js");
+var Pervasives = require("bs-platform/lib/js/pervasives.js");
 var Json_decode = require("../src/Json_decode.bs.js");
 
 function tree(decoder) {
@@ -87,7 +87,7 @@ var myTree = print(tree(Json_decode.$$int)(Json.parseOrRaise(json)));
 
 exports.Decode = Decode;
 exports.indent = indent;
-exports.print  = print;
-exports.json   = json;
+exports.print = print;
+exports.json = json;
 exports.myTree = myTree;
 /* myTree Not a pure module */

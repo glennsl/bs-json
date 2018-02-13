@@ -1,8 +1,8 @@
 'use strict';
 
-var Jest        = require("bs-jest/src/jest.js");
-var $$Array     = require("bs-platform/lib/js/array.js");
-var Js_dict     = require("bs-platform/lib/js/js_dict.js");
+var Jest = require("bs-jest/src/jest.js");
+var $$Array = require("bs-platform/lib/js/array.js");
+var Js_dict = require("bs-platform/lib/js/js_dict.js");
 var Json_encode = require("../src/Json_encode.bs.js");
 
 Jest.test("null", (function () {
