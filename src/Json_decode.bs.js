@@ -334,17 +334,24 @@ function optional(decode, json) {
   }
 }
 
-function oneOf(_decoders, json) {
+function oneOf(decoders, json) {
+  var _decoders = decoders;
+  var _errors = /* [] */0;
   while(true) {
-    var decoders = _decoders;
-    if (decoders) {
+    var errors = _errors;
+    var decoders$1 = _decoders;
+    if (decoders$1) {
       try {
-        return Curry._1(decoders[0], json);
+        return Curry._1(decoders$1[0], json);
       }
       catch (raw_exn){
         var exn = Js_exn.internalToOCamlException(raw_exn);
         if (exn[0] === DecodeError) {
-          _decoders = decoders[1];
+          _errors = /* :: */[
+            exn[1],
+            errors
+          ];
+          _decoders = decoders$1[1];
           continue ;
           
         } else {
@@ -352,10 +359,10 @@ function oneOf(_decoders, json) {
         }
       }
     } else {
-      var length = List.length(decoders);
+      var revErrors = List.rev(errors);
       throw [
             DecodeError,
-            "Expected oneOf " + (String(length) + ", got ") + JSON.stringify(json)
+            "All decoders given to oneOf failed. Here are all the errors: " + (String(revErrors) + ". And the JSON being decoded: ") + JSON.stringify(json)
           ];
     }
   };
