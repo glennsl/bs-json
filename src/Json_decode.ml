@@ -188,12 +188,13 @@ let oneOf decoders json =
   let rec inner decoders errors =
     match decoders with
     | [] ->
+        let revErrors = List.rev errors in
         raise @@ DecodeError
-              ({j|All decoders given to oneOf failed. Here are all the errors: $errors. And the JSON being decoded: |j} ^ _stringify json)
+              ({j|All decoders given to oneOf failed. Here are all the errors: $revErrors. And the JSON being decoded: |j} ^ _stringify json)
     | decode::rest ->
         try decode json with
         | DecodeError e ->
-             inner rest (List.append errors [e]) in
+             inner rest (e :: errors) in
   inner decoders []
 
 let either a b =
