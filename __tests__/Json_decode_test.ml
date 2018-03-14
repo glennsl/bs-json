@@ -10,6 +10,7 @@ module Test = struct
     | Array
     | Object
     | Bool
+    | Char
 
   let valueFor = 
     let open! Json.Encode in function
@@ -20,6 +21,7 @@ module Test = struct
     | Array   -> jsonArray [||]
     | Object  -> object_ []
     | Bool    -> boolean Js.true_
+    | Char    -> char 'a'
 
   let throws ?(name = "throws") decoder kinds =
     testAll name (List.map valueFor kinds)  (fun value ->
@@ -36,7 +38,7 @@ describe "boolean" (fun () ->
   test "boolean" (fun () ->
     expect @@ boolean (Encode.boolean Js.true_) |> toEqual Js.true_);
 
-  Test.throws boolean [Float; Int; String; Null; Array; Object];
+  Test.throws boolean [Float; Int; String; Null; Array; Object; Char];
 );
 
 describe "bool" (fun () ->
@@ -48,7 +50,7 @@ describe "bool" (fun () ->
   test "bool - false" (fun () ->
     expect @@ bool (Encode.boolean Js.false_) |> toEqual false);
     
-  Test.throws bool [Float; Int; String; Null; Array; Object];
+  Test.throws bool [Float; Int; String; Null; Array; Object; Char];
 );
 
 describe "float" (fun () ->
@@ -60,7 +62,7 @@ describe "float" (fun () ->
   test "int" (fun () ->
     expect @@ float (Encode.int 23) |> toEqual 23.);
   
-  Test.throws float [Bool; String; Null; Array; Object;];
+  Test.throws float [Bool; String; Null; Array; Object; Char];
 );
 
 describe "int" (fun () ->
@@ -80,7 +82,7 @@ describe "int" (fun () ->
       int (Encode.int inf)
       |> toThrowException(Decode.DecodeError "Expected integer, got null"));
   
-  Test.throws int [Bool; Float; String; Null; Array; Object];
+  Test.throws int [Bool; Float; String; Null; Array; Object; Char];
 );
 
 describe "string" (fun () ->
@@ -89,6 +91,9 @@ describe "string" (fun () ->
 
   test "string" (fun () ->
     expect @@ string (Encode.string "test") |> toEqual "test");
+
+  test "single-character string" (fun () ->
+    expect @@ string (Encode.char 'a') |> toEqual "a");
 
   Test.throws string [Bool; Float; Int; Null; Array; Object];
 );
@@ -103,6 +108,33 @@ describe "date" (fun () ->
       |> toEqual (Js.Date.fromString "2012-04-23T18:25:43.511Z"));
 
   Test.throws date [Bool; Float; Int; Null; Array; Object];
+);
+
+describe "char" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  test "character" (fun () ->
+    expect @@
+      char (Encode.char 'a')
+      |> toEqual ('a'));
+
+  test "single-character string" (fun () ->
+    expect @@
+      char (Encode.string "a")
+      |> toEqual ('a'));
+
+  test "empty string" (fun () ->
+    expectFn
+      char (Encode.string "")
+      |> toThrowException(Decode.DecodeError "Expected single-character string, got \"\""));
+
+  test "multiple-character string" (fun () ->
+    expectFn
+      char (Encode.string "abc")
+      |> toThrowException(Decode.DecodeError "Expected single-character string, got \"abc\""));
+
+  Test.throws char [Bool; Float; Int; Null; Array; Object];
 );
 
 describe "nullable" (fun () ->
@@ -123,7 +155,7 @@ describe "nullable" (fun () ->
   test "null -> null" (fun () ->
     expect @@ nullable (nullAs Js.null) Encode.null |> toEqual Js.null);
 
-  Test.throws (nullable int) [Bool; Float; String; Array; Object];
+  Test.throws (nullable int) [Bool; Float; String; Array; Object; Char];
   Test.throws (nullable boolean) [Int];
 );
 
@@ -141,7 +173,7 @@ describe "nullAs" (fun () ->
   test "as Some _" (fun () ->
     expect (nullAs (Some "foo") Encode.null) |> toEqual (Some "foo"));
 
-  Test.throws (nullAs 0) [Bool; Float; Int; String; Array; Object];
+  Test.throws (nullAs 0) [Bool; Float; Int; String; Array; Object; Char];
 );
 
 describe "array" (fun () ->
@@ -181,7 +213,7 @@ describe "array" (fun () ->
       (array (fun _ -> failwith "fail")) (Encode.array Encode.int [|1|])
       |> toThrowException(Failure "fail"));
 
-  Test.throws (array int) [Bool; Float; Int; String; Null; Object];
+  Test.throws (array int) [Bool; Float; Int; String; Null; Object; Char];
 );
 
 describe "list" (fun () ->
@@ -221,7 +253,7 @@ describe "list" (fun () ->
       (list (fun _ -> failwith "fail")) (Encode.list Encode.int [1])
       |> toThrowException(Failure "fail"));
 
-  Test.throws (list int) [Bool; Float; Int; String; Null; Object];
+  Test.throws (list int) [Bool; Float; Int; String; Null; Object; Char];
 );
 
 describe "pair" (fun () ->
@@ -377,7 +409,7 @@ describe "dict" (fun () ->
       (dict (fun _ -> failwith "fail")) (parseOrRaise {| { "a": 0 } |})
       |> toThrowException(Failure "fail"));
 
-  Test.throws (dict int) [Bool; Float; Int; String; Null; Array];
+  Test.throws (dict int) [Bool; Float; Int; String; Null; Array; Char];
 );
 
 describe "field" (fun () ->
@@ -417,7 +449,7 @@ describe "field" (fun () ->
       (field "a" (fun _ -> failwith "fail")) (parseOrRaise {| { "a": 0 } |})
       |> toThrowException(Failure "fail"));
 
-  Test.throws (field "foo" int) [Bool; Float; Int; String; Null; Array; Object];
+  Test.throws (field "foo" int) [Bool; Float; Int; String; Null; Array; Object; Char];
 );
 
 describe "at" (fun () ->
@@ -458,7 +490,7 @@ describe "at" (fun () ->
       (at []) int
       |> toThrowException(Invalid_argument "Expected key_path to contain at least one element"));
 
-  Test.throws (at ["foo"; "bar"] int) [Bool; Float; Int; String; Null; Array; Object];
+  Test.throws (at ["foo"; "bar"] int) [Bool; Float; Int; String; Null; Array; Object; Char];
 );
 
 describe "optional" (fun () ->
@@ -537,7 +569,7 @@ describe "oneOf" (fun () ->
       |> toThrowException(Failure "fail"));
   
 
-  Test.throws (oneOf [int; field "x" int]) [Bool; Float; String; Null; Array; Object];
+  Test.throws (oneOf [int; field "x" int]) [Bool; Float; String; Null; Array; Object; Char];
 );
 
 describe "either" (fun () ->
@@ -549,7 +581,7 @@ describe "either" (fun () ->
   test "int" (fun () ->
     expect @@ (either int (field "x" int)) (Encode.int 23) |> toEqual 23);
 
-  Test.throws (either int (field "x" int)) [Bool; Float; String; Null; Array; Object];
+  Test.throws (either int (field "x" int)) [Bool; Float; String; Null; Array; Object; Char];
 );
 
 describe "withDefault" (fun () ->
@@ -584,7 +616,7 @@ describe "map" (fun () ->
   test "int" (fun () ->
     expect @@ (int |> map ((+)2)) (Encode.int 23) |> toEqual 25);
 
-  Test.throws (int |> map ((+)2)) [Bool; Float; String; Null; Array; Object];
+  Test.throws (int |> map ((+)2)) [Bool; Float; String; Null; Array; Object; Char];
 );
 
 describe "andThen" (fun () ->
@@ -599,7 +631,7 @@ describe "andThen" (fun () ->
   test "int -> float andThen int" (fun () ->
     expect @@ (float |> andThen (fun _ -> int)) (Encode.int 23) |> toEqual 23);
 
-  Test.throws ~name:"int andThen int " (int |> andThen (fun _ -> int)) [Bool; Float; String; Null; Array; Object];
+  Test.throws ~name:"int andThen int " (int |> andThen (fun _ -> int)) [Bool; Float; String; Null; Array; Object; Char];
   Test.throws ~name:"float andThen int " (float |> andThen (fun _ -> int)) [Float];
   Test.throws ~name:"int to " (int |> andThen (fun _ -> float)) [Float];
 );

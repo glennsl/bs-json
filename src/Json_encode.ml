@@ -11,6 +11,10 @@ let bool b =
   b |> Js.Boolean.to_js_boolean
     |> boolean 
 
+let char c =
+  c |> String.make 1
+    |> string
+
 let date d =
   d |> Js.Date.toJSON
     |> string

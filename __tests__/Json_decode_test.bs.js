@@ -25,6 +25,8 @@ function valueFor(param) {
         return Json_encode.object_(/* [] */0);
     case 6 : 
         return true;
+    case 7 : 
+        return Json_encode.$$char(/* "a" */97);
     
   }
 }
@@ -60,7 +62,10 @@ describe("boolean", (function () {
                             /* Array */4,
                             /* :: */[
                               /* Object */5,
-                              /* [] */0
+                              /* :: */[
+                                /* Char */7,
+                                /* [] */0
+                              ]
                             ]
                           ]
                         ]
@@ -88,7 +93,10 @@ describe("bool", (function () {
                             /* Array */4,
                             /* :: */[
                               /* Object */5,
-                              /* [] */0
+                              /* :: */[
+                                /* Char */7,
+                                /* [] */0
+                              ]
                             ]
                           ]
                         ]
@@ -114,7 +122,10 @@ describe("float", (function () {
                           /* Array */4,
                           /* :: */[
                             /* Object */5,
-                            /* [] */0
+                            /* :: */[
+                              /* Char */7,
+                              /* [] */0
+                            ]
                           ]
                         ]
                       ]
@@ -149,7 +160,10 @@ describe("int", (function () {
                             /* Array */4,
                             /* :: */[
                               /* Object */5,
-                              /* [] */0
+                              /* :: */[
+                                /* Char */7,
+                                /* [] */0
+                              ]
                             ]
                           ]
                         ]
@@ -161,6 +175,9 @@ describe("int", (function () {
 describe("string", (function () {
         Jest.test("string", (function () {
                 return Jest.Expect[/* toEqual */12]("test", Jest.Expect[/* expect */0](Json_decode.string("test")));
+              }));
+        Jest.test("single-character string", (function () {
+                return Jest.Expect[/* toEqual */12]("a", Jest.Expect[/* expect */0](Json_decode.string(Json_encode.$$char(/* "a" */97))));
               }));
         return throws(/* None */0, Json_decode.string, /* :: */[
                     /* Bool */6,
@@ -188,6 +205,46 @@ describe("date", (function () {
                 return Jest.Expect[/* toEqual */12](new Date("2012-04-23T18:25:43.511Z"), Jest.Expect[/* expect */0](Json_decode.date("2012-04-23T18:25:43.511Z")));
               }));
         return throws(/* None */0, Json_decode.date, /* :: */[
+                    /* Bool */6,
+                    /* :: */[
+                      /* Float */0,
+                      /* :: */[
+                        /* Int */1,
+                        /* :: */[
+                          /* Null */3,
+                          /* :: */[
+                            /* Array */4,
+                            /* :: */[
+                              /* Object */5,
+                              /* [] */0
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]);
+      }));
+
+describe("char", (function () {
+        Jest.test("character", (function () {
+                return Jest.Expect[/* toEqual */12](/* "a" */97, Jest.Expect[/* expect */0](Json_decode.$$char(Json_encode.$$char(/* "a" */97))));
+              }));
+        Jest.test("single-character string", (function () {
+                return Jest.Expect[/* toEqual */12](/* "a" */97, Jest.Expect[/* expect */0](Json_decode.$$char("a")));
+              }));
+        Jest.test("empty string", (function () {
+                return Jest.Expect[/* toThrowException */20]([
+                            Json_decode.DecodeError,
+                            "Expected single-character string, got \"\""
+                          ], Jest.Expect[/* expectFn */1](Json_decode.$$char, ""));
+              }));
+        Jest.test("multiple-character string", (function () {
+                return Jest.Expect[/* toThrowException */20]([
+                            Json_decode.DecodeError,
+                            "Expected single-character string, got \"abc\""
+                          ], Jest.Expect[/* expectFn */1](Json_decode.$$char, "abc"));
+              }));
+        return throws(/* None */0, Json_decode.$$char, /* :: */[
                     /* Bool */6,
                     /* :: */[
                       /* Float */0,
@@ -242,7 +299,10 @@ describe("nullable", (function () {
                     /* Array */4,
                     /* :: */[
                       /* Object */5,
-                      /* [] */0
+                      /* :: */[
+                        /* Char */7,
+                        /* [] */0
+                      ]
                     ]
                   ]
                 ]
@@ -283,7 +343,10 @@ describe("nullAs", (function () {
                             /* Array */4,
                             /* :: */[
                               /* Object */5,
-                              /* [] */0
+                              /* :: */[
+                                /* Char */7,
+                                /* [] */0
+                              ]
                             ]
                           ]
                         ]
@@ -368,7 +431,10 @@ describe("array", (function () {
                             /* Null */3,
                             /* :: */[
                               /* Object */5,
-                              /* [] */0
+                              /* :: */[
+                                /* Char */7,
+                                /* [] */0
+                              ]
                             ]
                           ]
                         ]
@@ -481,7 +547,10 @@ describe("list", (function () {
                             /* Null */3,
                             /* :: */[
                               /* Object */5,
-                              /* [] */0
+                              /* :: */[
+                                /* Char */7,
+                                /* [] */0
+                              ]
                             ]
                           ]
                         ]
@@ -804,7 +873,10 @@ describe("dict", (function () {
                             /* Null */3,
                             /* :: */[
                               /* Array */4,
-                              /* [] */0
+                              /* :: */[
+                                /* Char */7,
+                                /* [] */0
+                              ]
                             ]
                           ]
                         ]
@@ -874,7 +946,10 @@ describe("field", (function () {
                               /* Array */4,
                               /* :: */[
                                 /* Object */5,
-                                /* [] */0
+                                /* :: */[
+                                  /* Char */7,
+                                  /* [] */0
+                                ]
                               ]
                             ]
                           ]
@@ -970,7 +1045,10 @@ describe("at", (function () {
                               /* Array */4,
                               /* :: */[
                                 /* Object */5,
-                                /* [] */0
+                                /* :: */[
+                                  /* Char */7,
+                                  /* [] */0
+                                ]
                               ]
                             ]
                           ]
@@ -1129,7 +1207,10 @@ describe("oneOf", (function () {
                             /* Array */4,
                             /* :: */[
                               /* Object */5,
-                              /* [] */0
+                              /* :: */[
+                                /* Char */7,
+                                /* [] */0
+                              ]
                             ]
                           ]
                         ]
@@ -1163,7 +1244,10 @@ describe("either", (function () {
                             /* Array */4,
                             /* :: */[
                               /* Object */5,
-                              /* [] */0
+                              /* :: */[
+                                /* Char */7,
+                                /* [] */0
+                              ]
                             ]
                           ]
                         ]
@@ -1228,7 +1312,10 @@ describe("map", (function () {
                             /* Array */4,
                             /* :: */[
                               /* Object */5,
-                              /* [] */0
+                              /* :: */[
+                                /* Char */7,
+                                /* [] */0
+                              ]
                             ]
                           ]
                         ]
@@ -1269,7 +1356,10 @@ describe("andThen", (function () {
                       /* Array */4,
                       /* :: */[
                         /* Object */5,
-                        /* [] */0
+                        /* :: */[
+                          /* Char */7,
+                          /* [] */0
+                        ]
                       ]
                     ]
                   ]

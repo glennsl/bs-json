@@ -37,6 +37,13 @@ let string json =
   else
     raise @@ DecodeError ("Expected string, got " ^ _stringify json)
 
+let char json =
+  let s = string json in
+  if String.length s = 1 then
+    String.get s 0
+  else
+    raise @@ DecodeError ("Expected single-character string, got " ^ _stringify json)
+
 let date json =
   json |> string
        |> Js.Date.fromString

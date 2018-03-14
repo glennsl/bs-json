@@ -21,6 +21,9 @@ external boolean : Js.boolean -> Js.Json.t = "%identity"
 val bool : bool -> Js.Json.t
 (** [bool b] makes a JSON boolean of the [bool] [b] *)
 
+val char : char -> Js.Json.t
+(** [char c] makes a JSON string of the [char] [c] *)
+
 val date : Js.Date.t -> Js.Json.t
 (** [bool b] makes an ISO 8601 JSON string of the [Js.Date.t] [b] *)
 
