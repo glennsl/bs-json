@@ -5,6 +5,7 @@ var $$Array = require("bs-platform/lib/js/array.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var Js_exn = require("bs-platform/lib/js/js_exn.js");
 var Pervasives = require("bs-platform/lib/js/pervasives.js");
+var Caml_string = require("bs-platform/lib/js/caml_string.js");
 var Caml_exceptions = require("bs-platform/lib/js/caml_exceptions.js");
 var Caml_builtin_exceptions = require("bs-platform/lib/js/caml_builtin_exceptions.js");
 
@@ -63,6 +64,18 @@ function string(json) {
     throw [
           DecodeError,
           "Expected string, got " + JSON.stringify(json)
+        ];
+  }
+}
+
+function $$char(json) {
+  var s = string(json);
+  if (s.length === 1) {
+    return Caml_string.get(s, 0);
+  } else {
+    throw [
+          DecodeError,
+          "Expected single-character string, got " + JSON.stringify(json)
         ];
   }
 }
@@ -412,6 +425,7 @@ exports.bool = bool;
 exports.$$float = $$float;
 exports.$$int = $$int;
 exports.string = string;
+exports.$$char = $$char;
 exports.date = date;
 exports.nullable = nullable;
 exports.nullAs = nullAs;

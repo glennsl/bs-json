@@ -33,6 +33,10 @@ Jest.test("date", (function () {
         return Jest.Expect[/* toEqual */12]("2012-04-23T18:25:43.511Z", Jest.Expect[/* expect */0](Json_encode.date(new Date("2012-04-23T18:25:43.511Z"))));
       }));
 
+Jest.test("char", (function () {
+        return Jest.Expect[/* toEqual */12]("a", Jest.Expect[/* expect */0](Json_encode.$$char(/* "a" */97)));
+      }));
+
 Jest.test("dict - empty", (function () {
         return Jest.Expect[/* toEqual */12]({ }, Jest.Expect[/* expect */0]({ }));
       }));

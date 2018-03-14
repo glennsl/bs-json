@@ -113,6 +113,24 @@ val string : string decoder
 ]}
 *)
 
+val char : char decoder
+(** Decodes a JSON value into a [char]
+
+{b Returns} a [char] if the JSON value is a single-character string.
+
+@raise [DecodeError] if unsuccessful.
+
+@example {[
+  open Json
+  (* returns 'a' *)
+  let _ = Json.parseOrRaise "\"a\"" |> Decode.char
+  (* raises DecodeError *)
+  let _ = Json.parseOrRaise "\"abc\"" |> Decode.char
+  (* raises DecodeError *)
+  let _ = Json.parseOrRaise "null" |> Decode.char
+]}
+*)
+
 val date : Js.Date.t decoder
 (** Decodes an ISO8601-fot\rmatted JSON string into a [Js.Date.t]
     

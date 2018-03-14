@@ -40,6 +40,11 @@ test "date" (fun () ->
     date (Js.Date.fromString "2012-04-23T18:25:43.511Z")
     |> toEqual @@ Obj.magic "2012-04-23T18:25:43.511Z");
 
+test "char" (fun () ->
+  expect @@
+    char 'a'
+    |> toEqual @@ Obj.magic "a");
+
 test "dict - empty" (fun () ->
   expect @@
     dict @@ Js.Dict.empty ()
