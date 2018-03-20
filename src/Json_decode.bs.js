@@ -4,7 +4,6 @@ var List = require("bs-platform/lib/js/list.js");
 var $$Array = require("bs-platform/lib/js/array.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var Js_exn = require("bs-platform/lib/js/js_exn.js");
-var Pervasives = require("bs-platform/lib/js/pervasives.js");
 var Caml_string = require("bs-platform/lib/js/caml_string.js");
 var Caml_exceptions = require("bs-platform/lib/js/caml_exceptions.js");
 var Caml_builtin_exceptions = require("bs-platform/lib/js/caml_builtin_exceptions.js");
@@ -117,7 +116,7 @@ function array(decode, json) {
         if (exn[0] === DecodeError) {
           throw [
                 DecodeError,
-                exn[1] + ("\n\tin array at index " + Pervasives.string_of_int(i))
+                exn[1] + ("\n\tin array at index " + String(i))
               ];
         } else {
           throw exn;
