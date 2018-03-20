@@ -143,6 +143,9 @@ transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js
 
 ## Changes
 
+### 1.2.0
+* Added `Json.Encode.char` and `Json.Decode.char`
+
 ### 1.1.0
 * Added "stack traces" to higher-order decoders, making it easier to find the location of an error.
 
