@@ -21,15 +21,13 @@ has been encoded in a JSON data structure first. See {!section:Encoding} below.
 {3 Encoding}
 Encoding creates a JSON data structure which can stringified directly with
 {! stringify} or passed to other APIs requiring a typed JSON data structure. Or
-you could just go straight to decoding it again, if that's your thing. ENcoding
+you could just go straight to decoding it again, if that's your thing. Encoding
 functions are in the {! Encode} module.
 {3 Decoding}
 Decoding is a more complex process, due to the highly dynamic nature of JSON
-data structures. There are several ways to decode a JSON data structure,
-depending on your needs. This module provides two fairly low level methods
-of decoding, the assertive, more convenient but also more rigid {! Decode}
-module and the more flexible but cumbersome {! reifyType} and {! test} functions.
-The third way is to use a opinionated third-party APIs that makes other tradeoffs.
+data structures. The {! Decode} module provides decoder combinators that can
+be combined to create complex composite decoders for any _known_ JSON data
+structure. It allows for custom decoders to produce user-defined types.
 
 @example {[
 (* Parsing a JSON string using Json.parse *)
