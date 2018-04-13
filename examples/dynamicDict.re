@@ -14,47 +14,47 @@
 */
 
 type obj = {
-    static: string,
-    dynamics: Js.Dict.t(int)
+  static: string,
+  dynamics: Js.Dict.t(int)
 };
 
 module Decode = {
-    let obj = json =>
-      Json.Decode.{
-        static: json |> field("static", string),
-        dynamics: json |> field("dynamics", dict(int)),
-      };
-  };
+  let obj = json =>
+    Json.Decode.{
+      static: json |> field("static", string),
+      dynamics: json |> field("dynamics", dict(int)),
+    };
+};
 
 module Encode = {
-    let obj = (c) => {
-      Json.Encode.(
-        object_([
-          ("static", string(c.static)),
-          ("dynamics", c.dynamics |> Js.Dict.map((. value) => int(value)) |> dict),
-        ])
-      );
-    };
+  let obj = (c) => {
+    Json.Encode.(
+      object_([
+        ("static", string(c.static)),
+        ("dynamics", c.dynamics |> Js.Dict.map((. value) => int(value)) |> dict),
+      ])
+    );
   };
+};
 
 let data = {| {
-    "static": "hi",
-    "dynamics": { "hello": 5, "random": 8 }
-  } |};
+  "static": "hi",
+  "dynamics": { "hello": 5, "random": 8 }
+} |};
 
 let decodedData =
-    data |> Json.parseOrRaise
-         |> Decode.obj;
+  data |> Json.parseOrRaise
+       |> Decode.obj;
 
 /*
-  Will log [ 'hi', { hello: 5, random: 8 } ]
+Will log [ 'hi', { hello: 5, random: 8 } ]
 */
 let _ =
-    decodedData |> Js.log;
+  decodedData |> Js.log;
 
 /*
-  Will log { static: 'hi', dynamics: { hello: 5, random: 8 } }
+Will log { static: 'hi', dynamics: { hello: 5, random: 8 } }
 */
 let encodedDataBack =
-    decodedData |> Encode.obj
-                |> Js.log;
+  decodedData |> Encode.obj
+              |> Js.log;
