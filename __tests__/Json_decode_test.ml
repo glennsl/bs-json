@@ -136,7 +136,7 @@ describe "nullable" (fun () ->
   test "null -> int" (fun () ->
     expect @@ (nullable int) Encode.null |> toEqual Js.null);
 
-  test "bool -> boolean " (fun () ->
+  test "bool -> bool " (fun () ->
     expect @@ nullable bool (Encode.bool true) |> toEqual (Js.Null.return true));
   test "float -> float" (fun () ->
     expect @@ nullable float (Encode.float 1.23) |> toEqual (Js.Null.return 1.23));
@@ -370,7 +370,7 @@ describe "dict" (fun () ->
       dict int (Encode.object_ [])
       |> toEqual (Js.Dict.empty ()));
 
-  test "boolean" (fun () ->
+  test "bool" (fun () ->
     expect @@
       dict bool (parseOrRaise {| { "a": true, "b": false } |})
       |> toEqual (Obj.magic [%obj { a = true; b = false }]));
@@ -406,7 +406,7 @@ describe "field" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
+  test "bool" (fun () ->
     expect @@
       field "b" bool (parseOrRaise {| { "a": true, "b": false } |})
       |> toEqual false);
@@ -487,7 +487,7 @@ describe "optional" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean -> int" (fun () ->
+  test "bool -> int" (fun () ->
     expect @@ (optional int) (Encode.bool true) |> toEqual None);
   test "float -> int" (fun () ->
     expect @@ (optional int) (Encode.float 1.23) |> toEqual None);
@@ -502,7 +502,7 @@ describe "optional" (fun () ->
   test "object -> int" (fun () ->
     expect @@ (optional int) (Encode.object_ []) |> toEqual None);
 
-  test "bool -> boolean " (fun () ->
+  test "bool -> bool " (fun () ->
     expect @@ optional bool (Encode.bool true) |> toEqual (Some true));
   test "float -> float" (fun () ->
     expect @@ optional float (Encode.float 1.23) |> toEqual (Some 1.23));
@@ -510,7 +510,7 @@ describe "optional" (fun () ->
     expect @@ optional string (Encode.string "test") |> toEqual (Some "test"));
   test "null -> null" (fun () ->
     expect @@ optional (nullAs Js.null) Encode.null |> toEqual (Some Js.null));
-  test "int -> boolean" (fun () ->
+  test "int -> bool" (fun () ->
     expect @@ (optional bool) (Encode.int 1) |> toEqual None);
 
   test "optional field" (fun () ->
@@ -578,7 +578,7 @@ describe "withDefault" (fun () ->
   let open Json in
   let open! Decode in
 
-  test "boolean" (fun () ->
+  test "bool" (fun () ->
     expect @@ (withDefault 0 int) (Encode.bool true) |> toEqual 0);
   test "float" (fun () ->
     expect @@ (withDefault 0 int) (Encode.float 1.23) |> toEqual 0);
