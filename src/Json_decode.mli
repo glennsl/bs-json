@@ -25,9 +25,9 @@ val boolean : Js.boolean decoder
 
 @example {[
   open Json
-  (* returns true *)
+  (* returns Js.true_ *)
   let _ = Json.parseOrRaise "true" |> Decode.boolean
-  (* returns false *)
+  (* returns Js.false_ *)
   let _ = Json.parseOrRaise "false" |> Decode.boolean
   (* raises DecodeError *)
   let _ = Json.parseOrRaise "123" |> Decode.boolean
