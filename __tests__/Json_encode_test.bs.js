@@ -1,5 +1,6 @@
 'use strict';
 
+var Js = require("bs-platform/lib/js/js.js");
 var Jest = require("bs-jest/src/jest.js");
 var $$Array = require("bs-platform/lib/js/array.js");
 var Js_dict = require("bs-platform/lib/js/js_dict.js");
@@ -22,11 +23,11 @@ Jest.test("int", (function () {
       }));
 
 Jest.test("boolean", (function () {
-        return Jest.Expect[/* toEqual */12](true, Jest.Expect[/* expect */0](true));
+        return Jest.Expect[/* toEqual */12](Js.true_, Jest.Expect[/* expect */0](Js.true_));
       }));
 
 Jest.test("bool", (function () {
-        return Jest.Expect[/* toEqual */12](true, Jest.Expect[/* expect */0](Json_encode.bool(/* true */1)));
+        return Jest.Expect[/* toEqual */12](Js.true_, Jest.Expect[/* expect */0](Json_encode.bool(true)));
       }));
 
 Jest.test("date", (function () {
@@ -68,13 +69,13 @@ Jest.test("object_ - simple", (function () {
       }));
 
 Jest.test("array int", (function () {
-        return Jest.Expect[/* toEqual */12](/* int array */[
+        return Jest.Expect[/* toEqual */12](/* array */[
                     1,
                     2,
                     3
                   ], Jest.Expect[/* expect */0](Json_encode.array((function (prim) {
                               return prim;
-                            }), /* int array */[
+                            }), /* array */[
                             1,
                             2,
                             3
@@ -82,7 +83,7 @@ Jest.test("array int", (function () {
       }));
 
 Jest.test("list int", (function () {
-        return Jest.Expect[/* toEqual */12](/* int array */[
+        return Jest.Expect[/* toEqual */12](/* array */[
                     1,
                     2,
                     3
@@ -101,13 +102,13 @@ Jest.test("list int", (function () {
       }));
 
 Jest.test("jsonArray int", (function () {
-        return Jest.Expect[/* toEqual */12](/* int array */[
+        return Jest.Expect[/* toEqual */12](/* array */[
                     1,
                     2,
                     3
                   ], Jest.Expect[/* expect */0]($$Array.map((function (prim) {
                               return prim;
-                            }), /* int array */[
+                            }), /* array */[
                             1,
                             2,
                             3
@@ -125,10 +126,10 @@ Jest.test("stringArray", (function () {
       }));
 
 Jest.test("numberArray", (function () {
-        return Jest.Expect[/* toEqual */12](/* int array */[
+        return Jest.Expect[/* toEqual */12](/* array */[
                     0,
                     4
-                  ], Jest.Expect[/* expect */0](/* float array */[
+                  ], Jest.Expect[/* expect */0](/* array */[
                         0,
                         4
                       ]));
@@ -136,11 +137,11 @@ Jest.test("numberArray", (function () {
 
 Jest.test("booleanArray", (function () {
         return Jest.Expect[/* toEqual */12](/* array */[
-                    true,
-                    false
+                    Js.true_,
+                    Js.false_
                   ], Jest.Expect[/* expect */0](/* array */[
-                        true,
-                        false
+                        Js.true_,
+                        Js.false_
                       ]));
       }));
 
@@ -219,7 +220,7 @@ Jest.test("tuple4", (function () {
                     "hello",
                     1.2,
                     4,
-                    Json_encode.bool(/* true */1)
+                    Json_encode.bool(true)
                   ], Jest.Expect[/* expect */0](Json_encode.tuple4((function (prim) {
                               return prim;
                             }), (function (prim) {
@@ -230,7 +231,7 @@ Jest.test("tuple4", (function () {
                             "hello",
                             1.2,
                             4,
-                            /* true */1
+                            true
                           ])));
       }));
 

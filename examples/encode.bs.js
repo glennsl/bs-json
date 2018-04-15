@@ -74,13 +74,13 @@ var Encode = /* module */[
 ];
 
 var data = /* record */[
-  /* start : float array */[
-    1.1,
-    -0.4
+  /* start : record */[
+    /* x */1.1,
+    /* y */-0.4
   ],
-  /* end_ : float array */[
-    5.3,
-    3.8
+  /* end_ : record */[
+    /* x */5.3,
+    /* y */3.8
   ],
   /* thickness : Some */[2]
 ];

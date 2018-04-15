@@ -10,9 +10,9 @@ var Caml_builtin_exceptions = require("bs-platform/lib/js/caml_builtin_exception
 
 function _isInteger(value) {
   if (isFinite(value)) {
-    return +(Math.floor(value) === value);
+    return Math.floor(value) === value;
   } else {
-    return /* false */0;
+    return false;
   }
 }
 
@@ -29,9 +29,7 @@ function $$boolean(json) {
   }
 }
 
-function bool(json) {
-  return +$$boolean(json);
-}
+var bool = $$boolean;
 
 function $$float(json) {
   if (typeof json === "number") {
@@ -365,7 +363,6 @@ function oneOf(decoders, json) {
           ];
           _decoders = decoders$1[1];
           continue ;
-          
         } else {
           throw exn;
         }

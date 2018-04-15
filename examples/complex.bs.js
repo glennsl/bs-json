@@ -4,9 +4,9 @@ var Json = require("../src/Json.bs.js");
 var Json_decode = require("../src/Json_decode.bs.js");
 
 function point(json) {
-  return /* float array */[
-          Json_decode.field("x", Json_decode.$$float, json),
-          Json_decode.field("y", Json_decode.$$float, json)
+  return /* record */[
+          /* x */Json_decode.field("x", Json_decode.$$float, json),
+          /* y */Json_decode.field("y", Json_decode.$$float, json)
         ];
 }
 

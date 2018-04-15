@@ -1,9 +1,9 @@
 'use strict';
 
+var Js = require("bs-platform/lib/js/js.js");
 var Jest = require("bs-jest/src/jest.js");
 var Json = require("../src/Json.bs.js");
 var List = require("bs-platform/lib/js/list.js");
-var Curry = require("bs-platform/lib/js/curry.js");
 var Pervasives = require("bs-platform/lib/js/pervasives.js");
 var Json_decode = require("../src/Json_decode.bs.js");
 var Json_encode = require("../src/Json_encode.bs.js");
@@ -24,7 +24,7 @@ function valueFor(param) {
     case 5 : 
         return Json_encode.object_(/* [] */0);
     case 6 : 
-        return true;
+        return Js.true_;
     case 7 : 
         return Json_encode.$$char(/* "a" */97);
     
@@ -48,7 +48,7 @@ var Test = /* module */[
 
 describe("boolean", (function () {
         Jest.test("boolean", (function () {
-                return Jest.Expect[/* toEqual */12](true, Jest.Expect[/* expect */0](Json_decode.$$boolean(true)));
+                return Jest.Expect[/* toEqual */12](Js.true_, Jest.Expect[/* expect */0](Json_decode.$$boolean(Js.true_)));
               }));
         return throws(/* None */0, Json_decode.$$boolean, /* :: */[
                     /* Float */0,
@@ -76,10 +76,10 @@ describe("boolean", (function () {
 
 describe("bool", (function () {
         Jest.test("bool", (function () {
-                return Jest.Expect[/* toEqual */12](/* true */1, Jest.Expect[/* expect */0](Json_decode.bool(true)));
+                return Jest.Expect[/* toEqual */12](true, Jest.Expect[/* expect */0](Json_decode.bool(Js.true_)));
               }));
         Jest.test("bool - false", (function () {
-                return Jest.Expect[/* toEqual */12](/* false */0, Jest.Expect[/* expect */0](Json_decode.bool(false)));
+                return Jest.Expect[/* toEqual */12](false, Jest.Expect[/* expect */0](Json_decode.bool(Js.false_)));
               }));
         return throws(/* None */0, Json_decode.bool, /* :: */[
                     /* Float */0,
@@ -273,7 +273,7 @@ describe("nullable", (function () {
                 return Jest.Expect[/* toEqual */12](null, Jest.Expect[/* expect */0](Json_decode.nullable(Json_decode.$$int, null)));
               }));
         Jest.test("boolean -> boolean ", (function () {
-                return Jest.Expect[/* toEqual */12](true, Jest.Expect[/* expect */0](Json_decode.nullable(Json_decode.$$boolean, true)));
+                return Jest.Expect[/* toEqual */12](Js.true_, Jest.Expect[/* expect */0](Json_decode.nullable(Json_decode.$$boolean, Js.true_)));
               }));
         Jest.test("float -> float", (function () {
                 return Jest.Expect[/* toEqual */12](1.23, Jest.Expect[/* expect */0](Json_decode.nullable(Json_decode.$$float, 1.23)));
@@ -357,24 +357,24 @@ describe("nullAs", (function () {
 
 describe("array", (function () {
         Jest.test("array", (function () {
-                return Jest.Expect[/* toEqual */12](/* int array */[], Jest.Expect[/* expect */0](Json_decode.array(Json_decode.$$int, /* array */[])));
+                return Jest.Expect[/* toEqual */12](/* array */[], Jest.Expect[/* expect */0](Json_decode.array(Json_decode.$$int, /* array */[])));
               }));
         Jest.test("boolean", (function () {
                 return Jest.Expect[/* toEqual */12](/* array */[
-                            true,
-                            false,
-                            true
+                            Js.true_,
+                            Js.false_,
+                            Js.true_
                           ], Jest.Expect[/* expect */0](Json_decode.array(Json_decode.$$boolean, Json.parseOrRaise(" [true, false, true] "))));
               }));
         Jest.test("float", (function () {
-                return Jest.Expect[/* toEqual */12](/* float array */[
+                return Jest.Expect[/* toEqual */12](/* array */[
                             1,
                             2,
                             3
                           ], Jest.Expect[/* expect */0](Json_decode.array(Json_decode.$$float, Json.parseOrRaise(" [1, 2, 3] "))));
               }));
         Jest.test("int", (function () {
-                return Jest.Expect[/* toEqual */12](/* int array */[
+                return Jest.Expect[/* toEqual */12](/* array */[
                             1,
                             2,
                             3
@@ -415,7 +415,7 @@ describe("array", (function () {
                                               }), param);
                                 }), Json_encode.array((function (prim) {
                                       return prim;
-                                    }), /* int array */[1])));
+                                    }), /* array */[1])));
               }));
         return throws(/* None */0, (function (param) {
                       return Json_decode.array(Json_decode.$$int, param);
@@ -449,11 +449,11 @@ describe("list", (function () {
               }));
         Jest.test("boolean", (function () {
                 return Jest.Expect[/* toEqual */12](/* :: */[
-                            true,
+                            Js.true_,
                             /* :: */[
-                              false,
+                              Js.false_,
                               /* :: */[
-                                true,
+                                Js.true_,
                                 /* [] */0
                               ]
                             ]
@@ -749,7 +749,7 @@ describe("tuple4", (function () {
                             "a",
                             3,
                             4.5,
-                            /* true */1
+                            true
                           ], Jest.Expect[/* expect */0](Json_decode.tuple4(Json_decode.string, Json_decode.$$int, Json_decode.$$float, Json_decode.bool, Json.parseOrRaise(" [\"a\", 3, 4.5, true] "))));
               }));
         Jest.test("too small", (function () {
@@ -810,8 +810,8 @@ describe("dict", (function () {
               }));
         Jest.test("boolean", (function () {
                 return Jest.Expect[/* toEqual */12]({
-                            a: true,
-                            b: false
+                            a: Js.true_,
+                            b: Js.false_
                           }, Jest.Expect[/* expect */0](Json_decode.dict(Json_decode.$$boolean, Json.parseOrRaise(" { \"a\": true, \"b\": false } "))));
               }));
         Jest.test("float", (function () {
@@ -887,7 +887,7 @@ describe("dict", (function () {
 
 describe("field", (function () {
         Jest.test("boolean", (function () {
-                return Jest.Expect[/* toEqual */12](false, Jest.Expect[/* expect */0](Json_decode.field("b", Json_decode.$$boolean, Json.parseOrRaise(" { \"a\": true, \"b\": false } "))));
+                return Jest.Expect[/* toEqual */12](Js.false_, Jest.Expect[/* expect */0](Json_decode.field("b", Json_decode.$$boolean, Json.parseOrRaise(" { \"a\": true, \"b\": false } "))));
               }));
         Jest.test("float", (function () {
                 return Jest.Expect[/* toEqual */12](2.3, Jest.Expect[/* expect */0](Json_decode.field("b", Json_decode.$$float, Json.parseOrRaise(" { \"a\": 1.2, \"b\": 2.3 } "))));
@@ -961,28 +961,28 @@ describe("field", (function () {
 
 describe("at", (function () {
         Jest.test("boolean", (function () {
-                return Jest.Expect[/* toEqual */12](false, Jest.Expect[/* expect */0](Curry._1(Json_decode.at(/* :: */[
-                                        "a",
+                return Jest.Expect[/* toEqual */12](Js.false_, Jest.Expect[/* expect */0](Json_decode.at(/* :: */[
+                                      "a",
+                                      /* :: */[
+                                        "x",
                                         /* :: */[
-                                          "x",
-                                          /* :: */[
-                                            "y",
-                                            /* [] */0
-                                          ]
+                                          "y",
+                                          /* [] */0
                                         ]
-                                      ], Json_decode.$$boolean), Json.parseOrRaise(" {\n        \"a\": { \"x\" : { \"y\" : false } }, \n        \"b\": false \n      } "))));
+                                      ]
+                                    ], Json_decode.$$boolean)(Json.parseOrRaise(" {\n        \"a\": { \"x\" : { \"y\" : false } }, \n        \"b\": false \n      } "))));
               }));
         Jest.test("nullAs", (function () {
                 var partial_arg = null;
-                return Jest.Expect[/* toEqual */12](null, Jest.Expect[/* expect */0](Curry._1(Json_decode.at(/* :: */[
-                                        "a",
-                                        /* :: */[
-                                          "x",
-                                          /* [] */0
-                                        ]
-                                      ], (function (param) {
-                                          return Json_decode.nullAs(partial_arg, param);
-                                        })), Json.parseOrRaise(" {\n        \"a\": { \"x\" : null }, \n        \"b\": null \n      } "))));
+                return Jest.Expect[/* toEqual */12](null, Jest.Expect[/* expect */0](Json_decode.at(/* :: */[
+                                      "a",
+                                      /* :: */[
+                                        "x",
+                                        /* [] */0
+                                      ]
+                                    ], (function (param) {
+                                        return Json_decode.nullAs(partial_arg, param);
+                                      }))(Json.parseOrRaise(" {\n        \"a\": { \"x\" : null }, \n        \"b\": null \n      } "))));
               }));
         Jest.test("missing key", (function () {
                 var partial_arg = null;
@@ -1060,7 +1060,7 @@ describe("at", (function () {
 
 describe("optional", (function () {
         Jest.test("boolean -> int", (function () {
-                return Jest.Expect[/* toEqual */12](/* None */0, Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$int, true)));
+                return Jest.Expect[/* toEqual */12](/* None */0, Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$int, Js.true_)));
               }));
         Jest.test("float -> int", (function () {
                 return Jest.Expect[/* toEqual */12](/* None */0, Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$int, 1.23)));
@@ -1081,7 +1081,7 @@ describe("optional", (function () {
                 return Jest.Expect[/* toEqual */12](/* None */0, Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$int, Json_encode.object_(/* [] */0))));
               }));
         Jest.test("boolean -> boolean ", (function () {
-                return Jest.Expect[/* toEqual */12](/* Some */[true], Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$boolean, true)));
+                return Jest.Expect[/* toEqual */12](/* Some */[Js.true_], Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$boolean, Js.true_)));
               }));
         Jest.test("float -> float", (function () {
                 return Jest.Expect[/* toEqual */12](/* Some */[1.23], Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$float, 1.23)));
@@ -1258,7 +1258,7 @@ describe("either", (function () {
 
 describe("withDefault", (function () {
         Jest.test("boolean", (function () {
-                return Jest.Expect[/* toEqual */12](0, Jest.Expect[/* expect */0](Json_decode.withDefault(0, Json_decode.$$int, true)));
+                return Jest.Expect[/* toEqual */12](0, Jest.Expect[/* expect */0](Json_decode.withDefault(0, Json_decode.$$int, Js.true_)));
               }));
         Jest.test("float", (function () {
                 return Jest.Expect[/* toEqual */12](0, Jest.Expect[/* expect */0](Json_decode.withDefault(0, Json_decode.$$int, 1.23)));
@@ -1388,15 +1388,15 @@ describe("composite expressions", (function () {
         Jest.test("dict array array int", (function () {
                 return Jest.Expect[/* toEqual */12]({
                             a: /* array */[
-                              /* int array */[
+                              /* array */[
                                 1,
                                 2
                               ],
-                              /* int array */[3]
+                              /* array */[3]
                             ],
                             b: /* array */[
-                              /* int array */[4],
-                              /* int array */[
+                              /* array */[4],
+                              /* array */[
                                 5,
                                 6
                               ]
@@ -1434,7 +1434,7 @@ describe("composite expressions", (function () {
         return Jest.test("field", (function () {
                       var json = Json.parseOrRaise(" { \"foo\": [1, 2, 3], \"bar\": \"baz\" } ");
                       return Jest.Expect[/* toEqual */12](/* tuple */[
-                                  /* int array */[
+                                  /* array */[
                                     1,
                                     2,
                                     3

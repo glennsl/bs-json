@@ -4,12 +4,12 @@
   "description": "Compositional JSON encode/decode library for BuckleScript",
   "main": "index.js",
   "scripts": {
-    "build": "bsb -make-world",
-    "start": "bsb -make-world -w",
+    "build": "./node_modules/.bin/bsb -make-world",
+    "start": "./node_modules/.bin/bsb -make-world -w",
     "coverage": "nyc report --temp-directory=coverage --reporter=text-lcov | coveralls",
     "test": "npm run build && jest --coverage && npm run coverage && npm run test:examples",
     "test:examples": "npm run build && ./run_examples.sh",
-    "watch:bsb": "bsb -make-world -w",
+    "watch:bsb": "./node_modules/.bin/bsb -make-world -w",
     "watch:jest": "jest --coverage --watchAll",
     "watch:screen": "screen -c .screenrc"
   },
@@ -33,7 +33,7 @@
   ],
   "devDependencies": {
     "bs-jest": "^0.3.0",
-    "bs-platform": "^2.1.0",
+    "bs-platform": "^3.0.0",
     "coveralls": "^3.0.0",
     "nyc": "^11.4.1"
   }
