@@ -15,8 +15,7 @@ let boolean json =
   else
     raise @@ DecodeError ("Expected boolean, got " ^ _stringify json)
 
-let bool json = 
-  boolean json |> Js.to_bool
+let bool = boolean 
 
 let float json = 
   if Js.typeof json = "number" then
