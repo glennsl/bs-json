@@ -98,6 +98,10 @@ test "booleanArray" (fun () ->
     booleanArray [|true;false|]
     |> toEqual @@ Obj.magic [|true;false|]);
 
+test "boolArray" (fun () ->
+  expect @@
+    boolArray [|true;false|]
+    |> toEqual @@ Obj.magic [|true;false|]);
 
 test "nullable (None)" (fun () -> 
   expect @@

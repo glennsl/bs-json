@@ -52,3 +52,4 @@ let tuple4 encodeA encodeB encodeC encodeD (a, b, c, d) =
 external stringArray : string array -> Js.Json.t = "%identity"
 external numberArray : float array -> Js.Json.t = "%identity"
 external booleanArray : Js.boolean array -> Js.Json.t = "%identity"
+external boolArray : bool array -> Js.Json.t = "%identity"
