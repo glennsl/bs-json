@@ -143,6 +143,9 @@ transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js
 
 ## Changes
 
+### 1.3.1
+* Reverted commits that broke backwards compatibility despite only affecting the implementation
+
 ### 1.3.0
 * Deprecated `Json.Decode.boolean`, `Json.Encode.boolean`, `Json.Encode.booleanArray`
 * Added `Json.Encode.boolArray`
