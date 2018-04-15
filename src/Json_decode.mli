@@ -16,6 +16,7 @@ type 'a decoder = Js.Json.t -> 'a
 exception DecodeError of string
 
 val boolean : Js.boolean decoder
+[@@deprecated "Js.boolean is deprecated, use `bool` instead"]
 (** Decodes a JSON value into a [Js.boolean]
     
 {b Returns} a [Js.boolean] if the JSON value is a number.
