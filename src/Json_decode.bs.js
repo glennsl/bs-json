@@ -18,7 +18,7 @@ function _isInteger(value) {
 
 var DecodeError = Caml_exceptions.create("Json_decode.DecodeError");
 
-function $$boolean(json) {
+function bool(json) {
   if (typeof json === "boolean") {
     return json;
   } else {
@@ -28,8 +28,6 @@ function $$boolean(json) {
         ];
   }
 }
-
-var bool = $$boolean;
 
 function $$float(json) {
   if (typeof json === "number") {
@@ -416,7 +414,6 @@ function andThen(b, a, json) {
 var tuple2 = pair;
 
 exports.DecodeError = DecodeError;
-exports.$$boolean = $$boolean;
 exports.bool = bool;
 exports.$$float = $$float;
 exports.$$int = $$int;
