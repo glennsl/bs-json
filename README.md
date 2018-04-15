@@ -143,6 +143,10 @@ transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js
 
 ## Changes
 
+### 1.3.0
+* Deprecated `Json.Decode.boolean`, `Json.Encode.boolean`, `Json.Encode.booleanArray`
+* Added `Json.Encode.boolArray`
+
 ### 1.2.0
 * Added `Json.Encode.char` and `Json.Decode.char`
 
