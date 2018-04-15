@@ -25,15 +25,10 @@ test "int" (fun () ->
     int 23
     |> toEqual @@ Obj.magic 23);
 
-test "boolean" (fun () ->
-  expect @@
-    boolean Js.true_
-    |> toEqual @@ Obj.magic Js.true_);
-
 test "bool" (fun () ->
   expect @@
     bool true
-    |> toEqual @@ Obj.magic Js.true_);
+    |> toEqual @@ Obj.magic true);
 
 test "date" (fun () ->
   expect @@
@@ -93,10 +88,10 @@ test "numberArray" (fun () ->
     numberArray [|0.;4.|]
     |> toEqual @@ Obj.magic [|0;4|]);
 
-test "booleanArray" (fun () ->
+test "boolArray" (fun () ->
   expect @@
-    booleanArray [|Js.true_;Js.false_|]
-    |> toEqual @@ Obj.magic [|Js.true_;Js.false_|]);
+    boolArray [|true;false|]
+    |> toEqual @@ Obj.magic [|true;false|]);
 
 
 test "nullable (None)" (fun () -> 

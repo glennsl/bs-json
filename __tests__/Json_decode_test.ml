@@ -20,7 +20,7 @@ module Test = struct
     | Null    -> null
     | Array   -> jsonArray [||]
     | Object  -> object_ []
-    | Bool    -> boolean Js.true_
+    | Bool    -> bool true
     | Char    -> char 'a'
 
   let throws ?(name = "throws") decoder kinds =
@@ -36,9 +36,9 @@ describe "bool" (fun () ->
   let open Decode in
 
   test "bool" (fun () ->
-    expect @@ bool (Encode.boolean Js.true_) |> toEqual true);
+    expect @@ bool (Encode.bool true) |> toEqual true);
   test "bool - false" (fun () ->
-    expect @@ bool (Encode.boolean Js.false_) |> toEqual false);
+    expect @@ bool (Encode.bool false) |> toEqual false);
     
   Test.throws bool [Float; Int; String; Null; Array; Object; Char];
 );
@@ -137,7 +137,7 @@ describe "nullable" (fun () ->
     expect @@ (nullable int) Encode.null |> toEqual Js.null);
 
   test "bool -> boolean " (fun () ->
-    expect @@ nullable bool (Encode.boolean Js.true_) |> toEqual (Js.Null.return Js.true_));
+    expect @@ nullable bool (Encode.bool true) |> toEqual (Js.Null.return true));
   test "float -> float" (fun () ->
     expect @@ nullable float (Encode.float 1.23) |> toEqual (Js.Null.return 1.23));
   test "string -> string" (fun () ->
@@ -488,7 +488,7 @@ describe "optional" (fun () ->
   let open! Decode in
 
   test "boolean -> int" (fun () ->
-    expect @@ (optional int) (Encode.boolean Js.true_) |> toEqual None);
+    expect @@ (optional int) (Encode.bool true) |> toEqual None);
   test "float -> int" (fun () ->
     expect @@ (optional int) (Encode.float 1.23) |> toEqual None);
   test "int -> int" (fun () ->
@@ -503,7 +503,7 @@ describe "optional" (fun () ->
     expect @@ (optional int) (Encode.object_ []) |> toEqual None);
 
   test "bool -> boolean " (fun () ->
-    expect @@ optional bool (Encode.boolean Js.true_) |> toEqual (Some true));
+    expect @@ optional bool (Encode.bool true) |> toEqual (Some true));
   test "float -> float" (fun () ->
     expect @@ optional float (Encode.float 1.23) |> toEqual (Some 1.23));
   test "string -> string" (fun () ->
@@ -579,7 +579,7 @@ describe "withDefault" (fun () ->
   let open! Decode in
 
   test "boolean" (fun () ->
-    expect @@ (withDefault 0 int) (Encode.boolean Js.true_) |> toEqual 0);
+    expect @@ (withDefault 0 int) (Encode.bool true) |> toEqual 0);
   test "float" (fun () ->
     expect @@ (withDefault 0 int) (Encode.float 1.23) |> toEqual 0);
   test "int" (fun () ->

@@ -5,9 +5,6 @@ var $$Array = require("bs-platform/lib/js/array.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var $$String = require("bs-platform/lib/js/string.js");
 var Js_dict = require("bs-platform/lib/js/js_dict.js");
-var Js_boolean = require("bs-platform/lib/js/js_boolean.js");
-
-var bool = Js_boolean.to_js_boolean;
 
 function $$char(c) {
   return $$String.make(1, c);
@@ -69,7 +66,6 @@ var tuple2 = pair;
 
 var arrayOf = array;
 
-exports.bool = bool;
 exports.$$char = $$char;
 exports.date = date;
 exports.nullable = nullable;

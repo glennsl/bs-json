@@ -1,6 +1,5 @@
 'use strict';
 
-var Js = require("bs-platform/lib/js/js.js");
 var Jest = require("bs-jest/src/jest.js");
 var $$Array = require("bs-platform/lib/js/array.js");
 var Js_dict = require("bs-platform/lib/js/js_dict.js");
@@ -22,12 +21,8 @@ Jest.test("int", (function () {
         return Jest.Expect[/* toEqual */12](23, Jest.Expect[/* expect */0](23));
       }));
 
-Jest.test("boolean", (function () {
-        return Jest.Expect[/* toEqual */12](Js.true_, Jest.Expect[/* expect */0](Js.true_));
-      }));
-
 Jest.test("bool", (function () {
-        return Jest.Expect[/* toEqual */12](Js.true_, Jest.Expect[/* expect */0](Json_encode.bool(true)));
+        return Jest.Expect[/* toEqual */12](true, Jest.Expect[/* expect */0](true));
       }));
 
 Jest.test("date", (function () {
@@ -135,13 +130,13 @@ Jest.test("numberArray", (function () {
                       ]));
       }));
 
-Jest.test("booleanArray", (function () {
+Jest.test("boolArray", (function () {
         return Jest.Expect[/* toEqual */12](/* array */[
-                    Js.true_,
-                    Js.false_
+                    true,
+                    false
                   ], Jest.Expect[/* expect */0](/* array */[
-                        Js.true_,
-                        Js.false_
+                        true,
+                        false
                       ]));
       }));
 
@@ -220,14 +215,16 @@ Jest.test("tuple4", (function () {
                     "hello",
                     1.2,
                     4,
-                    Json_encode.bool(true)
+                    true
                   ], Jest.Expect[/* expect */0](Json_encode.tuple4((function (prim) {
                               return prim;
                             }), (function (prim) {
                               return prim;
                             }), (function (prim) {
                               return prim;
-                            }), Json_encode.bool, /* tuple */[
+                            }), (function (prim) {
+                              return prim;
+                            }), /* tuple */[
                             "hello",
                             1.2,
                             4,

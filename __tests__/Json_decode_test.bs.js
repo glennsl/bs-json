@@ -1,6 +1,5 @@
 'use strict';
 
-var Js = require("bs-platform/lib/js/js.js");
 var Jest = require("bs-jest/src/jest.js");
 var Json = require("../src/Json.bs.js");
 var List = require("bs-platform/lib/js/list.js");
@@ -24,7 +23,7 @@ function valueFor(param) {
     case 5 : 
         return Json_encode.object_(/* [] */0);
     case 6 : 
-        return Js.true_;
+        return true;
     case 7 : 
         return Json_encode.$$char(/* "a" */97);
     
@@ -48,10 +47,10 @@ var Test = /* module */[
 
 describe("bool", (function () {
         Jest.test("bool", (function () {
-                return Jest.Expect[/* toEqual */12](true, Jest.Expect[/* expect */0](Json_decode.bool(Js.true_)));
+                return Jest.Expect[/* toEqual */12](true, Jest.Expect[/* expect */0](Json_decode.bool(true)));
               }));
         Jest.test("bool - false", (function () {
-                return Jest.Expect[/* toEqual */12](false, Jest.Expect[/* expect */0](Json_decode.bool(Js.false_)));
+                return Jest.Expect[/* toEqual */12](false, Jest.Expect[/* expect */0](Json_decode.bool(false)));
               }));
         return throws(/* None */0, Json_decode.bool, /* :: */[
                     /* Float */0,
@@ -245,7 +244,7 @@ describe("nullable", (function () {
                 return Jest.Expect[/* toEqual */12](null, Jest.Expect[/* expect */0](Json_decode.nullable(Json_decode.$$int, null)));
               }));
         Jest.test("bool -> boolean ", (function () {
-                return Jest.Expect[/* toEqual */12](Js.true_, Jest.Expect[/* expect */0](Json_decode.nullable(Json_decode.bool, Js.true_)));
+                return Jest.Expect[/* toEqual */12](true, Jest.Expect[/* expect */0](Json_decode.nullable(Json_decode.bool, true)));
               }));
         Jest.test("float -> float", (function () {
                 return Jest.Expect[/* toEqual */12](1.23, Jest.Expect[/* expect */0](Json_decode.nullable(Json_decode.$$float, 1.23)));
@@ -1032,7 +1031,7 @@ describe("at", (function () {
 
 describe("optional", (function () {
         Jest.test("boolean -> int", (function () {
-                return Jest.Expect[/* toEqual */12](/* None */0, Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$int, Js.true_)));
+                return Jest.Expect[/* toEqual */12](/* None */0, Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$int, true)));
               }));
         Jest.test("float -> int", (function () {
                 return Jest.Expect[/* toEqual */12](/* None */0, Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$int, 1.23)));
@@ -1053,7 +1052,7 @@ describe("optional", (function () {
                 return Jest.Expect[/* toEqual */12](/* None */0, Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$int, Json_encode.object_(/* [] */0))));
               }));
         Jest.test("bool -> boolean ", (function () {
-                return Jest.Expect[/* toEqual */12](/* Some */[true], Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.bool, Js.true_)));
+                return Jest.Expect[/* toEqual */12](/* Some */[true], Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.bool, true)));
               }));
         Jest.test("float -> float", (function () {
                 return Jest.Expect[/* toEqual */12](/* Some */[1.23], Jest.Expect[/* expect */0](Json_decode.optional(Json_decode.$$float, 1.23)));
@@ -1230,7 +1229,7 @@ describe("either", (function () {
 
 describe("withDefault", (function () {
         Jest.test("boolean", (function () {
-                return Jest.Expect[/* toEqual */12](0, Jest.Expect[/* expect */0](Json_decode.withDefault(0, Json_decode.$$int, Js.true_)));
+                return Jest.Expect[/* toEqual */12](0, Jest.Expect[/* expect */0](Json_decode.withDefault(0, Json_decode.$$int, true)));
               }));
         Jest.test("float", (function () {
                 return Jest.Expect[/* toEqual */12](0, Jest.Expect[/* expect */0](Json_decode.withDefault(0, Json_decode.$$int, 1.23)));
