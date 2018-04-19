@@ -15,27 +15,6 @@ type 'a decoder = Js.Json.t -> 'a
 
 exception DecodeError of string
 
-val boolean : Js.boolean decoder
-[@@deprecated "Js.boolean is deprecated, use `bool` instead"]
-(** Decodes a JSON value into a [Js.boolean]
-    
-{b Returns} a [Js.boolean] if the JSON value is a number.
-
-@raise [DecodeError] if unsuccessful 
-
-@example {[
-  open Json
-  (* returns Js.true_ *)
-  let _ = Json.parseOrRaise "true" |> Decode.boolean
-  (* returns Js.false_ *)
-  let _ = Json.parseOrRaise "false" |> Decode.boolean
-  (* raises DecodeError *)
-  let _ = Json.parseOrRaise "123" |> Decode.boolean
-  (* raises DecodeError *)
-  let _ = Json.parseOrRaise "null" |> Decode.boolean
-]}
-*)
-
 val bool : bool decoder
 (** Decodes a JSON value into a [bool]
     
