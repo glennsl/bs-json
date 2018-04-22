@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/glennsl/bs-json#readme",
   "files": [
-    "src/",
+    "src/*.ml*",
     "bsconfig.json"
   ],
   "devDependencies": {
