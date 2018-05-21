@@ -8,8 +8,6 @@ Compositional JSON encode/decode library for BuckleScript.
 [![Issues](https://img.shields.io/github/issues/glennsl/bs-json.svg)](https://github.com/glennsl/bs-json/issues)
 [![Last Commit](https://img.shields.io/github/last-commit/glennsl/bs-json.svg)](https://github.com/glennsl/bs-json/commits/master)
 
-_**NOTE:** NPM package has moved to `@glennsl/bs-json`. Remember to update both `package.json` AND `bsconfig.json`._
-
 The Decode module in particular provides a basic set of decoder functions to be composed into more complex decoders. A
 decoder is a function that takes a `Js.Json.t` and either returns a value of the desired type if successful or raises a
 `DecodeError` exception if not. Other functions accept a decoder and produce another decoder. Like `array`, which when
