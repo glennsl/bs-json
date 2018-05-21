@@ -9,13 +9,11 @@ type 'a decoder = Js.Json.t -> 'a
 
 exception DecodeError of string
 
-let boolean json = 
+let bool json = 
   if Js.typeof json = "boolean" then
-    (Obj.magic (json : Js.Json.t) : Js.boolean)
+    (Obj.magic (json : Js.Json.t) : bool)
   else
     raise @@ DecodeError ("Expected boolean, got " ^ _stringify json)
-
-let bool = boolean 
 
 let float json = 
   if Js.typeof json = "number" then

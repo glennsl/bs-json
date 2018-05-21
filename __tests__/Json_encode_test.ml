@@ -25,11 +25,6 @@ test "int" (fun () ->
     int 23
     |> toEqual @@ Obj.magic 23);
 
-test "boolean" (fun () ->
-  expect @@
-    boolean true
-    |> toEqual @@ Obj.magic true);
-
 test "bool" (fun () ->
   expect @@
     bool true
@@ -92,11 +87,6 @@ test "numberArray" (fun () ->
   expect @@
     numberArray [|0.;4.|]
     |> toEqual @@ Obj.magic [|0;4|]);
-
-test "booleanArray" (fun () ->
-  expect @@
-    booleanArray [|true;false|]
-    |> toEqual @@ Obj.magic [|true;false|]);
 
 test "boolArray" (fun () ->
   expect @@

@@ -15,10 +15,6 @@ external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 (** [int n] makes a JSON number of the [int] [n] *)
 
-external boolean : Js.boolean -> Js.Json.t = "%identity" 
-[@@deprecated "Js.boolean is deprecated, use `bool` instead"]
-(** [boolean b] makes a JSON boolean of the [Js.boolean] [b] *)
-
 external bool : bool -> Js.Json.t = "%identity" 
 (** [bool b] makes a JSON boolean of the [bool] [b] *)
 
@@ -81,10 +77,6 @@ external stringArray : string array -> Js.Json.t = "%identity"
 
 external numberArray : float array -> Js.Json.t = "%identity"
 (** [numberArray a] makes a JSON array of the [float array] [a] *)
-
-external booleanArray : Js.boolean array -> Js.Json.t = "%identity"
-[@@deprecated "Js.boolean is deprecated, use `boolArray` instead"]
-(** [booleanArray] makes a JSON array of the [Js.boolean array] [a] *)
 
 external boolArray : bool array -> Js.Json.t = "%identity"
 (** [boolArray] makes a JSON array of the [bool array] [a] *)
