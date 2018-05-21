@@ -19,7 +19,7 @@ external boolean : Js.boolean -> Js.Json.t = "%identity"
 [@@deprecated "Js.boolean is deprecated, use `bool` instead"]
 (** [boolean b] makes a JSON boolean of the [Js.boolean] [b] *)
 
-val bool : bool -> Js.Json.t
+external bool : bool -> Js.Json.t = "%identity" 
 (** [bool b] makes a JSON boolean of the [bool] [b] *)
 
 val char : char -> Js.Json.t
