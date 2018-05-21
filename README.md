@@ -143,6 +143,10 @@ transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js
 
 ## Changes
 
+### 2.0.0
+* Removed `Json.Decode.boolean`, `Json.Encode.boolean`, `Json.Encode.booleanArray`
+* Requires `bs-platform` >= 3.0.0
+
 ### 1.3.1
 * Reverted commits that broke backwards compatibility despite only affecting the implementation
 
