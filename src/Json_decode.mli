@@ -9,11 +9,18 @@ it to be {i possible} to decode any given data structure, not necessarily for
 it to be {i convenient}. For convenience you should look towards opinionated
 third-party libraries.
 *)
+(*
+type errorKind =
+| MissingField
+| IncorrectType
+type error = {
+  message: string;
+  kind: errorKind
+}*)
+type 'a result = ('a, string) Js.Result.t
 
-type 'a decoder = Js.Json.t -> 'a
+type 'a decoder = Js.Json.t -> 'a result
 (** The type of a decoder combinator *)
-
-exception DecodeError of string
 
 val bool : bool decoder
 (** Decodes a JSON value into a [bool]
@@ -281,46 +288,6 @@ values are successfully decoded.
 ]}
 *)
 
-val field : string -> 'a decoder -> 'a decoder
-(** Decodes a JSON object with a specific field into the value of that field
-    
-{b Returns} an ['a] if the JSON value is a JSON object with the given field
-and a value that is successfully decoded with the given decoder.
-
-@raise [DecodeError] if unsuccessful 
-
-@example {[
-  open Json
-  (* returns 23 *)
-  let _ = Json.parseOrRaise {| { "x": 23, "y": 42 } |} |> Decode.(field "x" int)
-  (* returns 23 *)
-  let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(field "x" int)
-  (* raises DecodeError *)
-  let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(field "y" int)
-  (* raises DecodeError *)
-  let _ = Json.parseOrRaise "123" |> Decode.(field "x" int)
-  (* raises DecodeError *)
-  let _ = Json.parseOrRaise "null" |> Decode.(field "x" int)
-]}
-*)
-
-val at : string list -> 'a decoder -> 'a decoder
-(** Same as [field] but takes a top level field and a list of nested fields for decoding nested values.
-    
-{b Returns} an ['a] if the JSON value is a JSON object with the given field
-and a value that is successfully decoded with the given decoder.
-
-@raise [DecodeError] if unsuccessful 
-
-@example {[
-  open Json
-  (* returns 23 *)
-  let _ = Json.parseOrRaise {| { "x": {"foo": 23}, "y": 42 } |} |> Decode.(at ["x"; "foo"] int)
-  (* raises DecodeError *)
-  let _ = Json.parseOrRaise {| { "x": null, "y": "b" } |} |> Decode.(at ["x"; "foo"] int)
-]}
-*)
-
 val optional : 'a decoder -> 'a option decoder
 (** Maps a decoder [result] to an option
     
@@ -479,3 +446,10 @@ val andThen : ('a -> 'b decoder) -> 'a decoder -> 'b decoder
         |> Decode.tree Json.Decode.int
 ]}
 *)
+
+
+type field_decoder = {
+  optional : 'a. string -> 'a decoder -> 'a option;
+  required : 'a. string -> 'a decoder -> 'a
+}
+val obj : (field: field_decoder -> 'b) -> 'b decoder

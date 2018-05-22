@@ -19,11 +19,13 @@ type obj = {
 }
 
 module Decode = struct
-  let obj json =
-    Json.Decode.{
-      static    = json |> field "static" string;
-      dynamics  = json |> field "dynamics" (dict int)
-    }
+  let obj =
+    Json.Decode.(
+      obj (fun ~field -> {
+        static    = field.required "static" string;
+        dynamics  = field.required "dynamics" (dict int)
+      })
+    )
 end
 
 module Encode = struct
@@ -55,5 +57,6 @@ let _ =
   Will log { static: 'hi', dynamics: { hello: 5, random: 8 } }
 *)
 let encodedDataBack =
-    decodedData |> Encode.obj
-                |> Js.log
+    match decodedData with
+    | Ok data   -> Encode.obj data |> Js.log
+    | Error msg -> Js.log msg

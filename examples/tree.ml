@@ -7,20 +7,26 @@ module Decode = struct
   open Json.Decode
 
   let rec tree decoder =
-    field "type" string |> andThen (
-      function | "node" -> node decoder
-               | "leaf" -> leaf decoder
-               | _      -> failwith "unknown node type"
+    obj (fun ~field ->
+      field.required "type" (string |> andThen (
+        function | "node" -> node decoder
+                | "leaf" -> leaf decoder
+                | _      -> failwith "unknown node type"
+      ))
     )
 
-  and node decoder json =
-    Node (
-      (json |> field "value" decoder),
-      (json |> field "children" (array (tree decoder) |> map Array.to_list))
+  and node decoder =
+    obj (fun ~field ->
+      Node (
+        (field.required "value" decoder),
+        (field.required "children" (array (tree decoder) |> map Array.to_list))
+      )
     )
 
-  and leaf decoder json =
-    Leaf (json |> field "value" decoder)
+  and leaf decoder =
+    obj (fun ~field ->
+      Leaf (field.required "value" decoder)
+    )
 end
 
 let rec indent =
@@ -61,4 +67,5 @@ let json = {| {
 let myTree =
   json |> Json.parseOrRaise 
        |> Decode.tree Json.Decode.int
-       |> print
+       |> function | Ok tree   -> print tree
+                   | Error msg -> Js.log msg

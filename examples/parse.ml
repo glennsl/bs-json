@@ -5,4 +5,10 @@ let arrayOfInts str =
   Json.Decode.(array int json)
 
 (* prints `[3, 2, 1]` *)
-let _ = Js.log (arrayOfInts "[1, 2, 3]" |> Js.Array.reverseInPlace)
+let _ =
+  match arrayOfInts "[1, 2, 3]" with
+  | Ok arr ->
+    arr |> Js.Array.reverseInPlace
+        |> Js.log
+  | Error msg ->
+    Js.log msg

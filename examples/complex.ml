@@ -9,18 +9,20 @@ and point = {
 }
 
 module Decode = struct
-  let point json =
-    let open! Json.Decode in {
-      x = json |> field "x" float;
-      y = json |> field "y" float
-    }
+  let point =
+    let open! Json.Decode in obj (fun ~field -> {
+      x = field.required "x" float;
+      y = field.required "y" float
+    })
 
-  let line json =
-    Json.Decode.{
-      start     = json |> field "start" point;
-      end_      = json |> field "end" point;
-      thickness = json |> optional (field "thickness" int)
-    }
+  let line =
+    Json.Decode.(
+      obj (fun ~field -> {
+        start     = field.required "start" point;
+        end_      = field.required "end" point;
+        thickness = field.optional "thickness" int
+      })
+    )
 end
 
 let data = {| {

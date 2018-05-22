@@ -1,5 +1,6 @@
 open Jest
 open Expect
+open Js.Result
 
 module Test = struct
   type default_case = 
@@ -25,21 +26,11 @@ module Test = struct
 
   let throws ?(name = "throws") decoder kinds =
     testAll name (List.map valueFor kinds)  (fun value ->
-        expectFn decoder value |> toThrowException (Json.Decode.DecodeError ""))
+        expect (decoder value) |> toEqual (Error ""))
 
 end
-
+(*
 let () = 
-
-describe "boolean" (fun () ->
-  let open Json in
-  let open Decode in
-
-  test "boolean" (fun () ->
-    expect @@ boolean (Encode.boolean Js.true_) |> toEqual Js.true_);
-
-  Test.throws boolean [Float; Int; String; Null; Array; Object; Char];
-);
 
 describe "bool" (fun () ->
   let open Json in
@@ -658,3 +649,4 @@ describe "composite expressions" (fun () ->
       (field "foo" (array int) json, field "bar" string json)
       |> toEqual ([| 1; 2; 3 |], "baz"));
 );
+*)
