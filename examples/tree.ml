@@ -13,14 +13,18 @@ module Decode = struct
                | _      -> failwith "unknown node type"
     )
 
-  and node decoder json =
-    Node (
-      (json |> field "value" decoder),
-      (json |> field "children" (array (tree decoder) |> map Array.to_list))
+  and node decoder =
+    obj (fun ~field ->
+      Node (
+        (field.required "value" decoder),
+        (field.required "children" (array (tree decoder) |> map Array.to_list))
+      )
     )
 
-  and leaf decoder json =
-    Leaf (json |> field "value" decoder)
+  and leaf decoder =
+    obj (fun ~field ->
+      Leaf (field.required "value" decoder)
+    )
 end
 
 let rec indent =
