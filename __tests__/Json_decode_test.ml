@@ -402,6 +402,90 @@ describe "dict" (fun () ->
   Test.throws (dict int) [Bool; Float; Int; String; Null; Array; Char];
 );
 
+describe "obj - field.required" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  let requiredField name decode = obj (fun ~field -> field.required name decode) in
+
+  test "boolean" (fun () ->
+    expect @@
+      requiredField "b" bool (parseOrRaise {| { "a": true, "b": false } |})
+      |> toEqual false);
+  test "float" (fun () ->
+    expect @@
+      requiredField "b" float (parseOrRaise {| { "a": 1.2, "b": 2.3 } |})
+      |> toEqual 2.3);
+  test "int" (fun () ->
+    expect @@
+      requiredField "b" int (parseOrRaise {| { "a": 1, "b": 2 } |})
+      |> toEqual 2);
+  test "string" (fun () ->
+    expect @@
+      requiredField "b" string (parseOrRaise {| { "a": "x", "b": "y" } |})
+      |> toEqual "y");
+  test "nullAs" (fun () ->
+    expect @@
+      requiredField "b" (nullAs Js.null) (parseOrRaise {| { "a": null, "b": null } |})
+      |> toEqual Js.null);
+  test "missing key" (fun () ->
+    expectFn
+      (requiredField "c" string) (parseOrRaise {| { "a": null, "b": null } |})
+      |> toThrowException(DecodeError "Expected required field 'c'"));
+  test "decoder error" (fun () ->
+    expectFn
+      (requiredField "b" string) (parseOrRaise {| { "a": null, "b": null } |})
+      |> toThrowException(DecodeError "Expected string, got null\n\tat field 'b'"));
+  test "non-DecodeError exceptions in decoder should pass through" (fun () ->
+    expectFn
+      (requiredField "a" (fun _ -> failwith "fail")) (parseOrRaise {| { "a": 0 } |})
+      |> toThrowException(Failure "fail"));
+
+  Test.throws (requiredField "foo" int) [Bool; Float; Int; String; Null; Array; Object; Char];
+);
+
+describe "obj - field.optional" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  let optionalField name decode = obj (fun ~field -> field.optional name decode) in
+
+  test "boolean" (fun () ->
+    expect @@
+      optionalField "b" bool (parseOrRaise {| { "a": true, "b": false } |})
+      |> toEqual (Some false));
+  test "float" (fun () ->
+    expect @@
+      optionalField "b" float (parseOrRaise {| { "a": 1.2, "b": 2.3 } |})
+      |> toEqual (Some 2.3));
+  test "int" (fun () ->
+    expect @@
+      optionalField "b" int (parseOrRaise {| { "a": 1, "b": 2 } |})
+      |> toEqual (Some 2));
+  test "string" (fun () ->
+    expect @@
+      optionalField "b" string (parseOrRaise {| { "a": "x", "b": "y" } |})
+      |> toEqual (Some "y"));
+  test "nullAs" (fun () ->
+    expect @@
+      optionalField "b" (nullAs Js.null) (parseOrRaise {| { "a": null, "b": null } |})
+      |> toEqual (Some Js.null));
+  test "missing key" (fun () ->
+    expect @@
+      optionalField "c" string (parseOrRaise {| { "a": null, "b": null } |})
+      |> toEqual None);
+  test "decoder error" (fun () ->
+    expectFn
+      (optionalField "b" string) (parseOrRaise {| { "a": null, "b": null } |})
+      |> toThrowException(DecodeError "Expected string, got null\n\tat field 'b'"));
+  test "non-DecodeError exceptions in decoder should pass through" (fun () ->
+    expectFn
+      (optionalField "a" (fun _ -> failwith "fail")) (parseOrRaise {| { "a": 0 } |})
+      |> toThrowException(Failure "fail"));
+
+  Test.throws (optionalField "foo" int) [Bool; Float; Int; String; Null; Array; Char];
+);
+
 describe "field" (fun () ->
   let open Json in
   let open! Decode in

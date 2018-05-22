@@ -281,6 +281,13 @@ values are successfully decoded.
 ]}
 *)
 
+type field_decoder = {
+  optional : 'a. string -> 'a decoder -> 'a option;
+  required : 'a. string -> 'a decoder -> 'a
+}
+val obj : (field: field_decoder -> 'b) -> 'b decoder
+
+
 val field : string -> 'a decoder -> 'a decoder
 (** Decodes a JSON object with a specific field into the value of that field
     

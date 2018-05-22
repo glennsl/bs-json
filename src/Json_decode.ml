@@ -157,6 +157,43 @@ let dict decode json =
   else
     raise @@ DecodeError ("Expected object, got " ^ _stringify json)
 
+type field_decoder = {
+  optional : 'a. string -> 'a decoder -> 'a option;
+  required : 'a. string -> 'a decoder -> 'a
+}
+
+let obj builder json =
+  if 
+    Js.typeof json = "object" && 
+    not (Js.Array.isArray json) && 
+    not ((Obj.magic json : 'a Js.null) == Js.null)
+  then
+    begin
+      let dict =
+        (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t)
+      in
+
+      let optional key decode =
+        match Js.Dict.get dict key with
+        | Some value -> begin
+          try Some (decode value) with
+          | DecodeError msg -> raise (DecodeError (msg ^ "\n\tat field '" ^ key ^ "'"))
+          end
+        | None -> None
+      in
+
+      let required key decode =
+        match optional key decode with
+        | Some x -> x
+        | None -> raise (DecodeError ("Expected required field '" ^ key ^ "'"))
+      in 
+
+      builder ~field:{ optional; required }
+
+    end
+  else
+    raise (DecodeError ("Expected object, got " ^ _stringify json))
+
 let field key decode json =
   if 
     Js.typeof json = "object" && 
