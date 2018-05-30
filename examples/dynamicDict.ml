@@ -21,7 +21,7 @@ type obj = {
 module Decode = struct
   let obj =
     Json.Decode.(
-      obj (fun ~field -> {
+      obj (fun {field} -> {
         static    = field.required "static" string;
         dynamics  = field.required "dynamics" (dict int)
       })

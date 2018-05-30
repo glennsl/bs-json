@@ -133,87 +133,107 @@ let tuple4 decodeA decodeB decodeC decodeD json =
   else
     raise @@ DecodeError ("Expected array, got " ^ _stringify json)
 
-let dict decode json = 
+let _jsonDict json =
   if Js.typeof json = "object" && 
-      not (Js.Array.isArray json) && 
-      not ((Obj.magic json : 'a Js.null) == Js.null)
-  then begin
-    let source = (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
-    let keys = Js.Dict.keys source in
-    let l = Js.Array.length keys in
-    let target = Js.Dict.empty () in
-    for i = 0 to l - 1 do
-        let key = (Array.unsafe_get keys i) in
-        let value =
-          try
-            decode (Js.Dict.unsafeGet source key)
-          with
-            DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin dict")
-          in
-        Js.Dict.set target key value;
-    done;
-    target
-  end
+     not (Js.Array.isArray json) && 
+     not ((Obj.magic json : 'a Js.null) == Js.null)
+  then
+    (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t)
   else
     raise @@ DecodeError ("Expected object, got " ^ _stringify json)
 
-type field_decoder = {
+let dict decode json = 
+  let source = _jsonDict json in
+  let keys = Js.Dict.keys source in
+  let l = Js.Array.length keys in
+  let target = Js.Dict.empty () in
+  for i = 0 to l - 1 do
+      let key = (Array.unsafe_get keys i) in
+      let value =
+        try
+          decode (Js.Dict.unsafeGet source key)
+        with
+          DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin dict")
+        in
+      Js.Dict.set target key value;
+  done;
+  target
+
+type field_getters = {
   optional : 'a. string -> 'a decoder -> 'a option;
   required : 'a. string -> 'a decoder -> 'a
 }
+type at_getters = {
+  optional : 'a. string list -> 'a decoder -> 'a option;
+  required : 'a. string list -> 'a decoder -> 'a
+}
+type obj_getters = {
+  field : field_getters;
+  at    : at_getters
+}
+
+exception FieldNotFound of string
 
 let obj builder json =
-  if 
-    Js.typeof json = "object" && 
-    not (Js.Array.isArray json) && 
-    not ((Obj.magic json : 'a Js.null) == Js.null)
-  then
-    begin
-      let dict =
-        (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t)
-      in
+  let _dict = _jsonDict json in (* TODO: optimize object check *)
 
-      let optional key decode =
-        match Js.Dict.get dict key with
-        | Some value -> begin
-          try Some (decode value) with
-          | DecodeError msg -> raise (DecodeError (msg ^ "\n\tat field '" ^ key ^ "'"))
-          end
-        | None -> None
-      in
+  let tag msg key =
+    msg ^ "\n\tat field '" ^ key ^ "'"
+  in
 
-      let required key decode =
-        match optional key decode with
-        | Some x -> x
-        | None -> raise (DecodeError ("Expected required field '" ^ key ^ "'"))
-      in 
+  let get key decode json =
+    match Js.Dict.get (_jsonDict json) key with
+    | Some value -> begin
+      try decode value with
+      | FieldNotFound msg -> raise (FieldNotFound (tag msg key))
+      | DecodeError msg   -> raise (DecodeError (tag msg key))
+      end
+    | None -> raise (FieldNotFound ("Expected required field '" ^ key ^ "'"))
+  in
 
-      builder ~field:{ optional; required }
+  let field: field_getters = {
+    optional = (fun key decode -> 
+      match get key decode json with
+      | x -> Some x
+      | exception FieldNotFound _ -> None);
 
-    end
-  else
-    raise (DecodeError ("Expected object, got " ^ _stringify json))
+    required = fun key decode ->
+      try get key decode json with
+      | FieldNotFound msg -> raise (DecodeError msg)
+  } in
+
+  let rec getPath key_path decode =
+    match key_path with 
+      | [key]     -> get key decode
+      | key::rest -> get key (getPath rest decode)
+      | []        -> raise @@ Invalid_argument ("Expected key_path to contain at least one element")
+  in
+
+  let at = {
+    optional = (fun path decode ->
+      match getPath path decode json with
+      | x -> Some x
+      | exception FieldNotFound _ -> None);
+
+    required = fun path decode ->
+      try getPath path decode json with
+      | FieldNotFound msg -> raise (DecodeError msg)
+  } in
+
+  builder { field; at }
 
 let field key decode json =
-  if 
-    Js.typeof json = "object" && 
-    not (Js.Array.isArray json) && 
-    not ((Obj.magic json : 'a Js.null) == Js.null)
-  then begin
-    let dict =
-      (Obj.magic (json : Js.Json.t) : Js.Json.t Js.Dict.t) in
-    match Js.Dict.get dict key with
-    | Some value -> begin
-      try
-        decode value
-      with
-        DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tat field '" ^ key ^ "'")
-      end
-    | None ->
-      raise @@ DecodeError ({j|Expected field '$(key)'|j})
-  end
-  else
-    raise @@ DecodeError ("Expected object, got " ^ _stringify json)
+  let dict = _jsonDict json in
+
+  match Js.Dict.get dict key with
+  | Some value -> begin
+    try
+      decode value
+    with
+      DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tat field '" ^ key ^ "'")
+    end
+  | None ->
+    raise @@ DecodeError ({j|Expected field '$(key)'|j})
 
 let rec at key_path decoder =
     match key_path with 

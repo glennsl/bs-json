@@ -21,7 +21,7 @@ type obj = {
 module Decode = {
   let obj =
     Json.Decode.(
-      obj ((~field) => {
+      obj (({field}) => {
         static:   field.required("static", string),
         dynamics: field.required("dynamics", dict(int)),
       })

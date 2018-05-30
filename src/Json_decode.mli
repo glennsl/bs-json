@@ -281,11 +281,19 @@ values are successfully decoded.
 ]}
 *)
 
-type field_decoder = {
+type field_getters = {
   optional : 'a. string -> 'a decoder -> 'a option;
   required : 'a. string -> 'a decoder -> 'a
 }
-val obj : (field: field_decoder -> 'b) -> 'b decoder
+type at_getters = {
+  optional : 'a. string list -> 'a decoder -> 'a option;
+  required : 'a. string list -> 'a decoder -> 'a
+}
+type obj_getters = {
+  field : field_getters;
+  at    : at_getters
+}
+val obj : (obj_getters -> 'b) -> 'b decoder
 
 
 val field : string -> 'a decoder -> 'a decoder

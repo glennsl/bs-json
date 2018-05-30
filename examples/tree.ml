@@ -14,7 +14,7 @@ module Decode = struct
     )
 
   and node decoder =
-    obj (fun ~field ->
+    obj (fun {field} ->
       Node (
         (field.required "value" decoder),
         (field.required "children" (array (tree decoder) |> map Array.to_list))
@@ -22,7 +22,7 @@ module Decode = struct
     )
 
   and leaf decoder =
-    obj (fun ~field ->
+    obj (fun {field} ->
       Leaf (field.required "value" decoder)
     )
 end

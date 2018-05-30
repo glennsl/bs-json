@@ -406,7 +406,7 @@ describe "obj - field.required" (fun () ->
   let open Json in
   let open! Decode in
 
-  let requiredField name decode = obj (fun ~field -> field.required name decode) in
+  let requiredField name decode = obj (fun {field} -> field.required name decode) in
 
   test "boolean" (fun () ->
     expect @@
@@ -448,7 +448,7 @@ describe "obj - field.optional" (fun () ->
   let open Json in
   let open! Decode in
 
-  let optionalField name decode = obj (fun ~field -> field.optional name decode) in
+  let optionalField name decode = obj (fun {field} -> field.optional name decode) in
 
   test "boolean" (fun () ->
     expect @@
@@ -484,6 +484,92 @@ describe "obj - field.optional" (fun () ->
       |> toThrowException(Failure "fail"));
 
   Test.throws (optionalField "foo" int) [Bool; Float; Int; String; Null; Array; Char];
+);
+
+describe "obj - at.required" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  let requiredAt path decode = obj (fun {at} -> at.required path decode) in
+
+  test "boolean" (fun () ->
+    expect @@
+      requiredAt ["a"; "x"; "y"] bool (parseOrRaise {| {
+        "a": { "x" : { "y" : false } }, 
+        "b": false 
+      } |})
+      |> toEqual false);
+  test "nullAs" (fun () ->
+    expect @@
+      requiredAt ["a"; "x"] (nullAs Js.null) (parseOrRaise {| {
+        "a": { "x" : null }, 
+        "b": null 
+      } |})
+      |> toEqual Js.null);
+
+  test "missing key" (fun () ->
+    expectFn 
+      (requiredAt ["a"; "y"] (nullAs Js.null)) (parseOrRaise {| {
+        "a": { "x" : null }, 
+        "b": null 
+      } |})
+      |> toThrowException(DecodeError "Expected required field 'y'\n\tat field 'a'"));
+  test "decoder error" (fun () ->
+    expectFn 
+      (requiredAt ["a"; "x"; "y"] (nullAs Js.null)) (parseOrRaise {| {
+        "a": { "x" : { "y": "foo" } }, 
+        "b": null 
+      } |})
+      |> toThrowException(DecodeError "Expected null, got \"foo\"\n\tat field 'y'\n\tat field 'x'\n\tat field 'a'"));
+  test "empty list of keys should raise Invalid_argument" (fun () ->
+    expectFn
+      (requiredAt [] int) (parseOrRaise "{}")
+      |> toThrowException(Invalid_argument "Expected key_path to contain at least one element"));
+
+  Test.throws (requiredAt ["foo"; "bar"] int) [Bool; Float; Int; String; Null; Array; Object; Char];
+);
+
+describe "obj - at.optional" (fun () ->
+  let open Json in
+  let open! Decode in
+
+  let optionalAt path decode = obj (fun {at} -> at.optional path decode) in
+
+  test "boolean" (fun () ->
+    expect @@
+      optionalAt ["a"; "x"; "y"] bool (parseOrRaise {| {
+        "a": { "x" : { "y" : false } }, 
+        "b": false 
+      } |})
+      |> toEqual (Some false));
+  test "nullAs" (fun () ->
+    expect @@
+      optionalAt ["a"; "x"] (nullAs Js.null) (parseOrRaise {| {
+        "a": { "x" : null }, 
+        "b": null 
+      } |})
+      |> toEqual (Some Js.null));
+
+  test "missing key" (fun () ->
+    expect @@ 
+      optionalAt ["a"; "y"] (nullAs Js.null) (parseOrRaise {| {
+        "a": { "x" : null }, 
+        "b": null 
+      } |})
+      |> toEqual None);
+  test "decoder error" (fun () ->
+    expectFn 
+      (optionalAt ["a"; "x"; "y"] (nullAs Js.null)) (parseOrRaise {| {
+        "a": { "x" : { "y": "foo" } }, 
+        "b": null 
+      } |})
+      |> toThrowException(DecodeError "Expected null, got \"foo\"\n\tat field 'y'\n\tat field 'x'\n\tat field 'a'"));
+  test "empty list of keys should raise Invalid_argument" (fun () ->
+    expectFn
+      (optionalAt [] int) (parseOrRaise "{}")
+      |> toThrowException(Invalid_argument "Expected key_path to contain at least one element"));
+
+  Test.throws (optionalAt ["foo"; "bar"] int) [Bool; Float; Int; String; Null; Array; Char];
 );
 
 describe "field" (fun () ->
