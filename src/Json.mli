@@ -2,21 +2,21 @@
 This module has four aspects to it:
 - Parsing, which turns a JSON string into an encoded JSON data structure
 - Stringificaiton, which produces a JSON string from an encoded JSON data structure
-- Encoding, which is the process of construction a JSON data strcture
+- Encoding, which is the process of construction a JSON data structure
 - Decoding, which is the process of deconstructing a JSON data structure
 {3 Parsing}
 {! parse} and {! exnParse} will both (try to) parse a JSON string into a JSON
-data structure ({! Js.Json.t}), but behhaves differently when encountering a
+data structure ({! Js.Json.t}), but behaves differently when encountering a
 parse error. [exnParse] will raise a [SyntaxError], while [parse] will return
 a [Js.Json.t result] indicating whether or not the parsing succeeded. There's
 not much more to it: [string] in, [Js.Json.t] out.
 The parsed result, and encoded JSON data structure, then needs to be decoded to
-avtually be usable. See {!section:Decoding} below.
+actually be usable. See {!section:Decoding} below.
 {3 Stringification}
-Stringificaiton is the exact reverse of parsing. {! stringify} and {! stringifyAny}
+Stringification is the exact reverse of parsing. {! stringify} and {! stringifyAny}
 both technically do the same thing, but where [stringifyAny] will take any value
 and try to do its best with it, retuning a [string option], [stringify] on the
-other handuses the type system to guarantee success, but requires that the data
+other hand uses the type system to guarantee success, but requires that the data
 has been encoded in a JSON data structure first. See {!section:Encoding} below.
 {3 Encoding}
 Encoding creates a JSON data structure which can stringified directly with
