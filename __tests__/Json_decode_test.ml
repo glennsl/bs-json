@@ -557,6 +557,13 @@ describe "obj - at.optional" (fun () ->
         "b": null 
       } |})
       |> toEqual None);
+  test "non-object in path" (fun () ->
+    expect @@ 
+      optionalAt ["a"; "y"] (nullAs Js.null) (parseOrRaise {| {
+        "a": "", 
+        "b": null 
+      } |})
+      |> toEqual None);
   test "decoder error" (fun () ->
     expectFn 
       (optionalAt ["a"; "x"; "y"] (nullAs Js.null)) (parseOrRaise {| {
