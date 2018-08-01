@@ -141,6 +141,10 @@ transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js
 
 ## Changes
 
+### 3.0.0
+* Replace usage of `Js.Date.toJSON` with `Js.Date.toJSONUsafe`, which is exactly the same, just to avoid deprecation warnings for end users (Thanks Bob!)
+* Requires `bs-platform` >= 4.0.2
+
 ### 2.0.0
 * Removed `Json.Decode.boolean`, `Json.Encode.boolean`, `Json.Encode.booleanArray`
 * Requires `bs-platform` >= 3.0.0
