@@ -12,7 +12,7 @@ let char c =
     |> string
 
 let date d =
-  d |> Js.Date.toJSON
+  d |> Js.Date.toJSONUnsafe
     |> string
 
 let nullable encode = function
