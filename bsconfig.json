@@ -17,5 +17,5 @@
       "type": "dev"
     }
   ],
-  "bs-dev-dependencies": ["bs-jest"]
+  "bs-dev-dependencies": ["@glennsl/bs-jest"]
 }
