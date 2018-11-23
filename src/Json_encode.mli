@@ -22,7 +22,7 @@ val char : char -> Js.Json.t
 (** [char c] makes a JSON string of the [char] [c] *)
 
 val date : Js.Date.t -> Js.Json.t
-(** [bool b] makes an ISO 8601 JSON string of the [Js.Date.t] [b] *)
+(** [date d] makes an ISO 8601 JSON string of the [Js.Date.t] [d] *)
 
 val nullable : 'a encoder -> 'a option -> Js.Json.t
 (** [nullable encoder option] returns either the encoded value or [null] *)
