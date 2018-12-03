@@ -24,15 +24,15 @@ type line = {
   thickness: option(int)
 }
 and point = {
-  x: float,
-  y: float
+  x: int,
+  y: int
 };
 
 module Decode = {
   let point = json =>
     Json.Decode.{
-      x: json |> field("x", float),
-      y: json |> field("y", float)
+      x: json |> field("x", int),
+      y: json |> field("y", int)
     };
 
   let line = json =>
@@ -44,8 +44,8 @@ module Decode = {
 };
 
 let data = {| {
-  "start": { "x": 1.1, "y": -0.4 },
-  "end":   { "x": 5.3, "y": 3.8 }
+  "start": { "x": 1, "y": -4 },
+  "end":   { "x": 5, "y": 8 }
 } |};
 
 let line = data |> Json.parseOrRaise
@@ -93,8 +93,8 @@ writing composable decoders! Let's look at `Decode.point` from the example above
 let point = json => {
   open! Json.Decode;
   {
-    x: json |> field("x", float),
-    y: json |> field("y", float)
+    x: json |> field("x", int),
+    y: json |> field("y", int)
   };
 };
 ```

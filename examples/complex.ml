@@ -4,15 +4,15 @@ type line = {
   thickness: int option
 }
 and point = {
-  x: float;
-  y: float
+  x: int;
+  y: int
 }
 
 module Decode = struct
   let point json =
-    let open! Json.Decode in {
-      x = json |> field "x" float;
-      y = json |> field "y" float
+    Json.Decode.{
+      x = json |> field "x" int;
+      y = json |> field "y" int
     }
 
   let line json =
@@ -24,8 +24,8 @@ module Decode = struct
 end
 
 let data = {| {
-  "start": { "x": 1.1, "y": -0.4 },
-  "end":   { "x": 5.3, "y": 3.8 }
+  "start": { "x": 1, "y": -4 },
+  "end":   { "x": 5, "y": 8 }
 } |}
 
 let _ =
