@@ -52,6 +52,11 @@ let line = data |> Json.parseOrRaise
                 |> Decode.line;
 ```
 
+NOTE: `Json.Decode.{ ... }` creates an ordinary record, but also opens the `Json.Decode` module locally, within the
+scope delimited by the curly braces, so we don't have to qualify the functions we use from it, like `field`, `int` and
+`optional` here. You can also use `Json.Decode.( ... )` to open the module locally within the parentheses, if you're not
+creating a record.
+
 See [examples](https://github.com/glennsl/bs-json/blob/master/examples/) for more.
 
 ## Installation
