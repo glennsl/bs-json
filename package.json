@@ -32,13 +32,13 @@
     "bsconfig.json"
   ],
   "devDependencies": {
-    "@glennsl/bs-jest": "^0.4.2",
-    "bs-platform": "^4.0.2",
+    "@glennsl/bs-jest": "^0.4.8",
+    "bs-platform": "^5.0.4",
     "coveralls": "^3.0.0",
     "nyc": "^11.4.1"
   },
   "peerDependencies": {
-    "bs-platform": "^4.0.2"
+    "bs-platform": "^5.0.4"
   },
   "jest": {
     "testEnvironment": "node"
