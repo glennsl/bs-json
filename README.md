@@ -146,6 +146,9 @@ transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js
 
 ## Changes
 
+### 4.0.0
+* Bumped `bs-platform` peer dependency to 5.0.4 to stop the compiler's complaining.
+
 ### 3.0.0
 * Replace usage of `Js.Date.toJSON` with `Js.Date.toJSONUsafe`, which is exactly the same, just to avoid deprecation warnings for end users (Thanks Bob!)
 * Requires `bs-platform` >= 4.0.2
