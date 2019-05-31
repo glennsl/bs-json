@@ -34,8 +34,8 @@
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.8",
     "bs-platform": "^5.0.4",
-    "coveralls": "^3.0.0",
-    "nyc": "^11.4.1"
+    "coveralls": "^3.0.3",
+    "nyc": "^14.1.1"
   },
   "peerDependencies": {
     "bs-platform": "^5.0.4"
