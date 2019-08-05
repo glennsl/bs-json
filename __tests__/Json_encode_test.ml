@@ -53,6 +53,14 @@ test "dict - simple" (fun () ->
     dict o
     |> toEqual @@ Obj.magic o);
 
+test "dictOf - simple" (fun () ->
+  let o = Js.Dict.empty () in
+  Js.Dict.set o "x" 42;
+
+  expect @@
+    dictOf int o
+    |> toEqual @@ Obj.magic o);
+
 test "object_ - empty" (fun () ->
   expect @@
     object_ @@ []
@@ -80,7 +88,7 @@ test "jsonArray int" (fun () ->
 
 test "stringArray" (fun () ->
   expect @@
-    stringArray [|"a";"b"|] 
+    stringArray [|"a";"b"|]
     |> toEqual @@ Obj.magic [|"a";"b"|]);
 
 test "numberArray" (fun () ->
@@ -93,13 +101,13 @@ test "boolArray" (fun () ->
     boolArray [|true;false|]
     |> toEqual @@ Obj.magic [|true;false|]);
 
-test "nullable (None)" (fun () -> 
+test "nullable (None)" (fun () ->
   expect @@
     nullable string None
     |> toEqual @@ null
 );
 
-test "nullable (Some)" (fun () -> 
+test "nullable (Some)" (fun () ->
   expect @@
     nullable string (Some "success")
     |> toEqual @@ string "success"
@@ -117,25 +125,25 @@ test "withDefault (Some)" (fun () ->
     |> toEqual @@ string "success"
 );
 
-test "pair" (fun () -> 
+test "pair" (fun () ->
   expect @@
     pair string float ("hello", 1.2)
     |> toEqual @@ jsonArray [|string "hello"; float 1.2|]
 );
 
-test "tuple2" (fun () -> 
+test "tuple2" (fun () ->
   expect @@
     tuple2 string float ("hello", 1.2)
     |> toEqual @@ jsonArray [|string "hello"; float 1.2|]
 );
 
-test "tuple3" (fun () -> 
+test "tuple3" (fun () ->
   expect @@
     tuple3 string float int ("hello", 1.2, 4)
     |> toEqual @@ jsonArray [|string "hello"; float 1.2; int 4|]
 );
 
-test "tuple4" (fun () -> 
+test "tuple4" (fun () ->
   expect @@
     tuple4 string float int bool ("hello", 1.2, 4, true)
     |> toEqual @@ jsonArray [|string "hello"; float 1.2; int 4; bool true|]

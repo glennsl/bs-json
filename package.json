@@ -8,6 +8,7 @@
     "start": "bsb -make-world -w",
     "coverage": "nyc report --temp-directory=coverage --reporter=text-lcov | coveralls",
     "test": "npm run build && jest --coverage && npm run coverage && npm run test:examples",
+    "test:nocoverage": "npm run build && jest && npm run test:examples",
     "test:examples": "npm run build && ./run_examples.sh",
     "watch:bsb": "bsb -make-world -w",
     "watch:jest": "jest --coverage --watchAll",
