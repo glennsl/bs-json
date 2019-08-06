@@ -4,13 +4,7 @@ external null : Js.Json.t = "" [@@bs.val]
 external string : string -> Js.Json.t = "%identity"
 external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
-external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 external bool : bool -> Js.Json.t = "%identity"
-
-let dictOf encode d =
-  let pairs = Js.Dict.entries d in
-  let encodedPairs = Array.map (fun (k, v) -> (k, encode(v))) pairs in
-  dict (Js.Dict.fromArray encodedPairs)
 
 let char c =
   c |> String.make 1
@@ -28,9 +22,15 @@ let withDefault d encode = function
   | None -> d
   | Some v -> encode v
 
+external jsonDict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
+let dict encode d =
+  let pairs = Js.Dict.entries d in
+  let encodedPairs = Array.map (fun (k, v) -> (k, encode(v))) pairs in
+  jsonDict (Js.Dict.fromArray encodedPairs)
+
 let object_ props: Js.Json.t =
   props |> Js.Dict.fromList
-        |> dict
+        |> jsonDict
 
 external jsonArray : Js.Json.t array -> Js.Json.t = "%identity"
 let array encode l =

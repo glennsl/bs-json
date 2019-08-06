@@ -42,11 +42,11 @@ val tuple3 : 'a encoder -> 'b encoder -> 'c encoder -> ('a * 'b * 'c) -> Js.Json
 val tuple4 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> ('a * 'b * 'c * 'd) -> Js.Json.t
 (** [tuple4 enc enc enc enc tuple] creates a JSON array from a tuple of size 4 *)
 
-external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
-(** [dict d] makes a JSON object of the [Js.Dict.t] [d] *)
+external jsonDict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
+(** [jsonDict d] makes a JSON object of the [Js.Dict.t] [d] *)
 
-val dictOf : 'a encoder -> 'a Js_dict.t encoder
-(** [dict(enc) d] makes a JSON object of the [Js.Dict.t] [d] with the given encoder *)
+val dict : 'a encoder -> 'a Js_dict.t encoder
+(** [dict encoder d] makes a JSON object of the [Js.Dict.t] [d] with the given [encoder] *)
 
 val object_ : (string * Js.Json.t) list -> Js.Json.t
 (** [object_ props] makes a JSON object of the [props] list of properties *)

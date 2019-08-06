@@ -40,25 +40,25 @@ test "char" (fun () ->
     char 'a'
     |> toEqual @@ Obj.magic "a");
 
-test "dict - empty" (fun () ->
+test "jsonDict - empty" (fun () ->
   expect @@
-    dict @@ Js.Dict.empty ()
+    jsonDict @@ Js.Dict.empty ()
     |> toEqual @@ Obj.magic @@ Js.Dict.empty ());
 
-test "dict - simple" (fun () ->
+test "jsonDict - simple" (fun () ->
   let o = Js.Dict.empty () in
   Js.Dict.set o "x" (int 42);
 
   expect @@
-    dict o
+    jsonDict o
     |> toEqual @@ Obj.magic o);
 
-test "dictOf - simple" (fun () ->
+test "dict - simple" (fun () ->
   let o = Js.Dict.empty () in
   Js.Dict.set o "x" 42;
 
   expect @@
-    dictOf int o
+    dict int o
     |> toEqual @@ Obj.magic o);
 
 test "object_ - empty" (fun () ->
