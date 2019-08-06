@@ -146,6 +146,11 @@ transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js
 
 ## Changes
 
+### 5.0.0
+* Removed deprecated `arrayOf` encoder
+* Renamed `dict` encoder to `jsonDict`
+* Added new `dict` encoder that takes an additional encoder argument used to encode the contained values, and so it's consistent with the respective `dict` decoder.
+
 ### 4.0.0
 * Bumped `bs-platform` peer dependency to 5.0.4 to stop the compiler's complaining.
 
