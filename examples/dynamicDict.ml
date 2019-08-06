@@ -31,7 +31,7 @@ module Encode = struct
     Json.Encode.(
       object_ [
         "static",   c.static   |> string;
-        "dynamics", c.dynamics |> Js.Dict.map (fun [@bs] value -> value |> int) |> dict
+        "dynamics", c.dynamics |> dict int
       ]
     )
 end

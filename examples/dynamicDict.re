@@ -31,7 +31,7 @@ module Encode = {
     Json.Encode.(
       object_([
         ("static", string(c.static)),
-        ("dynamics", c.dynamics |> Js.Dict.map((. value) => int(value)) |> dict),
+        ("dynamics", c.dynamics |> dict(int)),
       ])
     );
   };
