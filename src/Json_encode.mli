@@ -15,7 +15,7 @@ external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 (** [int n] makes a JSON number of the [int] [n] *)
 
-external bool : bool -> Js.Json.t = "%identity" 
+external bool : bool -> Js.Json.t = "%identity"
 (** [bool b] makes a JSON boolean of the [bool] [b] *)
 
 val char : char -> Js.Json.t
@@ -45,18 +45,21 @@ val tuple4 : 'a encoder -> 'b encoder -> 'c encoder -> 'd encoder -> ('a * 'b * 
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
 (** [dict d] makes a JSON object of the [Js.Dict.t] [d] *)
 
+val dictOf : 'a encoder -> 'a Js_dict.t encoder
+(** [dict(enc) d] makes a JSON object of the [Js.Dict.t] [d] with the given encoder *)
+
 val object_ : (string * Js.Json.t) list -> Js.Json.t
 (** [object_ props] makes a JSON object of the [props] list of properties *)
 
 val array : 'a encoder -> 'a array encoder
-(** [arrayOf encoder l] makes a JSON array of the [list] [l] using the given [encoder] 
+(** [arrayOf encoder l] makes a JSON array of the [list] [l] using the given [encoder]
  *  NOTE: This will be renamed `array` once the existing and deprecated `array` function
  *  has been removed.
  *)
 
 val arrayOf : 'a encoder -> 'a array encoder
 [@@deprecated "Use `array` instead"]
-(** [arrayOf encoder l] makes a JSON array of the [list] [l] using the given [encoder] 
+(** [arrayOf encoder l] makes a JSON array of the [list] [l] using the given [encoder]
  *  NOTE: This will be renamed `array` once the existing and deprecated `array` function
  *  has been removed.
  *  @deprecated Use [array] instead
@@ -65,15 +68,15 @@ val arrayOf : 'a encoder -> 'a array encoder
 val list : 'a encoder -> 'a list encoder
 (** [list encoder a] makes a JSON array of the [array] [a] using the given [encoder] *)
 
-(** The functions below are specialized for specific array type which 
+(** The functions below are specialized for specific array type which
     happened to be already JSON object in the BuckleScript runtime. Therefore
-    they are more efficient (constant time rather than linear conversion). *) 
+    they are more efficient (constant time rather than linear conversion). *)
 
 external jsonArray : Js.Json.t array -> Js.Json.t = "%identity"
 (** [jsonArray a] makes a JSON array of the [Js.Json.t array] [a] *)
 
 external stringArray : string array -> Js.Json.t = "%identity"
-(** [stringArray a] makes a JSON array of the [string array] [a] *) 
+(** [stringArray a] makes a JSON array of the [string array] [a] *)
 
 external numberArray : float array -> Js.Json.t = "%identity"
 (** [numberArray a] makes a JSON array of the [float array] [a] *)

@@ -5,7 +5,12 @@ external string : string -> Js.Json.t = "%identity"
 external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
 external dict : Js.Json.t Js_dict.t -> Js.Json.t = "%identity"
-external bool : bool -> Js.Json.t = "%identity" 
+external bool : bool -> Js.Json.t = "%identity"
+
+let dictOf encode d =
+  let pairs = Js.Dict.entries d in
+  let encodedPairs = Array.map (fun (k, v) -> (k, encode(v))) pairs in
+  dict (Js.Dict.fromArray encodedPairs)
 
 let char c =
   c |> String.make 1
