@@ -57,14 +57,6 @@ val array : 'a encoder -> 'a array encoder
  *  has been removed.
  *)
 
-val arrayOf : 'a encoder -> 'a array encoder
-[@@deprecated "Use `array` instead"]
-(** [arrayOf encoder l] makes a JSON array of the [list] [l] using the given [encoder]
- *  NOTE: This will be renamed `array` once the existing and deprecated `array` function
- *  has been removed.
- *  @deprecated Use [array] instead
- *)
-
 val list : 'a encoder -> 'a list encoder
 (** [list encoder a] makes a JSON array of the [array] [a] using the given [encoder] *)
 

@@ -36,7 +36,6 @@ external jsonArray : Js.Json.t array -> Js.Json.t = "%identity"
 let array encode l =
   l |> Array.map encode
     |> jsonArray
-let arrayOf = array
 let list encode l =
   l |> List.map encode
     |> Array.of_list
