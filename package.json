@@ -23,7 +23,7 @@
     "json"
   ],
   "author": "glennsl",
-  "license": "LGPL-3.0",
+  "license": "(LGPL-3.0 OR MPL-2.0)",
   "bugs": {
     "url": "https://github.com/glennsl/bs-json/issues"
   },
