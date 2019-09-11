@@ -144,6 +144,15 @@ let floatPoint = point(Json.Decode.float);
 Encoders work exactly the same way, just in reverse. `'a encoder` is just an alias for `'a -> Js.Json.t`, and this also
 transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js.Json.t) -> 'a array -> Js.Json.t`.
 
+## License
+
+This work is dual-licensed under LGPL 3.0 and MPL 2.0.
+You can choose between one of them if you use this work.
+
+Please see LICENSE.LGPL-3.0 and LICENSE.MPL-2.0 for the full text of each license.
+
+`SPDX-License-Identifier: LGPL-3.0 OR MPL-2.0`
+
 ## Changes
 
 ### 5.0.0
