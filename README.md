@@ -149,7 +149,11 @@ transfers to composition: `'a encoder -> 'a array encoder` expands to `('a -> Js
 This work is dual-licensed under LGPL 3.0 and MPL 2.0.
 You can choose between one of them if you use this work.
 
-Please see LICENSE.LGPL-3.0 and LICENSE.MPL-2.0 for the full text of each license.
+As [recommended](https://www.gnu.org/licenses/gpl-howto.en.html) by the Free Software Foundation, the complete text of the GPL 3.0 as referenced by the LGPL 3.0
+is included in the file [COPYING](./COPYING).  The complete text of the LGPL 3.0 is included in both the [LICENSE](./LICENSE) file
+and in the file [COPYING.LESSER](./COPYING.LESSER).
+
+The complete text of the Mozilla Public License 2.0 is included in the file [LICENSE.MPL-2.0](./LICENSE.MPL-2.0).
 
 `SPDX-License-Identifier: LGPL-3.0 OR MPL-2.0`
 
