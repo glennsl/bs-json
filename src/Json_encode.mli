@@ -3,7 +3,7 @@
 type 'a encoder = 'a -> Js.Json.t
 (** The type of a encoder combinator *)
 
-external null : Js.Json.t = "" [@@bs.val]
+external null : Js.Json.t = "null" [@@bs.val]
 (** [null] is the singleton null JSON value *)
 
 external string : string -> Js.Json.t = "%identity"

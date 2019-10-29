@@ -1,6 +1,6 @@
 type 'a encoder = 'a -> Js.Json.t
 
-external null : Js.Json.t = "" [@@bs.val]
+external null : Js.Json.t = "null" [@@bs.val]
 external string : string -> Js.Json.t = "%identity"
 external float : float -> Js.Json.t = "%identity"
 external int : int -> Js.Json.t = "%identity"
