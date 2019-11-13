@@ -12,7 +12,8 @@
     "test:examples": "npm run build && ./run_examples.sh",
     "watch:bsb": "bsb -make-world -w",
     "watch:jest": "jest --coverage --watchAll",
-    "watch:screen": "screen -c .screenrc"
+    "watch:screen": "screen -c .screenrc",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
