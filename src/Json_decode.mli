@@ -15,6 +15,23 @@ type 'a decoder = Js.Json.t -> 'a
 
 exception DecodeError of string
 
+val id : Js.Json.t decoder
+(** Identity decoder.
+
+    {b Returns} the input JSON value.
+
+    Always succeeds. You would use this if you wanted to partially decode
+    some JSON in stages; in the first stage you could decode some portion
+    of the input, while using [id] to keep the rest as JSON and decoding
+    that in subsequent stages.
+
+    @example {[
+      open Json
+      (* returns [(1 : int, {"a": true} : Js.Json.t)] *)
+      let json = parseOrRaise {|{"id": 1, {"a": true}}|}
+      let _ = Decode.(int json, id json)
+    ]} *)
+
 val bool : bool decoder
 (** Decodes a JSON value into a [bool]
     

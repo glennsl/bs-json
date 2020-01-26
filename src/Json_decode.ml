@@ -9,6 +9,8 @@ type 'a decoder = Js.Json.t -> 'a
 
 exception DecodeError of string
 
+let id json = json
+
 let bool json = 
   if Js.typeof json = "boolean" then
     (Obj.magic (json : Js.Json.t) : bool)

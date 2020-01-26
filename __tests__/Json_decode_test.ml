@@ -31,6 +31,14 @@ end
 
 let () = 
 
+describe "id" (fun () ->
+  let open Json in
+  let open Decode in
+
+  test "id" (fun () ->
+    expect @@ int (0 |> Encode.int |> Decode.id) |> toEqual 0);
+);
+
 describe "bool" (fun () ->
   let open Json in
   let open Decode in
