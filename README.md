@@ -155,6 +155,9 @@ Please see LICENSE.LGPL-3.0 and LICENSE.MPL-2.0 for the full text of each licens
 
 ## Changes
 
+### 5.0.2
+* Added `Json.Decode.id`
+
 ### 5.0.1
 * Dual licensed as LGPL-3.0 and MPL-2.0. MPL is mostly equivalent to LGPL but relaxes its restriction on linking, which works better with the JavaScript packaging and distribution model.
 
