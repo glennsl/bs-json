@@ -229,8 +229,10 @@ let withDefault default decode json =
   try decode json with
   | DecodeError _ -> default
 
+(* XXX why does the doc say this raises? Depends of what function is passed in *)
 let map f decode json =
   f (decode json)
 
+(* XXX why does the doc say this raises? Depends of what function is passed in *)
 let andThen b a json=
   b (a json) json
