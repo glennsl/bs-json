@@ -162,7 +162,7 @@ let dict decode json =
         let value =
           try
             decode (Js.Dict.unsafeGet source key)
-          with
+          with (* XXX This is wrong: unsafeGet does not raise exceptions *)
             DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin dict")
           in
         Js.Dict.set target key value;
