@@ -34,7 +34,7 @@
   ],
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.8",
-    "bs-platform": "^5.0.4",
+    "bs-platform": "^7.2.0",
     "coveralls": "^3.0.3",
     "nyc": "^14.1.1"
   },
@@ -43,5 +43,8 @@
   },
   "jest": {
     "testEnvironment": "node"
+  },
+  "dependencies": {
+    "reanalyze": "file:../reanalyze"
   }
 }

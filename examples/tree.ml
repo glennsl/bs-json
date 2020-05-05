@@ -12,12 +12,14 @@ module Decode = struct
                | "leaf" -> leaf decoder
                | _      -> failwith "unknown node type"
     )
+   [@@raises Failure]
 
   and node decoder json =
     Node (
       (json |> field "value" decoder),
       (json |> field "children" (array (tree decoder) |> map Array.to_list))
     )
+   [@@raises Failure]
 
   and leaf decoder json =
     Leaf (json |> field "value" decoder)

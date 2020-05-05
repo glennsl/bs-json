@@ -16,12 +16,14 @@ let bool json =
     (Obj.magic (json : Js.Json.t) : bool)
   else
     raise @@ DecodeError ("Expected boolean, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let float json = 
   if Js.typeof json = "number" then
     (Obj.magic (json : Js.Json.t) : float)
   else
     raise @@ DecodeError ("Expected number, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let int json = 
   let f = float json in
@@ -29,23 +31,27 @@ let int json =
     (Obj.magic (f : float) : int)
   else
     raise @@ DecodeError ("Expected integer, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let string json = 
   if Js.typeof json = "string" then
     (Obj.magic (json : Js.Json.t) : string)
   else
     raise @@ DecodeError ("Expected string, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let char json =
   let s = string json in
   if String.length s = 1 then
-    String.get s 0
+    try (String.get s 0) with Invalid_argument _ -> ' '
   else
     raise @@ DecodeError ("Expected single-character string, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let date json =
   json |> string
        |> Js.Date.fromString
+[@@raises DecodeError]
 
 let nullable decode json =
   if (Obj.magic json : 'a Js.null) == Js.null then
@@ -59,6 +65,7 @@ let nullAs value json =
     value
   else 
     raise @@ DecodeError ("Expected null, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let array decode json = 
   if Js.Array.isArray json then begin
@@ -78,9 +85,11 @@ let array decode json =
   end
   else
     raise @@ DecodeError ("Expected array, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let list decode json =
   json |> array decode |> Array.to_list
+[@@raises DecodeError]
 
 let pair decodeA decodeB json =
   if Js.Array.isArray json then begin
@@ -97,8 +106,10 @@ let pair decodeA decodeB json =
   end
   else
     raise @@ DecodeError ("Expected array, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let tuple2 = pair
+[@@raises DecodeError]
 
 let tuple3 decodeA decodeB decodeC json =
   if Js.Array.isArray json then begin
@@ -116,6 +127,7 @@ let tuple3 decodeA decodeB decodeC json =
   end
   else
     raise @@ DecodeError ("Expected array, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let tuple4 decodeA decodeB decodeC decodeD json =
   if Js.Array.isArray json then begin
@@ -134,6 +146,7 @@ let tuple4 decodeA decodeB decodeC decodeD json =
   end
   else
     raise @@ DecodeError ("Expected array, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let dict decode json = 
   if Js.typeof json = "object" && 
@@ -158,6 +171,7 @@ let dict decode json =
   end
   else
     raise @@ DecodeError ("Expected object, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let field key decode json =
   if 
@@ -179,12 +193,14 @@ let field key decode json =
   end
   else
     raise @@ DecodeError ("Expected object, got " ^ _stringify json)
+[@@raises DecodeError]
 
 let rec at key_path decoder =
     match key_path with 
       | [key] -> field key decoder
       | first::rest -> field first (at rest decoder) 
       | [] -> raise @@ Invalid_argument ("Expected key_path to contain at least one element")
+[@@raises (DecodeError, Invalid_argument)]
 
 let optional decode json =
   try Some (decode json) with
@@ -200,11 +216,14 @@ let oneOf decoders json =
     | decode::rest ->
         try decode json with
         | DecodeError e ->
-             inner rest (e :: errors) in
+             inner rest (e :: errors)
+    [@@raises DecodeError] in
   inner decoders []
+[@@raises DecodeError]
 
 let either a b =
   oneOf [a;b]
+[@@raises DecodeError]
 
 let withDefault default decode json =
   try decode json with

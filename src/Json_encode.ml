@@ -7,8 +7,10 @@ external int : int -> Js.Json.t = "%identity"
 external bool : bool -> Js.Json.t = "%identity"
 
 let char c =
-  c |> String.make 1
-    |> string
+ try
+  c |> String.make 1 |> string
+ with
+  | Invalid_argument _ -> null
 
 let date d =
   d |> Js.Date.toJSONUnsafe
