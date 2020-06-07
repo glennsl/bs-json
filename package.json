@@ -38,9 +38,6 @@
     "coveralls": "^3.0.3",
     "nyc": "^14.1.1"
   },
-  "peerDependencies": {
-    "bs-platform": "^5.0.4"
-  },
   "jest": {
     "testEnvironment": "node"
   }
