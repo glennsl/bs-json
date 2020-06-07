@@ -328,6 +328,7 @@ val at : string list -> 'a decoder -> 'a decoder
 and a value that is successfully decoded with the given decoder.
 
 @raise [DecodeError] if unsuccessful 
+@raise [Invalid_argument] if list of fields is empty 
 
 @example {[
   open Json
@@ -430,8 +431,6 @@ val map : ('a -> 'b) -> 'a decoder -> 'b decoder
 
 {b Returns} a ['b] if the given decoder succeeds.
 
-@raise [DecodeError] if unsuccessful 
-
 @example {[
   open Json
   (* returns 46 *)
@@ -443,8 +442,6 @@ val andThen : ('a -> 'b decoder) -> 'a decoder -> 'b decoder
 (** Returns a decoder that maps the result of the given decoder if successful
 
 {b Returns} an ['a] if both decoders succeed.
-
-@raise [DecodeError] if unsuccessful 
 
 @example {[
   (* Decode a JSON tree structure *)
