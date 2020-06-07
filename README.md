@@ -85,7 +85,7 @@ For the moment, please see the interface files:
 
 ### Writing custom decoders and encoders
 
-If you look at the type signature of `Js.Decode.array`, for example, you'll see it takes an `'a decoder` and returns an
+If you look at the type signature of `Json.Decode.array`, for example, you'll see it takes an `'a decoder` and returns an
 `'a array decoder`. `'a decoder` is just an alias for `Js.Json.t -> 'a`, so if we expand the type signature of `array`
 we'll get `(Js.Json.t -> 'a) -> Js.Json.t -> 'a array`. We can now see that it is a function that takes a decoder and
 returns a function, itself a decoder. Applying the `int` decoder to `array` will give us an `int array decoder`, a
