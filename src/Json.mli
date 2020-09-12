@@ -5,9 +5,9 @@ This module has four aspects to it:
 - Encoding, which is the process of construction a JSON data structure
 - Decoding, which is the process of deconstructing a JSON data structure
 {3 Parsing}
-{! parse} and {! exnParse} will both (try to) parse a JSON string into a JSON
+{! parse} and {! parseOrRaise} will both (try to) parse a JSON string into a JSON
 data structure ({! Js.Json.t}), but behaves differently when encountering a
-parse error. [exnParse] will raise a [SyntaxError], while [parse] will return
+parse error. [parseOrRaise] will raise a [ParseError], while [parse] will return
 a [Js.Json.t result] indicating whether or not the parsing succeeded. There's
 not much more to it: [string] in, [Js.Json.t] out.
 The parsed result, and encoded JSON data structure, then needs to be decoded to
