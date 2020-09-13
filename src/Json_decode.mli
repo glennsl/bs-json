@@ -35,7 +35,7 @@ val id : Js.Json.t decoder
 val bool : bool decoder
 (** Decodes a JSON value into a [bool]
     
-{b Returns} a [bool] if the JSON value is a "true" or "false".
+{b Returns} a [bool] if the JSON value is a [true] or [false].
 
 @raise [DecodeError] if unsuccessful 
 
