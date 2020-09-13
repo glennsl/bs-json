@@ -35,7 +35,7 @@ val id : Js.Json.t decoder
 val bool : bool decoder
 (** Decodes a JSON value into a [bool]
     
-{b Returns} a [bool] if the JSON value is a number.
+{b Returns} a [bool] if the JSON value is a [true] or [false].
 
 @raise [DecodeError] if unsuccessful 
 
@@ -95,7 +95,7 @@ val int : int decoder
 val string : string decoder
 (** Decodes a JSON value into a [string]
     
-{b Returns} a [string] if the JSON value is a number.
+{b Returns} a [string] if the JSON value is a string.
 
 @raise [DecodeError] if unsuccessful 
 
@@ -129,7 +129,7 @@ val char : char decoder
 *)
 
 val date : Js.Date.t decoder
-(** Decodes an ISO8601-fot\rmatted JSON string into a [Js.Date.t]
+(** Decodes an ISO8601-formatted JSON string into a [Js.Date.t]
     
 {b Returns} a [Js.Date.t] if the JSON value is an IS8601-formatted string.
 
@@ -189,7 +189,7 @@ elements are successfully decoded.
   let _ = Json.parseOrRaise "[1, 2, "c"]" |> Decode.(array int)
   (* raises DecodeError *)
   let _ = Json.parseOrRaise "123" |> Decode.(array int)
-  (* returns None *)
+  (* raises DecodeError *)
   let _ = Json.parseOrRaise "null" |> Decode.(array int)
 ]}
 *)
@@ -210,7 +210,7 @@ elements are successfully decoded.
   let _ = Json.parseOrRaise "[1, 2, "c"]" |> Decode.(list int)
   (* raises DecodeError *)
   let _ = Json.parseOrRaise "123" |> Decode.(list int)
-  (* returns None *)
+  (* raises DecodeError *)
   let _ = Json.parseOrRaise "null" |> Decode.(list int)
 ]}
 *)
@@ -293,7 +293,7 @@ values are successfully decoded.
   let _ = Json.parseOrRaise {| { "x": 23, "y": "b" } |} |> Decode.(dict int)
   (* raises DecodeError *)
   let _ = Json.parseOrRaise "123" |> Decode.(dict int)
-  (* returns None *)
+  (* raises DecodeError *)
   let _ = Json.parseOrRaise "null" |> Decode.(dict int)
 ]}
 *)
@@ -434,7 +434,7 @@ val map : ('a -> 'b) -> 'a decoder -> 'b decoder
 @example {[
   open Json
   (* returns 46 *)
-  let _ = Json.parseOrRaise "23" |> Decode.map (fun x -> x * x) int
+  let _ = Json.parseOrRaise "23" |> Decode.map (fun x -> x + x) int
 ]}
 *)
 
