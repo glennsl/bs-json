@@ -194,7 +194,7 @@ let oneOf decoders json =
   let rec inner decoders errors =
     match decoders with
     | [] ->
-        let revErrors = List.rev errors in
+        let revErrors = Js.Array.joinWith ", " (Array.of_list (List.rev errors)) in
         raise @@ DecodeError
               ({j|All decoders given to oneOf failed. Here are all the errors: $revErrors. And the JSON being decoded: |j} ^ _stringify json)
     | decode::rest ->
