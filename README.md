@@ -155,6 +155,9 @@ Please see LICENSE.LGPL-3.0 and LICENSE.MPL-2.0 for the full text of each licens
 
 ## Changes
 
+### 5.0.4
+* Rewrote `Encode.list` to be stack-safe and much faster.
+
 ### 5.0.2
 * Added `Json.Decode.id`
 

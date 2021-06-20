@@ -36,10 +36,18 @@ external jsonArray : Js.Json.t array -> Js.Json.t = "%identity"
 let array encode l =
   l |> Array.map encode
     |> jsonArray
-let list encode l =
-  l |> List.map encode
-    |> Array.of_list
-    |> jsonArray
+let list encode = function
+  | [] -> jsonArray [||]
+  | hd::tl as l ->
+      let a = Array.make (List.length l) (encode hd) in
+      let rec fill i = function
+        | [] -> a
+        | hd::tl -> (
+          Array.unsafe_set a i (encode hd);
+          fill (i + 1) tl
+        )
+      in
+        jsonArray (fill 1 tl)
 
 let pair encodeA encodeB (a, b) =
   jsonArray [|encodeA a; encodeB b|]
