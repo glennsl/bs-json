@@ -2,6 +2,8 @@
 
 Compositional JSON encode/decode library for BuckleScript.
 
+**NOTE: For rescript users, please see the spiritual successor library [rescript-json-combinators](https://github.com/glennsl/rescript-json-combinators)**
+
 [![npm](https://img.shields.io/npm/v/@glennsl/bs-json.svg)](https://npmjs.org/@glennsl/bs-json)
 [![Travis](https://img.shields.io/travis/glennsl/bs-json/master.svg)](https://travis-ci.org/glennsl/bs-json)
 [![Coveralls](https://img.shields.io/coveralls/glennsl/bs-json/master.svg)](https://coveralls.io/github/glennsl/bs-json?branch=master)
