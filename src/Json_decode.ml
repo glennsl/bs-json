@@ -93,7 +93,7 @@ let pair decodeA decodeB json =
       with
         DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin pair/tuple2")
     else
-      raise @@ DecodeError ({j|Expected array of length 2, got array of length $length|j})
+      raise @@ DecodeError ("Expected array of length 2, got array of length " ^ string_of_int(length))
   end
   else
     raise @@ DecodeError ("Expected array, got " ^ _stringify json)
@@ -112,7 +112,7 @@ let tuple3 decodeA decodeB decodeC json =
       with
         DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin tuple3")
     else
-      raise @@ DecodeError ({j|Expected array of length 3, got array of length $length|j})
+      raise @@ DecodeError ("Expected array of length 3, got array of length " ^ string_of_int(length))
   end
   else
     raise @@ DecodeError ("Expected array, got " ^ _stringify json)
@@ -130,7 +130,7 @@ let tuple4 decodeA decodeB decodeC decodeD json =
       with
         DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tin tuple4")
     else
-      raise @@ DecodeError ({j|Expected array of length 4, got array of length $length|j})
+      raise @@ DecodeError ("Expected array of length 4, got array of length " ^ string_of_int(length))
   end
   else
     raise @@ DecodeError ("Expected array, got " ^ _stringify json)
@@ -175,7 +175,7 @@ let field key decode json =
         DecodeError msg -> raise @@ DecodeError (msg ^ "\n\tat field '" ^ key ^ "'")
       end
     | None ->
-      raise @@ DecodeError ({j|Expected field '$(key)'|j})
+      raise @@ DecodeError ("Expected field '" ^ key ^ "'")
   end
   else
     raise @@ DecodeError ("Expected object, got " ^ _stringify json)
@@ -196,7 +196,10 @@ let oneOf decoders json =
     | [] ->
         let formattedErrors = "\n- " ^ Js.Array.joinWith "\n- " (Array.of_list (List.rev errors)) in
         raise @@ DecodeError
-              ({j|All decoders given to oneOf failed. Here are all the errors: $formattedErrors\nAnd the JSON being decoded: |j} ^ _stringify json)
+              ("All decoders given to oneOf failed. Here are all the errors: "
+              ^ formattedErrors
+              ^ "\nAnd the JSON being decoded: "
+              ^ _stringify json)
     | decode::rest ->
         try decode json with
         | DecodeError e ->
