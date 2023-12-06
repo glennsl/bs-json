@@ -2,7 +2,7 @@
 
 Compositional JSON encode/decode library for BuckleScript.
 
-**NOTE: For rescript users, please see the spiritual successor library [rescript-json-combinators](https://github.com/glennsl/rescript-json-combinators)**
+**NOTE: This project has been deprecated. For rescript users, consider the spiritual successor library [rescript-json-combinators](https://github.com/glennsl/rescript-json-combinators). For melange users, consider [melange-json](https://github.com/melange-community/melange-json)**
 
 [![npm](https://img.shields.io/npm/v/@glennsl/bs-json.svg)](https://npmjs.org/@glennsl/bs-json)
 [![Travis](https://img.shields.io/travis/glennsl/bs-json/master.svg)](https://travis-ci.org/glennsl/bs-json)
